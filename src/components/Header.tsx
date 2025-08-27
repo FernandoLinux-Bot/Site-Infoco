@@ -1,0 +1,83 @@
+import React, { useState } from 'react';
+
+interface DropdownItemProps {
+    href: string;
+    children: React.ReactNode;
+}
+const DropdownItem: React.FC<DropdownItemProps> = ({ href, children }) => (
+    <li><a href={href} className="dropdown-item">{children}</a></li>
+);
+
+interface DropdownProps {
+    title: string;
+    children: React.ReactNode;
+}
+const Dropdown: React.FC<DropdownProps> = ({ title, children }) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+        <li
+            className="nav-item dropdown"
+            onMouseEnter={() => setIsOpen(true)}
+            onMouseLeave={() => setIsOpen(false)}
+        >
+            <a href="#" className="nav-link" onClick={(e) => e.preventDefault()}>
+                {title}
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                </svg>
+            </a>
+            {isOpen && (
+                <ul className="dropdown-menu">
+                    {children}
+                </ul>
+            )}
+        </li>
+    );
+};
+
+const Header = () => {
+    const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+    return (
+        <header className="app-header">
+            <div className="container nav-container">
+                <a href="#inicio" className="logo">INFOCO LICITAÇÕES</a>
+                <nav className={isMobileMenuOpen ? 'nav-open' : ''}>
+                    <ul className="nav-links">
+                        <Dropdown title="Comprador">
+                            <DropdownItem href="#">Ente Público</DropdownItem>
+                            <DropdownItem href="#">Estatais</DropdownItem>
+                            <DropdownItem href="#">Sistema S</DropdownItem>
+                        </Dropdown>
+                        <li><a href="#" className="nav-link">Fornecedor</a></li>
+                        <li><a href="#" className="nav-link">Marketplace</a></li>
+                        <li><a href="#solucoes" className="nav-link">Serviços</a></li>
+                        <Dropdown title="Cadastrar">
+                            <DropdownItem href="#">Comprador</DropdownItem>
+                            <DropdownItem href="#">Fornecedor</DropdownItem>
+                            <DropdownItem href="#">Cidadão</DropdownItem>
+                        </Dropdown>
+                        <li><a href="#contato" className="nav-link">Contato</a></li>
+                    </ul>
+                </nav>
+                 <a href="#" className="cta-button desktop-cta">
+                    Acessar Plataforma
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                    </svg>
+                </a>
+                <button
+                    className="hamburger-menu"
+                    onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
+                    aria-label="Abrir menu"
+                    aria-expanded={isMobileMenuOpen}
+                >
+                    <span/><span/><span/>
+                </button>
+            </div>
+        </header>
+    );
+};
+
+export default Header;
