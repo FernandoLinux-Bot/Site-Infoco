@@ -47,16 +47,14 @@ const Header = () => {
                     <ul className="nav-links">
                         <Dropdown title="Comprador">
                             <DropdownItem href="#">Ente Público</DropdownItem>
-                            <DropdownItem href="#">Estatais</DropdownItem>
-                            <DropdownItem href="#">Sistema S</DropdownItem>
+                            <DropdownItem href="#">AMX DIGITAL</DropdownItem>
+                            <DropdownItem href="#">SICC</DropdownItem>
                         </Dropdown>
                         <li><a href="#" className="nav-link">Fornecedor</a></li>
-                        <li><a href="#" className="nav-link">Marketplace</a></li>
-                        <li><a href="#solucoes" className="nav-link">Serviços</a></li>
+                        <li><a href="#servicos" className="nav-link">Serviços</a></li>
                         <Dropdown title="Cadastrar">
                             <DropdownItem href="#">Comprador</DropdownItem>
                             <DropdownItem href="#">Fornecedor</DropdownItem>
-                            <DropdownItem href="#">Cidadão</DropdownItem>
                         </Dropdown>
                         <li><a href="#contato" className="nav-link">Contato</a></li>
                     </ul>
