@@ -26,37 +26,37 @@ const Features = () => (
             <div className="features-grid">
                 <FeatureCard
                     delay={1}
-                    icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 18.375c.364 0 .728-.05 1.084-.148l.162-.045a13.435 13.435 0 006.187-3.415c.394-.362.775-.73.114-1.11a.75.75 0 00-1.298.74c-.002 0-.004.002-.005.003-.01.007-.02.014-.03.022a11.936 11.936 0 01-5.18 2.965.75.75 0 00-.533.74V18.375zM12 5.625c-.364 0-.728.05-1.084.148l-.162.045a13.435 13.435 0 00-6.187 3.415c-.394.362-.775.73-.114 1.11a.75.75 0 001.298-.74c.002 0 .004-.002.005-.003.01-.007.02-.014.03-.022a11.936 11.936 0 015.18-2.965.75.75 0 00.533-.74V5.625z" /><path strokeLinecap="round" strokeLinejoin="round" d="M4.735 14.126a.75.75 0 01.114-1.11 13.435 13.435 0 006.187-3.415L11.2 9.552a11.936 11.936 0 015.18 2.965c.01.008.02.015.03.022a.75.75 0 01-1.058.995 11.99 11.99 0 00-5.772-2.73.75.75 0 01-.533-.74V5.625a.75.75 0 01.75-.75h.375a.75.75 0 01.75.75v3.375c0 .414.336.75.75.75h1.5a.75.75 0 01.75.75v1.5a.75.75 0 01-.75.75h-3.375a.75.75 0 01-.75-.75V8.25a.75.75 0 01-.75-.75H8.25a.75.75 0 01-.75.75v1.838a.75.75 0 00.533.74c.77.16 1.52.38 2.23.654l-.5.866a.75.75 0 01-1.298-.74z" /></svg>}
+                    icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path></svg>}
                     title="Consultoria Especializada"
                     description="Navegue com segurança no universo das licitações com o suporte de nossos especialistas."
                 />
                 <FeatureCard
                     delay={2}
-                    icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 17.25v1.5m3-1.5v1.5m3-1.5v1.5M9 5.25v1.5m3-1.5v1.5m3-1.5v1.5M5.25 9.75h1.5m-1.5 3h1.5m-1.5 3h1.5m10.5-9h-1.5m1.5 3h-1.5m1.5 3h-1.5M9 12l1.5 1.5 1.5-1.5M12 9l1.5 1.5 1.5-1.5M9 15l1.5 1.5 1.5-1.5M12 6l1.5 1.5 1.5-1.5" /></svg>}
+                    icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"></path></svg>}
                     title="Sistema de Gestão"
                     description="Gerencie todas as fases do processo licitatório em uma plataforma intuitiva e poderosa."
                 />
                 <FeatureCard
                     delay={3}
-                    icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1.5-1.5m1.5 1.5l1.5-1.5m0 0l-1.5 1.5m-7.5-9l1.5 1.5 1.5-1.5" /></svg>}
+                    icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1.5-1.5m1.5 1.5l1.5-1.5m0 0l-1.5 1.5m-7.5-9l1.5 1.5 1.5-1.5"></path></svg>}
                     title="Inteligência de Mercado"
                     description="Acesse dados e análises estratégicas para identificar as melhores oportunidades de negócio."
                 />
                  <FeatureCard
                     delay={4}
-                    icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path d="M12 14l9-5-9-5-9 5 9 5z" /><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-5.998 12.078 12.078 0 01.665-6.479L12 14z" /><path strokeLinecap="round" strokeLinejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0v6" /></svg>}
+                    icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-5.998 12.078 12.078 0 01.665-6.479L12 14z"></path><path strokeLinecap="round" strokeLinejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0v6"></path></svg>}
                     title="Capacitação e Treinamentos"
                     description="Capacite sua equipe com nossos cursos e treinamentos focados em licitações públicas."
                 />
                  <FeatureCard
                     delay={5}
-                    icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15.52 8.48a.75.75 0 10-1.04-1.04l-3.48 3.48-1.52-1.52a.75.75 0 00-1.04 1.04l2.04 2.04a.75.75 0 001.04 0l4-4z" /></svg>}
+                    icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18z"></path><path strokeLinecap="round" strokeLinejoin="round" d="M15.52 8.48a.75.75 0 10-1.04-1.04l-3.48 3.48-1.52-1.52a.75.75 0 00-1.04 1.04l2.04 2.04a.75.75 0 001.04 0l4-4z"></path></svg>}
                     title="Disputa de Licitações"
                     description="Conte com nossa equipe para representar sua empresa e operar lances em pregões eletrônicos."
                 />
                  <FeatureCard
                     delay={6}
-                    icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 2.25c.966 0 1.905.174 2.78.498l.18.067a13.435 13.435 0 016.187 3.415c.394.362.775.73.114 1.11a.75.75 0 01-1.298-.74c-.002 0-.004-.002-.005-.003-.01-.007-.02-.014-.03-.022a11.936 11.936 0 00-5.18-2.965.75.75 0 01-.533-.74V2.25zM4.735 7.43a.75.75 0 01.114-1.11 13.435 13.435 0 016.187-3.415l.18-.067A11.952 11.952 0 0112 2.25c.966 0 1.905.174 2.78.498l.18.067a13.435 13.435 0 016.187 3.415c.394.362.775.73.114 1.11a.75.75 0 01-1.298-.74c-.002 0-.004-.002-.005-.003-.01-.007-.02-.014-.03-.022a11.936 11.936 0 00-5.18-2.965.75.75 0 01-.533-.74V2.25a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75v.328a.75.75 0 01-.533.74 11.936 11.936 0 00-5.18 2.965c-.01.008-.02.015-.03.022a.75.75 0 01-1.058.995z" /><path strokeLinecap="round" strokeLinejoin="round" d="M12 12.75a.75.75 0 000 1.5h.008a.75.75 0 000-1.5H12zm0-3a.75.75 0 000 1.5h.008a.75.75 0 000-1.5H12zm-3.375.75a.75.75 0 001.5 0V9h-1.5v.75zm6.75 0a.75.75 0 001.5 0V9h-1.5v.75z" /></svg>}
+                    icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0012 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 01-2.153.274c-.473 0-.936-.086-1.383-.257L12 16.5l-2.62 3.528c-.447.17-.91.257-1.383.257a5.988 5.988 0 01-2.153-.274c-.483-.174-.711-.703-.59-1.202L9 4.971m-3-.52c-.99-.203-1.99-.377-3-.52M6 4.971l-2.62 10.726c-.122.499.106 1.028.589 1.202a5.989 5.989 0 002.153.274c.473 0 .936-.086 1.383-.257L12 16.5l2.62 3.528c.447.17.91.257 1.383.257a5.989 5.989 0 002.153-.274c.483-.174.711-.703.59-1.202L15 4.971m-4.5 .47a48.416 48.416 0 015.25.045"></path></svg>}
                     title="Assessoria Jurídica"
                     description="Garanta a conformidade e segurança jurídica em todas as suas participações em licitações."
                 />
