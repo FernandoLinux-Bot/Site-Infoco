@@ -39,12 +39,14 @@ const Dropdown: React.FC<DropdownProps> = ({ title, children }) => {
 const Header = () => {
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+    const closeMobileMenu = () => setMobileMenuOpen(false);
+
     return (
         <header className="app-header">
             <div className="container nav-container">
                 <a href="#inicio" className="logo">INFOCO LICITAÇÕES</a>
                 <nav className={isMobileMenuOpen ? 'nav-open' : ''}>
-                    <ul className="nav-links">
+                    <ul className="nav-links" onClick={closeMobileMenu}>
                         <Dropdown title="Comprador">
                             <DropdownItem href="#">Ente Público</DropdownItem>
                             <DropdownItem href="#">AMX DIGITAL</DropdownItem>
