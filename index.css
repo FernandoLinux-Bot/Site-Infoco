@@ -62,6 +62,13 @@ body {
   font-weight: 700;
   color: var(--text-light);
   text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+    max-height: 40px;
+    width: auto;
 }
 
 .nav-links {
@@ -221,7 +228,7 @@ section {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url('/hero-background.jpg');
+    background-image: url('/hero-background.png');
     background-size: cover;
     background-position: center;
     opacity: 0.1;
