@@ -12,25 +12,38 @@ const CountUp: React.FC<CountUpProps> = ({ end, duration = 3000 }) => {
     const [setRef, isVisible] = useIntersectionObserver({ threshold: 0.5 });
 
     useEffect(() => {
-        if (!isVisible) return;
+        if (!isVisible) {
+            setCount(0); // Reset count if it's not visible
+            return;
+        }
 
         let animationFrameId: number;
-        const start = 0;
-        const startTime = Date.now();
+        let startTimestamp: number | null = null;
+        const startValue = 0;
 
-        const step = (currentTime: number) => {
-            const progress = Math.min((currentTime - startTime) / duration, 1);
-            const currentCount = Math.floor(progress * (end - start) + start);
+        const animate = (timestamp: number) => {
+            if (!startTimestamp) {
+                startTimestamp = timestamp;
+            }
+
+            const elapsed = timestamp - startTimestamp;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Apply an easing function (ease-out cubic) for a smoother animation
+            const easeOutProgress = 1 - Math.pow(1 - progress, 3);
+            
+            const currentCount = Math.floor(easeOutProgress * (end - startValue) + startValue);
+            
             setCount(currentCount);
 
             if (progress < 1) {
-                animationFrameId = requestAnimationFrame(step);
+                animationFrameId = requestAnimationFrame(animate);
             } else {
-                setCount(end);
+                setCount(end); // Ensure it ends on the exact number
             }
         };
 
-        animationFrameId = requestAnimationFrame(step);
+        animationFrameId = requestAnimationFrame(animate);
 
         return () => {
             cancelAnimationFrame(animationFrameId);
