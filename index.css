@@ -64,6 +64,7 @@ body {
   text-decoration: none;
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 
 .logo img {
@@ -92,6 +93,7 @@ body {
   align-items: center;
   gap: 0.25rem;
   opacity: 0.9;
+  cursor: pointer;
 }
 
 .nav-link:hover {
@@ -505,6 +507,122 @@ section {
 }
 
 
+/* --- NEW PAGE STYLES --- */
+
+/* Fornecedor Page */
+.fornecedor-hero {
+    background-color: var(--background-color);
+    padding: 6rem 0;
+    text-align: center;
+}
+
+.fornecedor-hero h1 {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.fornecedor-hero p {
+    font-size: 1.2rem;
+    max-width: 700px;
+    margin: 0 auto 2rem auto;
+}
+
+.benefits {
+    background-color: var(--secondary-color);
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2.5rem;
+    margin-top: 3rem;
+}
+
+.benefit-card {
+    background-color: var(--secondary-color);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    border: 1px solid #EAECEF;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.benefit-card:hover {
+     transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+}
+
+.benefit-card .icon {
+    font-size: 2.5rem;
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+}
+
+.benefit-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+
+/* Cadastro Page */
+.cadastro-page {
+    background-color: var(--background-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 1rem;
+    min-height: 80vh;
+}
+
+.cadastro-container {
+    background-color: var(--secondary-color);
+    padding: 3rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.cadastro-container h1 {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+}
+
+.cadastro-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ced4da;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+
 /* Mobile Responsiveness */
 @media (max-width: 992px) {
     .nav-links {
@@ -570,6 +688,10 @@ section {
 
     .stat-number {
         font-size: 2.8rem;
+    }
+
+    .fornecedor-hero h1 {
+        font-size: 2.2rem;
     }
 
     .whatsapp-fab {
