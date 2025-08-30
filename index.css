@@ -216,28 +216,10 @@ section {
 .hero {
   text-align: center;
   padding: 8rem 0;
-  position: relative;
   color: var(--text-light);
   background-image: url('/hero-background.png');
   background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-}
-
-.hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(10, 37, 64, 0.7);
-    z-index: 1;
-}
-
-.hero .container {
-    position: relative;
-    z-index: 2;
+  background-position: center center;
 }
 
 .hero h1 {
@@ -246,7 +228,7 @@ section {
   margin-bottom: 1rem;
   font-weight: 700;
   line-height: 1.2;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
 .hero p {
@@ -256,6 +238,7 @@ section {
   margin-left: auto;
   margin-right: auto;
   opacity: 0.9;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
 /* Features Section */
