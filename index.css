@@ -546,6 +546,20 @@ section {
         padding: 6rem 0;
     }
 
+    /* Use a more subtle animation on mobile to prevent image from looking too zoomed in */
+    .hero::before {
+        animation-name: kenburns-effect-mobile;
+    }
+
+    @keyframes kenburns-effect-mobile {
+        from {
+            transform: scale(1);
+        }
+        to {
+            transform: scale(1.05); /* Reduced zoom effect */
+        }
+    }
+
     .hero h1 {
         font-size: 2.5rem;
     }
