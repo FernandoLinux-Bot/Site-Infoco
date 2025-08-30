@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
 
+type Page = 'home' | 'fornecedor' | 'cadastro';
+
+interface HeaderProps {
+    setCurrentPage: (page: Page) => void;
+}
+
 interface DropdownItemProps {
     href: string;
     children: React.ReactNode;
@@ -36,31 +42,28 @@ const Dropdown: React.FC<DropdownProps> = ({ title, children }) => {
     );
 };
 
-const Header = () => {
+const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-    const closeMobileMenu = () => setMobileMenuOpen(false);
+    const handleNavClick = (page: Page) => {
+        setCurrentPage(page);
+        setMobileMenuOpen(false);
+    };
 
     return (
         <header className="app-header">
             <div className="container nav-container">
-                <a href="#inicio" className="logo">
+                <a onClick={() => handleNavClick('home')} className="logo">
                     <img src="/Logo.png" alt="INFOCO LICITAÇÕES Logo" />
                 </a>
                 <nav className={isMobileMenuOpen ? 'nav-open' : ''}>
-                    <ul className="nav-links" onClick={closeMobileMenu}>
-                        <Dropdown title="Comprador">
-                            <DropdownItem href="#">Ente Público</DropdownItem>
-                        </Dropdown>
-                        <li><a href="#" className="nav-link">Fornecedor</a></li>
+                    <ul className="nav-links">
+                        <li><a onClick={() => handleNavClick('fornecedor')} className="nav-link">Fornecedor</a></li>
                         <Dropdown title="Soluções">
                             <DropdownItem href="#">SICC</DropdownItem>
                             <DropdownItem href="#">AMX Digital</DropdownItem>
                         </Dropdown>
-                        <Dropdown title="Cadastrar">
-                            <DropdownItem href="#">Comprador</DropdownItem>
-                            <DropdownItem href="#">Fornecedor</DropdownItem>
-                        </Dropdown>
+                        <li><a onClick={() => handleNavClick('cadastro')} className="nav-link">Cadastrar</a></li>
                         <li><a href="#contato" className="nav-link">Contato</a></li>
                     </ul>
                 </nav>
