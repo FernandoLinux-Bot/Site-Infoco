@@ -7,26 +7,34 @@ interface CountUpProps {
     duration?: number;
 }
 
-const CountUp: React.FC<CountUpProps> = ({ end, duration = 2000 }) => {
+const CountUp: React.FC<CountUpProps> = ({ end, duration = 3000 }) => {
     const [count, setCount] = useState(0);
     const [setRef, isVisible] = useIntersectionObserver({ threshold: 0.5 });
 
     useEffect(() => {
         if (!isVisible) return;
 
-        let start = 0;
+        let animationFrameId: number;
+        const start = 0;
         const startTime = Date.now();
+
         const step = (currentTime: number) => {
             const progress = Math.min((currentTime - startTime) / duration, 1);
             const currentCount = Math.floor(progress * (end - start) + start);
             setCount(currentCount);
+
             if (progress < 1) {
-                requestAnimationFrame(step);
+                animationFrameId = requestAnimationFrame(step);
             } else {
-                setCount(end); // Ensure it ends on the exact number
+                setCount(end);
             }
         };
-        requestAnimationFrame(step);
+
+        animationFrameId = requestAnimationFrame(step);
+
+        return () => {
+            cancelAnimationFrame(animationFrameId);
+        };
     }, [isVisible, end, duration]);
 
     return <span ref={setRef} className="stat-number">{count.toLocaleString('pt-BR')}</span>;
