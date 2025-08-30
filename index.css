@@ -256,11 +256,16 @@ section {
     box-shadow: var(--shadow-hover);
 }
 
+.feature-icon-wrapper {
+    margin-bottom: 1rem;
+    display: inline-block;
+}
+
 .feature-card svg {
     width: 50px;
     height: 50px;
-    margin-bottom: 1rem;
     color: var(--primary-color);
+    display: block;
 }
 
 .feature-card h3 {
