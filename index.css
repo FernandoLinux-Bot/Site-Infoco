@@ -217,10 +217,32 @@ section {
   text-align: center;
   padding: 8rem 0;
   color: var(--text-light);
-  background-image: url('/hero-background.png');
-  background-size: cover;
-  background-position: center center;
+  position: relative; /* Required for pseudo-element positioning */
+  overflow: hidden; /* Hide overflowing parts of the animated background */
 }
+
+/* Animated Background Pseudo-Element */
+.hero::before {
+    content: '';
+    position: absolute;
+    inset: 0; /* top, right, bottom, left: 0 */
+    z-index: -1;
+    background-image: url('/hero-background.png');
+    background-size: cover;
+    background-position: center;
+    /* Animation definition */
+    animation: kenburns-effect 25s ease-in-out infinite alternate;
+}
+
+@keyframes kenburns-effect {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.1);
+    }
+}
+
 
 .hero h1 {
   font-size: 3.5rem;
