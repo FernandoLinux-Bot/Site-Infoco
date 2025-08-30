@@ -1,5 +1,6 @@
 import React from 'react';
 import AnimatedSection from './AnimatedSection';
+import { motion, useAnimationControls } from 'framer-motion';
 
 interface FeatureCardProps {
     icon: React.ReactNode;
@@ -8,13 +9,42 @@ interface FeatureCardProps {
     delay: number;
 }
 
-const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description, delay }) => (
-    <div className="feature-card animated-item" style={{ transitionDelay: `${delay * 100}ms` }}>
-        {icon}
-        <h3>{title}</h3>
-        <p>{description}</p>
-    </div>
-);
+const iconVariants = {
+    rest: {
+        scale: 1,
+        rotate: 0,
+        transition: { type: 'spring', stiffness: 400, damping: 15 }
+    },
+    hover: {
+        scale: 1.15,
+        rotate: 7,
+        transition: { type: 'spring', stiffness: 400, damping: 10 }
+    }
+};
+
+const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description, delay }) => {
+    const controls = useAnimationControls();
+
+    return (
+        <div 
+            className="feature-card animated-item" 
+            style={{ transitionDelay: `${delay * 100}ms` }}
+            onMouseEnter={() => controls.start('hover')}
+            onMouseLeave={() => controls.start('rest')}
+        >
+            <motion.div
+                className="feature-icon-wrapper"
+                variants={iconVariants}
+                initial="rest"
+                animate={controls}
+            >
+                {icon}
+            </motion.div>
+            <h3>{title}</h3>
+            <p>{description}</p>
+        </div>
+    );
+};
 
 const Features = () => (
     <AnimatedSection id="servicos" className="features">
