@@ -49,11 +49,12 @@ const Header = () => {
                     <ul className="nav-links" onClick={closeMobileMenu}>
                         <Dropdown title="Comprador">
                             <DropdownItem href="#">Ente Público</DropdownItem>
-                            <DropdownItem href="#">AMX DIGITAL</DropdownItem>
-                            <DropdownItem href="#">SICC</DropdownItem>
                         </Dropdown>
                         <li><a href="#" className="nav-link">Fornecedor</a></li>
-                        <li><a href="#servicos" className="nav-link">Serviços</a></li>
+                        <Dropdown title="Soluções">
+                            <DropdownItem href="#">SICC</DropdownItem>
+                            <DropdownItem href="#">AMX Digital</DropdownItem>
+                        </Dropdown>
                         <Dropdown title="Cadastrar">
                             <DropdownItem href="#">Comprador</DropdownItem>
                             <DropdownItem href="#">Fornecedor</DropdownItem>
