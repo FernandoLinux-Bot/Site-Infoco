@@ -44,7 +44,9 @@ const Header = () => {
     return (
         <header className="app-header">
             <div className="container nav-container">
-                <a href="#inicio" className="logo">INFOCO LICITAÇÕES</a>
+                <a href="#inicio" className="logo">
+                    <img src="/Logo.png" alt="INFOCO LICITAÇÕES Logo" />
+                </a>
                 <nav className={isMobileMenuOpen ? 'nav-open' : ''}>
                     <ul className="nav-links" onClick={closeMobileMenu}>
                         <Dropdown title="Comprador">
