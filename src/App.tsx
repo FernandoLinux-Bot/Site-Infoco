@@ -12,8 +12,9 @@ import Fornecedor from './pages/Fornecedor';
 import Cadastro from './pages/Cadastro';
 import Sicc from './pages/Sicc';
 import AmxDigital from './pages/AmxDigital';
+import Contact from './pages/Contact';
 
-type Page = 'home' | 'fornecedor' | 'cadastro' | 'sicc' | 'amx-digital';
+type Page = 'home' | 'fornecedor' | 'cadastro' | 'sicc' | 'amx-digital' | 'contact';
 
 // Fix: Add `Variants` type to ensure the object structure is correct.
 const pageVariants: Variants = {
@@ -48,6 +49,8 @@ const App = () => {
         return <Sicc setCurrentPage={setCurrentPage} />;
       case 'amx-digital':
         return <AmxDigital setCurrentPage={setCurrentPage} />;
+      case 'contact':
+        return <Contact />;
       case 'home':
       default:
         return <Home />;
@@ -71,7 +74,7 @@ const App = () => {
           </motion.div>
         </AnimatePresence>
       </main>
-      <Footer />
+      <Footer setCurrentPage={setCurrentPage} />
       <WhatsAppButton />
       <ScrollToTopButton />
     </>
