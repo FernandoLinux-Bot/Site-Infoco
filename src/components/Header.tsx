@@ -54,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
         <header className="app-header">
             <div className="container nav-container">
                 <a onClick={() => handleNavClick('home')} className="logo">
-                    <img src="/logo.png" alt="INFOCO Logo" />
+                    <img src="/Logo.png" alt="INFOCO Logo" />
                     <span>INFOCO</span>
                 </a>
                 <nav className={isMobileMenuOpen ? 'nav-open' : ''}>
