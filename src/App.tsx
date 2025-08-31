@@ -10,8 +10,10 @@ import ScrollToTopButton from './components/ScrollToTopButton';
 import Home from './pages/Home';
 import Fornecedor from './pages/Fornecedor';
 import Cadastro from './pages/Cadastro';
+import Sicc from './pages/Sicc';
+import AmxDigital from './pages/AmxDigital';
 
-type Page = 'home' | 'fornecedor' | 'cadastro';
+type Page = 'home' | 'fornecedor' | 'cadastro' | 'sicc' | 'amx-digital';
 
 // Fix: Add `Variants` type to ensure the object structure is correct.
 const pageVariants: Variants = {
@@ -42,6 +44,10 @@ const App = () => {
         return <Fornecedor setCurrentPage={setCurrentPage} />;
       case 'cadastro':
         return <Cadastro />;
+      case 'sicc':
+        return <Sicc setCurrentPage={setCurrentPage} />;
+      case 'amx-digital':
+        return <AmxDigital setCurrentPage={setCurrentPage} />;
       case 'home':
       default:
         return <Home />;
