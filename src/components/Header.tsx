@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 
-type Page = 'home' | 'fornecedor' | 'cadastro' | 'sicc' | 'amx-digital';
+type Page = 'home' | 'fornecedor' | 'cadastro' | 'sicc' | 'amx-digital' | 'contact';
 
 interface HeaderProps {
     setCurrentPage: (page: Page) => void;
@@ -82,7 +82,7 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
                             <DropdownItem href="#" onClick={(e) => { e.preventDefault(); handleNavClick('amx-digital'); }}>AMX Digital</DropdownItem>
                         </Dropdown>
                         <li><a onClick={() => handleNavClick('cadastro')} className="nav-link">Cadastrar</a></li>
-                        <li><a href="#contato" className="nav-link" onClick={() => handleNavClick('home')}>Contato</a></li>
+                        <li><a onClick={() => handleNavClick('contact')} className="nav-link">Contato</a></li>
                     </ul>
                 </nav>
                  <a href="#" className="cta-button desktop-cta">
