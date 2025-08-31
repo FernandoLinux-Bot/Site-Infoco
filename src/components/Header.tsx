@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-type Page = 'home' | 'fornecedor' | 'cadastro';
+type Page = 'home' | 'fornecedor' | 'cadastro' | 'sicc' | 'amx-digital';
 
 interface HeaderProps {
     setCurrentPage: (page: Page) => void;
@@ -9,9 +9,10 @@ interface HeaderProps {
 interface DropdownItemProps {
     href: string;
     children: React.ReactNode;
+    onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
 }
-const DropdownItem: React.FC<DropdownItemProps> = ({ href, children }) => (
-    <li><a href={href} className="dropdown-item">{children}</a></li>
+const DropdownItem: React.FC<DropdownItemProps> = ({ href, children, onClick }) => (
+    <li><a href={href} className="dropdown-item" onClick={onClick}>{children}</a></li>
 );
 
 interface DropdownProps {
@@ -53,18 +54,18 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
     return (
         <header className="app-header">
             <div className="container nav-container">
-                <a onClick={() => handleNavClick('home')} className="logo">
+                <a onClick={() => handleNavClick('home')} className="logo" style={{ cursor: 'pointer' }}>
                     <img src="/Logo.png" alt="INFOCO Logo" />
                 </a>
                 <nav className={isMobileMenuOpen ? 'nav-open' : ''}>
                     <ul className="nav-links">
                         <li><a onClick={() => handleNavClick('fornecedor')} className="nav-link">Fornecedor</a></li>
                         <Dropdown title="Soluções">
-                            <DropdownItem href="#">SICC</DropdownItem>
-                            <DropdownItem href="#">AMX Digital</DropdownItem>
+                            <DropdownItem href="#" onClick={(e) => { e.preventDefault(); handleNavClick('sicc'); }}>SICC</DropdownItem>
+                            <DropdownItem href="#" onClick={(e) => { e.preventDefault(); handleNavClick('amx-digital'); }}>AMX Digital</DropdownItem>
                         </Dropdown>
                         <li><a onClick={() => handleNavClick('cadastro')} className="nav-link">Cadastrar</a></li>
-                        <li><a href="#contato" className="nav-link">Contato</a></li>
+                        <li><a href="#contato" className="nav-link" onClick={() => handleNavClick('home')}>Contato</a></li>
                     </ul>
                 </nav>
                  <a href="#" className="cta-button desktop-cta">
