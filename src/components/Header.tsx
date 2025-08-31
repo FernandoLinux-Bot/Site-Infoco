@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 type Page = 'home' | 'fornecedor' | 'cadastro' | 'sicc' | 'amx-digital';
 
@@ -21,12 +21,29 @@ interface DropdownProps {
 }
 const Dropdown: React.FC<DropdownProps> = ({ title, children }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const timeoutRef = useRef<number | null>(null);
+
+    const handleMouseEnter = () => {
+        // If there's a pending timeout to close the menu, clear it
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = null;
+        }
+        setIsOpen(true);
+    };
+
+    const handleMouseLeave = () => {
+        // Set a timer to close the dropdown after a short delay
+        timeoutRef.current = window.setTimeout(() => {
+            setIsOpen(false);
+        }, 200); // A 200ms delay provides a smoother user experience
+    };
 
     return (
         <li
             className="nav-item dropdown"
-            onMouseEnter={() => setIsOpen(true)}
-            onMouseLeave={() => setIsOpen(false)}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
         >
             <a href="#" className="nav-link" onClick={(e) => e.preventDefault()}>
                 {title}
