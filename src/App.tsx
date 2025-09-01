@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import WhatsAppButton from './components/WhatsAppButton';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 // Import page components
 import Home from './pages/Home';
@@ -79,6 +80,7 @@ const App = () => {
       <WhatsAppButton />
       <ScrollToTopButton />
       <Analytics />
+      <SpeedInsights />
     </>
   );
 };
