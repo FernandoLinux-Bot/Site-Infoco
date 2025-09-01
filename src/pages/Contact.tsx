@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 
 type SubmitStatus = 'idle' | 'submitting' | 'success' | 'error';
@@ -7,25 +7,39 @@ type SubmitStatus = 'idle' | 'submitting' | 'success' | 'error';
 declare global {
     interface Window {
         grecaptcha: any;
-        onRecaptchaSuccess: () => void;
-        onRecaptchaExpired: () => void;
     }
 }
 
 const Contact = () => {
     const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle');
     const [isRecaptchaVerified, setRecaptchaVerified] = useState(false);
+    const recaptchaContainer = useRef<HTMLDivElement>(null);
+    const recaptchaWidgetId = useRef<number | null>(null);
 
     useEffect(() => {
-        // Expose callbacks to the window object for reCAPTCHA to use
-        window.onRecaptchaSuccess = () => setRecaptchaVerified(true);
-        window.onRecaptchaExpired = () => setRecaptchaVerified(false);
-
-        // Cleanup function to remove the callbacks when the component unmounts
-        return () => {
-            delete window.onRecaptchaSuccess;
-            delete window.onRecaptchaExpired;
+        // Function to render the reCAPTCHA
+        const renderRecaptcha = () => {
+            // Ensure we have the container, the grecaptcha object is available, and it hasn't been rendered yet.
+            if (recaptchaContainer.current && window.grecaptcha?.render && recaptchaWidgetId.current === null) {
+                recaptchaWidgetId.current = window.grecaptcha.render(recaptchaContainer.current, {
+                    'sitekey': '6Lewq7krAAAAAG6X-fKiZIAvAo53IKSNWAlMpyNn',
+                    'callback': () => setRecaptchaVerified(true),
+                    'expired-callback': () => setRecaptchaVerified(false),
+                });
+            }
         };
+
+        // The reCAPTCHA script loads asynchronously. We need to wait for it.
+        // A simple approach is to check periodically if the API is ready.
+        const intervalId = setInterval(() => {
+            if (window.grecaptcha && window.grecaptcha.render) {
+                renderRecaptcha();
+                clearInterval(intervalId);
+            }
+        }, 100);
+
+        // Cleanup interval on component unmount
+        return () => clearInterval(intervalId);
     }, []);
 
 
@@ -47,13 +61,17 @@ const Contact = () => {
                 setSubmitStatus('success');
             } else {
                 setSubmitStatus('error');
-                window.grecaptcha.reset();
+                if (window.grecaptcha && recaptchaWidgetId.current !== null) {
+                    window.grecaptcha.reset(recaptchaWidgetId.current);
+                }
                 setRecaptchaVerified(false);
             }
         } catch (error) {
             console.error('Erro ao enviar formulário:', error);
             setSubmitStatus('error');
-            window.grecaptcha.reset();
+            if (window.grecaptcha && recaptchaWidgetId.current !== null) {
+                window.grecaptcha.reset(recaptchaWidgetId.current);
+            }
             setRecaptchaVerified(false);
         }
     };
@@ -96,16 +114,11 @@ const Contact = () => {
                                 <textarea id="mensagem" name="mensagem" className="form-input" rows={5} required></textarea>
                             </div>
                             <div className="form-group recaptcha-container">
-                                <div
-                                    className="g-recaptcha"
-                                    data-sitekey="6Lewq7krAAAAAG6X-fKiZIAvAo53IKSNWAlMpyNn"
-                                    data-callback="onRecaptchaSuccess"
-                                    data-expired-callback="onRecaptchaExpired"
-                                ></div>
+                                <div ref={recaptchaContainer}></div>
                             </div>
-                            <button 
-                                type="submit" 
-                                className="cta-button" 
+                            <button
+                                type="submit"
+                                className="cta-button"
                                 style={{ width: '100%', justifyContent: 'center' }}
                                 disabled={submitStatus === 'submitting' || !isRecaptchaVerified}
                             >
