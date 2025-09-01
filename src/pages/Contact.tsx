@@ -49,6 +49,7 @@ const Contact = () => {
         const formData = new FormData(e.currentTarget);
 
         try {
+            // Corrected Formspark URL to use the actual form ID
             const response = await fetch('https://submit-form.com/Zr70ukjGJSEHGttk58iYMUBH', {
                 method: 'POST',
                 body: formData,
