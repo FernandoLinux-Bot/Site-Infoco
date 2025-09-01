@@ -175,18 +175,23 @@ body {
     gap: 0.5rem;
 }
 
+.cta-button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
 .cta-button svg {
     width: 16px;
     height: 16px;
     transition: transform 0.3s ease;
 }
 
-.cta-button:hover {
+.cta-button:hover:not(:disabled) {
     background-color: #0069d9;
     transform: translateY(-2px);
 }
 
-.cta-button:hover svg {
+.cta-button:hover:not(:disabled) svg {
     transform: translateX(3px);
 }
 
@@ -628,6 +633,23 @@ section {
 textarea.form-input {
     resize: vertical;
     min-height: 120px;
+}
+
+.submit-success {
+    padding: 2rem;
+    border: 1px solid #28a745;
+    background-color: #d4edda;
+    color: #155724;
+    border-radius: var(--border-radius);
+}
+
+.submit-success h3 {
+    margin-bottom: 0.5rem;
+}
+
+.submit-error {
+    color: #721c24;
+    margin-top: 1rem;
 }
 
 
