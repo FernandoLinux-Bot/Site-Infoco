@@ -50,7 +50,7 @@ const Contact = () => {
 
         try {
             // Corrected Formspark URL to use the actual form ID
-            const response = await fetch('https://submit-form.com/Zr70ukjGJSEHGttk58iYMUBH', {
+            const response = await fetch('https://submit-form.com/Z4G5K3MOm', {
                 method: 'POST',
                 body: formData,
                 headers: {
