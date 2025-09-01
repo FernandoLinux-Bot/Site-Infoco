@@ -635,6 +635,12 @@ textarea.form-input {
     min-height: 120px;
 }
 
+.recaptcha-container {
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
 .submit-success {
     padding: 2rem;
     border: 1px solid #28a745;
