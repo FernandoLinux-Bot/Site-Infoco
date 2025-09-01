@@ -12,7 +12,7 @@ const Contact = () => {
         const formData = new FormData(e.currentTarget);
 
         try {
-            const response = await fetch('https://submit-form.com/YOUR_FORM_ID', { // <-- SUBSTITUA COM SEU URL DO FORMSPARK
+            const response = await fetch('https://submit-form.com/form_v1_Zr70ukjGJSEHGttk58iYMUBH', {
                 method: 'POST',
                 body: formData,
                 headers: {
