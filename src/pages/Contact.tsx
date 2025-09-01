@@ -1,11 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 
+type SubmitStatus = 'idle' | 'submitting' | 'success' | 'error';
+
 const Contact = () => {
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle');
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // Handle form submission logic here
-        alert('Mensagem enviada com sucesso!');
+        setSubmitStatus('submitting');
+        const formData = new FormData(e.currentTarget);
+
+        try {
+            const response = await fetch('https://submit-form.com/YOUR_FORM_ID', { // <-- SUBSTITUA COM SEU URL DO FORMSPARK
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                setSubmitStatus('success');
+            } else {
+                setSubmitStatus('error');
+            }
+        } catch (error) {
+            console.error('Erro ao enviar formulário:', error);
+            setSubmitStatus('error');
+        }
     };
 
     return (
@@ -17,30 +40,50 @@ const Contact = () => {
         >
             <div className="contact-container">
                 <h1 className="section-title">Entre em Contato</h1>
-                <p className="section-subtitle">
-                    Tem alguma dúvida ou precisa de uma demonstração? Preencha o formulário abaixo e nossa equipe retornará em breve.
-                </p>
-                <form className="contact-form" onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="nome">Nome Completo</label>
-                        <input type="text" id="nome" className="form-input" required />
+
+                {submitStatus === 'success' ? (
+                    <div className="submit-success">
+                        <h3>Obrigado!</h3>
+                        <p>Sua mensagem foi enviada com sucesso. Retornaremos em breve.</p>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="email">E-mail</label>
-                        <input type="email" id="email" className="form-input" required />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="telefone">Telefone / WhatsApp</label>
-                        <input type="tel" id="telefone" className="form-input" />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="mensagem">Sua Mensagem</label>
-                        <textarea id="mensagem" className="form-input" rows={5} required></textarea>
-                    </div>
-                    <button type="submit" className="cta-button" style={{ width: '100%', justifyContent: 'center' }}>
-                        Enviar Mensagem
-                    </button>
-                </form>
+                ) : (
+                    <>
+                        <p className="section-subtitle">
+                            Tem alguma dúvida ou precisa de uma demonstração? Preencha o formulário abaixo e nossa equipe retornará em breve.
+                        </p>
+                        <form className="contact-form" onSubmit={handleSubmit}>
+                            <div className="form-group">
+                                <label htmlFor="nome">Nome Completo</label>
+                                <input type="text" id="nome" name="nome" className="form-input" required />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="email">E-mail</label>
+                                <input type="email" id="email" name="email" className="form-input" required />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="telefone">Telefone / WhatsApp</label>
+                                <input type="tel" id="telefone" name="telefone" className="form-input" />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="mensagem">Sua Mensagem</label>
+                                <textarea id="mensagem" name="mensagem" className="form-input" rows={5} required></textarea>
+                            </div>
+                            <button 
+                                type="submit" 
+                                className="cta-button" 
+                                style={{ width: '100%', justifyContent: 'center' }}
+                                disabled={submitStatus === 'submitting'}
+                            >
+                                {submitStatus === 'submitting' ? 'Enviando...' : 'Enviar Mensagem'}
+                            </button>
+                            {submitStatus === 'error' && (
+                                <p className="submit-error">
+                                    Ocorreu um erro ao enviar a mensagem. Por favor, tente novamente mais tarde.
+                                </p>
+                            )}
+                        </form>
+                    </>
+                )}
             </div>
         </motion.section>
     );
