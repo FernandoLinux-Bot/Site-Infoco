@@ -69,12 +69,32 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
     };
 
     return (
-        <header className="app-header">
-            <div className="container nav-container">
-                <a onClick={() => handleNavClick('home')} className="logo" style={{ cursor: 'pointer' }}>
-                    <img src="/Logo.png" alt="INFOCO Logo" />
-                </a>
-                <nav className={isMobileMenuOpen ? 'nav-open' : ''}>
+        <header className={`app-header ${isMobileMenuOpen ? 'nav-open' : ''}`}>
+             <div className="header-top">
+                <div className="container header-top-container">
+                    <a onClick={() => handleNavClick('home')} className="logo" style={{ cursor: 'pointer' }}>
+                        <img src="/Logo.png" alt="INFOCO Logo" />
+                    </a>
+                    <div className="header-actions">
+                         <a href="#" className="cta-button desktop-cta">
+                            Acessar Plataforma
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                            </svg>
+                        </a>
+                        <button
+                            className="hamburger-menu"
+                            onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
+                            aria-label="Abrir menu"
+                            aria-expanded={isMobileMenuOpen}
+                        >
+                            <span/><span/><span/>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <nav className="header-nav">
+                <div className="container">
                     <ul className="nav-links">
                         <li><a onClick={() => handleNavClick('fornecedor')} className="nav-link">Fornecedor</a></li>
                         <Dropdown title="Soluções">
@@ -84,22 +104,8 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
                         <li><a onClick={() => handleNavClick('cadastro')} className="nav-link">Cadastrar</a></li>
                         <li><a onClick={() => handleNavClick('contact')} className="nav-link">Contato</a></li>
                     </ul>
-                </nav>
-                 <a href="#" className="cta-button desktop-cta">
-                    Acessar Plataforma
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                    </svg>
-                </a>
-                <button
-                    className="hamburger-menu"
-                    onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
-                    aria-label="Abrir menu"
-                    aria-expanded={isMobileMenuOpen}
-                >
-                    <span/><span/><span/>
-                </button>
-            </div>
+                </div>
+            </nav>
         </header>
     );
 };
