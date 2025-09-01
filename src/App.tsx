@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import WhatsAppButton from './components/WhatsAppButton';
 import ScrollToTopButton from './components/ScrollToTopButton';
+import { Analytics } from '@vercel/analytics/react';
 
 // Import page components
 import Home from './pages/Home';
@@ -77,6 +78,7 @@ const App = () => {
       <Footer setCurrentPage={setCurrentPage} />
       <WhatsAppButton />
       <ScrollToTopButton />
+      <Analytics />
     </>
   );
 };
