@@ -1,10 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 type SubmitStatus = 'idle' | 'submitting' | 'success' | 'error';
 
+// Define grecaptcha on the window type to avoid TypeScript errors
+declare global {
+    interface Window {
+        grecaptcha: any;
+        onRecaptchaSuccess: () => void;
+        onRecaptchaExpired: () => void;
+    }
+}
+
 const Contact = () => {
     const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle');
+    const [isRecaptchaVerified, setRecaptchaVerified] = useState(false);
+
+    useEffect(() => {
+        // Expose callbacks to the window object for reCAPTCHA to use
+        window.onRecaptchaSuccess = () => setRecaptchaVerified(true);
+        window.onRecaptchaExpired = () => setRecaptchaVerified(false);
+
+        // Cleanup function to remove the callbacks when the component unmounts
+        return () => {
+            delete window.onRecaptchaSuccess;
+            delete window.onRecaptchaExpired;
+        };
+    }, []);
+
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -24,10 +47,14 @@ const Contact = () => {
                 setSubmitStatus('success');
             } else {
                 setSubmitStatus('error');
+                window.grecaptcha.reset();
+                setRecaptchaVerified(false);
             }
         } catch (error) {
             console.error('Erro ao enviar formulário:', error);
             setSubmitStatus('error');
+            window.grecaptcha.reset();
+            setRecaptchaVerified(false);
         }
     };
 
@@ -68,11 +95,19 @@ const Contact = () => {
                                 <label htmlFor="mensagem">Sua Mensagem</label>
                                 <textarea id="mensagem" name="mensagem" className="form-input" rows={5} required></textarea>
                             </div>
+                            <div className="form-group recaptcha-container">
+                                <div
+                                    className="g-recaptcha"
+                                    data-sitekey="6Lewq7krAAAAAG6X-fKiZIAvAo53IKSNWAlMpyNn"
+                                    data-callback="onRecaptchaSuccess"
+                                    data-expired-callback="onRecaptchaExpired"
+                                ></div>
+                            </div>
                             <button 
                                 type="submit" 
                                 className="cta-button" 
                                 style={{ width: '100%', justifyContent: 'center' }}
-                                disabled={submitStatus === 'submitting'}
+                                disabled={submitStatus === 'submitting' || !isRecaptchaVerified}
                             >
                                 {submitStatus === 'submitting' ? 'Enviando...' : 'Enviar Mensagem'}
                             </button>
