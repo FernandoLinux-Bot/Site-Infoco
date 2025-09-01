@@ -381,16 +381,6 @@ section {
 }
 
 
-/* Contact Section */
-.contact {
-    background-color: var(--secondary-color);
-}
-.contact-content {
-    max-width: 600px;
-    margin: 2rem auto;
-    text-align: center;
-}
-
 /* Footer */
 .app-footer {
     background-color: var(--primary-color);
@@ -572,8 +562,8 @@ section {
 }
 
 
-/* Cadastro Page */
-.cadastro-page {
+/* Cadastro Page & Contact Page */
+.cadastro-page, .contact-page {
     background-color: var(--background-color);
     display: flex;
     align-items: center;
@@ -582,23 +572,27 @@ section {
     min-height: 80vh;
 }
 
-.cadastro-container {
+.cadastro-container, .contact-container {
     background-color: var(--secondary-color);
     padding: 3rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     width: 100%;
-    max-width: 500px;
+    max-width: 600px;
     text-align: center;
 }
 
-.cadastro-container h1 {
+.cadastro-container h1, .contact-container h1 {
     font-size: 2rem;
     color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.contact-container .section-subtitle {
     margin-bottom: 2rem;
 }
 
-.cadastro-form {
+.cadastro-form, .contact-form {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -621,12 +615,19 @@ section {
     border-radius: var(--border-radius);
     font-size: 1rem;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    font-family: var(--font-family);
+    line-height: 1.5;
 }
 
 .form-input:focus {
     outline: none;
     border-color: var(--accent-color);
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+textarea.form-input {
+    resize: vertical;
+    min-height: 120px;
 }
 
 
@@ -700,6 +701,10 @@ section {
     .fornecedor-hero h1,
     .product-hero h1 {
         font-size: 2.2rem;
+    }
+    
+    .cadastro-container, .contact-container {
+        padding: 2rem 1.5rem;
     }
 
     .whatsapp-fab {
