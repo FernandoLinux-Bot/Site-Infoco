@@ -29,7 +29,7 @@ const Hero = () => (
         
         <div className="avatar-container">
             <div className="avatar">
-                😊
+                <img src="/avatar-infoco.png" alt="Avatar 3D da INFOCO" />
             </div>
             <div className="avatar-message">
                 "Estamos felizes em atender você! Vamos juntos inovar a gestão pública."
