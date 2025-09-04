@@ -96,7 +96,6 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
             <nav className="header-nav">
                 <div className="container">
                     <ul className="nav-links">
-                        <li><a onClick={() => handleNavClick('fornecedor')} className="nav-link">Fornecedor</a></li>
                         <Dropdown title="Soluções">
                             <DropdownItem href="#" onClick={(e) => { e.preventDefault(); handleNavClick('sicc'); }}>SICC</DropdownItem>
                             <DropdownItem href="#" onClick={(e) => { e.preventDefault(); handleNavClick('amx-digital'); }}>AMX Digital</DropdownItem>
