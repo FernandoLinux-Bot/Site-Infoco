@@ -64,7 +64,7 @@ const cards = [
 
 const Particles = () => (
     <div className="hero-particles">
-        {Array.from({ length: 15 }).map((_, i) => (
+        {Array.from({ length: 20 }).map((_, i) => (
             <div key={i} className="particle" />
         ))}
     </div>
@@ -93,16 +93,27 @@ const Hero = () => {
                             key={`title-${index}`} 
                             variants={letterVariants}
                             animate={{
-                                y: [0, -4, 0],
+                                y: [0, -5, 0],
+                                textShadow: [
+                                    "0 0 2px rgba(28, 42, 57, 0.2)",
+                                    "0 0 10px rgba(0, 123, 255, 0.5)",
+                                    "0 0 2px rgba(28, 42, 57, 0.2)"
+                                ],
                                 transition: {
                                     delay: 1.5 + index * 0.1,
-                                    duration: 5,
+                                    duration: 4,
                                     repeat: Infinity,
-                                    repeatType: 'reverse',
+                                    repeatType: 'mirror',
                                     ease: 'easeInOut'
                                 }
                             }}
-                             whileHover={{ scale: 1.15, color: 'var(--accent-color)', transition: { duration: 0.2 } }}
+                             whileHover={{ 
+                                scale: 1.2, 
+                                color: 'var(--accent-color)', 
+                                textShadow: "0 0 16px var(--accent-color)",
+                                y: -2,
+                                transition: { duration: 0.2 }
+                            }}
                         >
                             {char}
                         </motion.span>
@@ -117,16 +128,23 @@ const Hero = () => {
                             key={`subtitle-${index}`} 
                             variants={letterVariants}
                             animate={{
-                                y: [0, 3, 0],
+                                y: [0, 4, 0],
+                                opacity: [0.8, 1, 0.8],
                                 transition: {
                                     delay: 2 + index * 0.08,
-                                    duration: 4,
+                                    duration: 3,
                                     repeat: Infinity,
-                                    repeatType: 'reverse',
+                                    repeatType: 'mirror',
                                     ease: 'easeInOut'
                                 }
                             }}
-                            whileHover={{ scale: 1.1, color: 'var(--primary-color)', transition: { duration: 0.2 } }}
+                            whileHover={{ 
+                                scale: 1.15, 
+                                color: 'var(--primary-color)',
+                                opacity: 1, 
+                                y: 0,
+                                transition: { duration: 0.2 } 
+                            }}
                         >
                             {char === ' ' ? '\u00A0' : char}
                         </motion.span>
