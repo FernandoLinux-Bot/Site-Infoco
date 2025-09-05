@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { motion, Variants } from 'framer-motion';
 
 // Main container variant to stagger children elements
@@ -65,6 +65,110 @@ const cards = [
 const Hero = () => {
     const titleText = "INFOCO".split("");
     const subtitleText = "GESTÃO PÚBLICA".split("");
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        interface Particle {
+          x: number;
+          y: number;
+          angle: number;
+          speed: number;
+          radius: number;
+          opacity: number;
+          decay: number;
+        }
+
+        class Firework {
+          x: number;
+          y: number;
+          colors: string;
+          particles: Particle[];
+
+          constructor(x: number, y: number, colors: string) {
+            this.x = x;
+            this.y = y;
+            this.colors = colors;
+            this.particles = [];
+            for (let i = 0; i < 100; i++) {
+              this.particles.push({
+                x: this.x,
+                y: this.y,
+                angle: Math.random() * 2 * Math.PI,
+                speed: Math.random() * 5 + 2,
+                radius: Math.random() * 2 + 1,
+                opacity: 1,
+                decay: Math.random() * 0.02 + 0.01
+              });
+            }
+          }
+
+          draw() {
+            this.particles.forEach(p => {
+              p.x += Math.cos(p.angle) * p.speed;
+              p.y += Math.sin(p.angle) * p.speed;
+              p.opacity -= p.decay;
+
+              if (ctx) {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, 2 * Math.PI);
+                ctx.fillStyle = `rgba(${this.colors}, ${p.opacity})`;
+                ctx.fill();
+              }
+            });
+          }
+        }
+
+        let fireworks: Firework[] = [];
+        let animationFrameId: number;
+
+        const animate = () => {
+          if (!ctx || !canvas) return;
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          if (Math.random() < 0.05) {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * (canvas.height / 2);
+            const colors = `${Math.floor(Math.random() * 255)}, 
+                            ${Math.floor(Math.random() * 255)}, 
+                            ${Math.floor(Math.random() * 255)}`;
+            fireworks.push(new Firework(x, y, colors));
+          }
+
+          fireworks.forEach((fw, index) => {
+            fw.draw();
+            fw.particles = fw.particles.filter(p => p.opacity > 0);
+            if (fw.particles.length === 0) {
+              fireworks.splice(index, 1);
+            }
+          });
+
+          animationFrameId = requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        const handleResize = () => {
+          if (canvas) {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+          }
+        };
+
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+            cancelAnimationFrame(animationFrameId);
+        }
+    }, []);
 
     return (
         <motion.section
@@ -73,6 +177,7 @@ const Hero = () => {
             initial="hidden"
             animate="visible"
         >
+            <canvas ref={canvasRef} className="hero-fireworks" />
             <div className="hero-content">
                 <motion.h1
                     className="animated-title"
@@ -85,9 +190,9 @@ const Hero = () => {
                             animate={{
                                 y: [0, -5, 0],
                                 textShadow: [
-                                    "0 0 2px rgba(255, 255, 255, 0.3)",
-                                    "0 0 10px rgba(0, 123, 255, 0.7)",
-                                    "0 0 2px rgba(255, 255, 255, 0.3)"
+                                    "0 0 2px rgba(28, 42, 57, 0.2)",
+                                    "0 0 10px rgba(0, 123, 255, 0.5)",
+                                    "0 0 2px rgba(28, 42, 57, 0.2)"
                                 ],
                                 transition: {
                                     delay: 1.5 + index * 0.1,
@@ -130,8 +235,7 @@ const Hero = () => {
                             }}
                             whileHover={{ 
                                 scale: 1.15, 
-                                color: 'var(--secondary-color)',
-                                textShadow: "0 0 12px var(--secondary-color)",
+                                color: 'var(--primary-color)',
                                 opacity: 1, 
                                 y: 0,
                                 transition: { duration: 0.2 } 
