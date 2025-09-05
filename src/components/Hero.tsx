@@ -33,7 +33,7 @@ const sentenceVariants: Variants = {
   },
 };
 
-// Variant for each individual letter animation
+// Variant for each individual letter's initial animation
 const letterVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -62,6 +62,15 @@ const cards = [
     }
 ];
 
+const Particles = () => (
+    <div className="hero-particles">
+        {Array.from({ length: 15 }).map((_, i) => (
+            <div key={i} className="particle" />
+        ))}
+    </div>
+);
+
+
 const Hero = () => {
     const titleText = "INFOCO".split("");
     const subtitleText = "GESTÃO PÚBLICA".split("");
@@ -73,13 +82,28 @@ const Hero = () => {
             initial="hidden"
             animate="visible"
         >
+            <Particles />
             <div className="hero-content">
                 <motion.h1
                     className="animated-title"
                     variants={sentenceVariants}
                 >
                     {titleText.map((char, index) => (
-                        <motion.span key={`title-${index}`} variants={letterVariants}>
+                        <motion.span 
+                            key={`title-${index}`} 
+                            variants={letterVariants}
+                            animate={{
+                                y: [0, -4, 0],
+                                transition: {
+                                    delay: 1.5 + index * 0.1,
+                                    duration: 5,
+                                    repeat: Infinity,
+                                    repeatType: 'reverse',
+                                    ease: 'easeInOut'
+                                }
+                            }}
+                             whileHover={{ scale: 1.15, color: 'var(--accent-color)', transition: { duration: 0.2 } }}
+                        >
                             {char}
                         </motion.span>
                     ))}
@@ -89,7 +113,21 @@ const Hero = () => {
                     variants={sentenceVariants}
                 >
                      {subtitleText.map((char, index) => (
-                        <motion.span key={`subtitle-${index}`} variants={letterVariants}>
+                        <motion.span 
+                            key={`subtitle-${index}`} 
+                            variants={letterVariants}
+                            animate={{
+                                y: [0, 3, 0],
+                                transition: {
+                                    delay: 2 + index * 0.08,
+                                    duration: 4,
+                                    repeat: Infinity,
+                                    repeatType: 'reverse',
+                                    ease: 'easeInOut'
+                                }
+                            }}
+                            whileHover={{ scale: 1.1, color: 'var(--primary-color)', transition: { duration: 0.2 } }}
+                        >
                             {char === ' ' ? '\u00A0' : char}
                         </motion.span>
                     ))}
