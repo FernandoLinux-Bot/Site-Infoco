@@ -3,9 +3,8 @@ import MuxPlayer from '@mux/mux-player-react';
 import AnimatedSection from './AnimatedSection';
 
 const VideoSection = () => {
-    // IMPORTANTE: Substitua 'YOUR_MUX_PLAYBACK_ID' pelo Playback ID
-    // real do seu vídeo, que você pode encontrar no painel do Mux.
-    const muxPlaybackId = "2P02m00i14qf229g12z01uhm0100d02IOX6GR00D9dGQSgV300aW19c";
+    // O Playback ID do seu vídeo foi atualizado.
+    const muxPlaybackId = "FPT9OkUxOEs02S79RkBWYebul02Ayawrfblpm8skPFW2g";
 
     return (
         <AnimatedSection id="video" className="video-section">
@@ -19,7 +18,7 @@ const VideoSection = () => {
                         playbackId={muxPlaybackId}
                         metadata={{
                             video_title: 'Apresentação INFOCO',
-                            viewer_user_id: 'user-id-1234', // Opcional: para analytics
+                            viewer_user_id: 'user-id-infoco-site', // Opcional: para analytics
                         }}
                         streamType="on-demand"
                         accentColor="#007BFF" // Cor de destaque do player
