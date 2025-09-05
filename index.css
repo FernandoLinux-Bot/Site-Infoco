@@ -257,15 +257,7 @@ section {
     position: absolute;
     inset: 0;
     z-index: -1;
-    background-image: url('/hero-background.png');
-    background-size: cover;
-    background-position: center;
-    animation: kenburns-effect 25s ease-in-out infinite alternate;
-}
-
-@keyframes kenburns-effect {
-    from { transform: scale(1); }
-    to { transform: scale(1.1); }
+    background-color: var(--primary-color);
 }
 
 .hero-content {
@@ -822,10 +814,6 @@ textarea.form-input {
     .hero {
         padding: 4rem 1.5rem;
         min-height: 75vh;
-    }
-
-    .hero::before {
-        animation: none;
     }
 
     .hero h1 {
