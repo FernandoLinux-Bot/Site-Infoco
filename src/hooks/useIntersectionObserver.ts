@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+// Fix: Import `React` to use `React.Dispatch` and `React.SetStateAction` types.
+import React, { useState, useEffect } from 'react';
 
 const useIntersectionObserver = (options: IntersectionObserverInit): [React.Dispatch<React.SetStateAction<Element | null>>, boolean] => {
     const [element, setElement] = useState<Element | null>(null);
