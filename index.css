@@ -251,12 +251,27 @@ section {
   overflow: hidden;
 }
 
+@keyframes ken-burns {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+}
+
+
 .hero::before {
     content: '';
     position: absolute;
     inset: 0;
     z-index: -1;
-    background-color: var(--background-color);
+    background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/4QAiRXhpZgAATU0AKgAAAAgAAQESAAMAAAABAAEAAAAAAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAH0A+gDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjQ0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycpS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2gAMAwEAAhEDEQA/AP38ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigA-');
+    background-size: cover;
+    background-position: center;
+    animation: ken-burns 25s ease-out infinite alternate;
 }
 
 .hero-content {
@@ -269,11 +284,11 @@ section {
 .hero h1 {
   font-family: 'Inter', sans-serif;
   font-size: 4rem;
-  color: var(--primary-color);
+  color: var(--text-light);
   margin-bottom: 0.5rem;
   font-weight: 800;
   line-height: 1.2;
-  text-shadow: none;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
 .animated-title span, .animated-subtitle span {
@@ -283,11 +298,11 @@ section {
 .hero h2 {
     font-family: 'Poppins', sans-serif;
     font-size: 1.5rem;
-    color: var(--accent-color);
+    color: var(--text-light);
     letter-spacing: 2px;
     text-transform: uppercase;
     margin-bottom: 1.5rem;
-    text-shadow: none;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .hero p {
@@ -296,8 +311,8 @@ section {
   max-width: 650px;
   margin-left: auto;
   margin-right: auto;
-  color: var(--text-color);
-  text-shadow: none;
+  color: var(--text-light);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
 .hero .cta-button {
@@ -377,77 +392,6 @@ section {
     transform: rotateY(180deg);
     font-size: 1.1rem;
 }
-
-
-/* Hero Particles */
-.hero-particles {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-}
-
-@keyframes particle-burst {
-    0% {
-        transform: translateY(0) scale(0.5);
-        opacity: 0;
-    }
-    50% {
-        transform: translateY(-50vh) scale(1.2);
-        opacity: 1;
-    }
-    100% {
-        transform: translateY(-100vh) scale(0);
-        opacity: 0;
-    }
-}
-
-.particle {
-    position: absolute;
-    bottom: -20px;
-    border-radius: 50%;
-    opacity: 0;
-    animation-name: particle-burst;
-    animation-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
-    animation-iteration-count: infinite;
-}
-
-/* Particle Colors for Fireworks Effect */
-.particle:nth-child(3n + 1) {
-    background-color: hsla(211, 100%, 70%, 0.9);
-    box-shadow: 0 0 8px 2px hsla(211, 100%, 70%, 0.5);
-}
-.particle:nth-child(3n + 2) {
-    background-color: hsla(50, 100%, 60%, 0.9);
-    box-shadow: 0 0 12px 3px hsla(50, 100%, 60%, 0.6);
-}
-.particle:nth-child(3n + 3) {
-    background-color: hsla(0, 0%, 100%, 0.9);
-    box-shadow: 0 0 10px 4px hsla(0, 0%, 100%, 0.7);
-}
-
-/* Particle properties */
-.particle:nth-child(1) { width: 8px; height: 8px; left: 15%; animation-duration: 9s; animation-delay: 0.2s; }
-.particle:nth-child(2) { width: 6px; height: 6px; left: 25%; animation-duration: 12s; animation-delay: 1.5s; }
-.particle:nth-child(3) { width: 11px; height: 11px; left: 35%; animation-duration: 7s; animation-delay: 2.1s; }
-.particle:nth-child(4) { width: 7px; height: 7px; left: 45%; animation-duration: 15s; animation-delay: 0.5s; }
-.particle:nth-child(5) { width: 9px; height: 9px; left: 55%; animation-duration: 10s; animation-delay: 3s; }
-.particle:nth-child(6) { width: 5px; height: 5px; left: 65%; animation-duration: 13s; animation-delay: 1s; }
-.particle:nth-child(7) { width: 10px; height: 10px; left: 75%; animation-duration: 8s; animation-delay: 2.5s; }
-.particle:nth-child(8) { width: 6px; height: 6px; left: 85%; animation-duration: 11s; animation-delay: 0.8s; }
-.particle:nth-child(9) { width: 8px; height: 8px; left: 5%; animation-duration: 14s; animation-delay: 4s; }
-.particle:nth-child(10) { width: 7px; height: 7px; left: 95%; animation-duration: 9s; animation-delay: 2.2s; }
-.particle:nth-child(11) { width: 9px; height: 9px; left: 20%; animation-duration: 12s; animation-delay: 5s; }
-.particle:nth-child(12) { width: 5px; height: 5px; left: 80%; animation-duration: 16s; animation-delay: 3.5s; }
-.particle:nth-child(13) { width: 12px; height: 12px; left: 50%; animation-duration: 8s; animation-delay: 1.8s; }
-.particle:nth-child(14) { width: 7px; height: 7px; left: 30%; animation-duration: 11s; animation-delay: 4.5s; }
-.particle:nth-child(15) { width: 6px; height: 6px; left: 70%; animation-duration: 14s; animation-delay: 0.1s; }
-.particle:nth-child(16) { width: 8px; height: 8px; left: 10%; animation-duration: 10s; animation-delay: 2.8s; }
-.particle:nth-child(17) { width: 10px; height: 10px; left: 90%; animation-duration: 7s; animation-delay: 1.2s; }
-.particle:nth-child(18) { width: 6px; height: 6px; left: 40%; animation-duration: 13s; animation-delay: 3.8s; }
-.particle:nth-child(19) { width: 9px; height: 9px; left: 60%; animation-duration: 9s; animation-delay: 5.5s; }
-.particle:nth-child(20) { width: 7px; height: 7px; left: 2%; animation-duration: 15s; animation-delay: 2s; }
-
 
 /* Features Section */
 .features {
