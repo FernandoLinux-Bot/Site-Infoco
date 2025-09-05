@@ -566,7 +566,7 @@ section {
     position: fixed;
     width: 60px;
     height: 60px;
-    bottom: 30px;
+    bottom: 100px;
     right: 30px;
     background-color: #25D366;
     color: #FFF;
@@ -597,7 +597,7 @@ section {
     width: 60px;
     height: 60px;
     bottom: 30px;
-    left: 30px;
+    right: 30px;
     background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
     color: #FFF;
     border-radius: 50%;
@@ -913,7 +913,7 @@ textarea.form-input {
     .whatsapp-fab {
         width: 50px;
         height: 50px;
-        bottom: 20px;
+        bottom: 80px;
         right: 20px;
     }
 
@@ -926,7 +926,7 @@ textarea.form-input {
         width: 50px;
         height: 50px;
         bottom: 20px;
-        left: 20px;
+        right: 20px;
     }
 
     .instagram-fab svg {
