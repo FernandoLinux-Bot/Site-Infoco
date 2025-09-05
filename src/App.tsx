@@ -4,6 +4,7 @@ import { motion, AnimatePresence, Transition, Variants } from 'framer-motion';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import WhatsAppButton from './components/WhatsAppButton';
+import InstagramButton from './components/InstagramButton';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
@@ -78,6 +79,7 @@ const App = () => {
       </main>
       <Footer setCurrentPage={setCurrentPage} />
       <WhatsAppButton />
+      <InstagramButton />
       <ScrollToTopButton />
       <Analytics />
       <SpeedInsights />
