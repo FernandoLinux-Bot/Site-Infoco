@@ -62,15 +62,6 @@ const cards = [
     }
 ];
 
-const Particles = () => (
-    <div className="hero-particles">
-        {Array.from({ length: 20 }).map((_, i) => (
-            <div key={i} className="particle" />
-        ))}
-    </div>
-);
-
-
 const Hero = () => {
     const titleText = "INFOCO".split("");
     const subtitleText = "GESTÃO PÚBLICA".split("");
@@ -82,7 +73,6 @@ const Hero = () => {
             initial="hidden"
             animate="visible"
         >
-            <Particles />
             <div className="hero-content">
                 <motion.h1
                     className="animated-title"
@@ -95,9 +85,9 @@ const Hero = () => {
                             animate={{
                                 y: [0, -5, 0],
                                 textShadow: [
-                                    "0 0 2px rgba(28, 42, 57, 0.2)",
-                                    "0 0 10px rgba(0, 123, 255, 0.5)",
-                                    "0 0 2px rgba(28, 42, 57, 0.2)"
+                                    "0 0 2px rgba(255, 255, 255, 0.3)",
+                                    "0 0 10px rgba(0, 123, 255, 0.7)",
+                                    "0 0 2px rgba(255, 255, 255, 0.3)"
                                 ],
                                 transition: {
                                     delay: 1.5 + index * 0.1,
@@ -140,7 +130,8 @@ const Hero = () => {
                             }}
                             whileHover={{ 
                                 scale: 1.15, 
-                                color: 'var(--primary-color)',
+                                color: 'var(--secondary-color)',
+                                textShadow: "0 0 12px var(--secondary-color)",
                                 opacity: 1, 
                                 y: 0,
                                 transition: { duration: 0.2 } 
