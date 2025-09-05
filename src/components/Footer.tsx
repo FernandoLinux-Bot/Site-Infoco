@@ -23,7 +23,7 @@ const Footer: React.FC<FooterProps> = ({ setCurrentPage }) => (
                     </svg>
                 </a>
             </div>
-            <p>&copy; {new Date().getFullYear()} INFOCO LICITAÇÕES. Todos os direitos reservados.</p>
+            <p>&copy; {new Date().getFullYear()} INFOCO GESTÃO PÚBLICA. Todos os direitos reservados.</p>
         </div>
     </footer>
 );
