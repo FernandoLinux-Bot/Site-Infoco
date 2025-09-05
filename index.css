@@ -387,10 +387,29 @@ section {
     pointer-events: none;
 }
 
+/* Video Section */
+.video-section {
+    background-color: var(--secondary-color);
+}
+
+.video-player-container {
+    max-width: 900px;
+    margin: 2rem auto 0 auto;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-hover);
+    overflow: hidden; /* Ensures the player corners are rounded */
+    border: 1px solid #EAECEF;
+}
+
+mux-player {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    height: auto;
+}
 
 /* Features Section */
 .features {
-    background-color: var(--secondary-color);
+    background-color: var(--background-color);
 }
 
 .features-grid {
