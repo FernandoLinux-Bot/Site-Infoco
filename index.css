@@ -1106,8 +1106,8 @@ textarea.form-input {
 
 .banner-illustration img {
   max-width: 24rem; /* max-w-sm */
-  border-radius: 1rem; /* rounded-2xl */
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* shadow-2xl */
+  /* Replaced box-shadow with drop-shadow for a more natural floating effect */
+  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.2));
   position: relative;
   z-index: 20;
 }
