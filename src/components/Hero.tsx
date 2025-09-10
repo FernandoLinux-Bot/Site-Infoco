@@ -65,7 +65,7 @@ export default function Hero() {
         >
           {/* Imagem principal */}
           <motion.img
-            src="/banner-image.png"
+            src="/patrao.png"
             alt="Gestão Pública"
             animate={{ y: [0, -12, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
