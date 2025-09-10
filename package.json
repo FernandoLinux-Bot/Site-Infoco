@@ -14,7 +14,8 @@
     "framer-motion": "^11.2.10",
     "@vercel/analytics": "^1.3.1",
     "@vercel/speed-insights": "^1.0.12",
-    "@mux/mux-player-react": "^2.5.1"
+    "@mux/mux-player-react": "^2.5.1",
+    "react-icons": "^5.2.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
