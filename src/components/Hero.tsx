@@ -1,276 +1,102 @@
-import React, { useRef, useEffect } from 'react';
-import { motion, Variants } from 'framer-motion';
+import { motion } from "framer-motion";
+import { MdSearch, MdDescription, MdCheckCircle, MdLink } from "react-icons/md";
 
-// Main container variant to stagger children elements
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-    },
-  },
-};
+export default function Hero() {
+  return (
+    <section className="banner-section">
+      {/* Fundo com grid animado */}
+      <div className="banner-grid-bg">
+        <motion.div
+          animate={{ x: ["0%", "-15%"], y: ["0%", "-15%"] }}
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+        />
+      </div>
 
-// Variant for simple fade-in items like paragraphs and buttons
-const itemVariants: Variants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: { type: 'spring', stiffness: 100 },
-  },
-};
-
-// Variant for the title containers (h1, h2) to stagger letters
-const sentenceVariants: Variants = {
-  hidden: { opacity: 1 }, // Parent handles initial opacity
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.06,
-    },
-  },
-};
-
-// Variant for each individual letter's initial animation
-const letterVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-        type: 'spring',
-        damping: 12,
-        stiffness: 100
-    }
-  },
-};
-
-const cards = [
-    {
-        front: { title: 'Transparência', text: 'Gestão clara e acessível.' },
-        back: { text: 'Informações em tempo real para todos os cidadãos.' }
-    },
-    {
-        front: { title: 'Licitações', text: 'Processos simplificados.' },
-        back: { text: 'Acompanhe editais e resultados de forma digital.' }
-    },
-    {
-        front: { title: 'Inovação', text: 'Tecnologia na gestão.' },
-        back: { text: 'Modernize processos com soluções inteligentes.' }
-    }
-];
-
-const Hero = () => {
-    const titleText = "INFOCO".split("");
-    const subtitleText = "GESTÃO PÚBLICA".split("");
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
-
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        interface Particle {
-          x: number;
-          y: number;
-          angle: number;
-          speed: number;
-          radius: number;
-          opacity: number;
-          decay: number;
-        }
-
-        class Firework {
-          x: number;
-          y: number;
-          colors: string;
-          particles: Particle[];
-
-          constructor(x: number, y: number, colors: string) {
-            this.x = x;
-            this.y = y;
-            this.colors = colors;
-            this.particles = [];
-            for (let i = 0; i < 100; i++) {
-              this.particles.push({
-                x: this.x,
-                y: this.y,
-                angle: Math.random() * 2 * Math.PI,
-                speed: Math.random() * 5 + 2,
-                radius: Math.random() * 2 + 1,
-                opacity: 1,
-                decay: Math.random() * 0.02 + 0.01
-              });
-            }
-          }
-
-          draw() {
-            this.particles.forEach(p => {
-              p.x += Math.cos(p.angle) * p.speed;
-              p.y += Math.sin(p.angle) * p.speed;
-              p.opacity -= p.decay;
-
-              if (ctx) {
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, 2 * Math.PI);
-                ctx.fillStyle = `rgba(${this.colors}, ${p.opacity})`;
-                ctx.fill();
-              }
-            });
-          }
-        }
-
-        let fireworks: Firework[] = [];
-        let animationFrameId: number;
-
-        const animate = () => {
-          if (!ctx || !canvas) return;
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-          if (Math.random() < 0.05) {
-            const x = Math.random() * canvas.width;
-            const y = Math.random() * (canvas.height / 2);
-            const colors = `${Math.floor(Math.random() * 255)}, 
-                            ${Math.floor(Math.random() * 255)}, 
-                            ${Math.floor(Math.random() * 255)}`;
-            fireworks.push(new Firework(x, y, colors));
-          }
-
-          fireworks.forEach((fw, index) => {
-            fw.draw();
-            fw.particles = fw.particles.filter(p => p.opacity > 0);
-            if (fw.particles.length === 0) {
-              fireworks.splice(index, 1);
-            }
-          });
-
-          animationFrameId = requestAnimationFrame(animate);
-        }
-
-        animate();
-
-        const handleResize = () => {
-          if (canvas) {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-          }
-        };
-
-        window.addEventListener("resize", handleResize);
-
-        return () => {
-            window.removeEventListener("resize", handleResize);
-            cancelAnimationFrame(animationFrameId);
-        }
-    }, []);
-
-    return (
-        <motion.section
-            className="hero"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
+      {/* Conteúdo */}
+      <div className="container banner-content">
+        {/* Texto */}
+        <motion.div
+          initial={{ y: 40, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="banner-text"
         >
-            <canvas ref={canvasRef} className="hero-fireworks" />
-            <div className="hero-content">
-                <motion.h1
-                    className="animated-title"
-                    variants={sentenceVariants}
-                >
-                    {titleText.map((char, index) => (
-                        <motion.span 
-                            key={`title-${index}`} 
-                            variants={letterVariants}
-                            animate={{
-                                y: [0, -5, 0],
-                                textShadow: [
-                                    "0 0 2px rgba(28, 42, 57, 0.2)",
-                                    "0 0 10px rgba(0, 123, 255, 0.5)",
-                                    "0 0 2px rgba(28, 42, 57, 0.2)"
-                                ],
-                                transition: {
-                                    delay: 1.5 + index * 0.1,
-                                    duration: 4,
-                                    repeat: Infinity,
-                                    repeatType: 'mirror',
-                                    ease: 'easeInOut'
-                                }
-                            }}
-                             whileHover={{ 
-                                scale: 1.2, 
-                                color: 'var(--accent-color)', 
-                                textShadow: "0 0 16px var(--accent-color)",
-                                y: -2,
-                                transition: { duration: 0.2 }
-                            }}
-                        >
-                            {char}
-                        </motion.span>
-                    ))}
-                </motion.h1>
-                <motion.h2
-                    className="animated-subtitle"
-                    variants={sentenceVariants}
-                >
-                     {subtitleText.map((char, index) => (
-                        <motion.span 
-                            key={`subtitle-${index}`} 
-                            variants={letterVariants}
-                            animate={{
-                                y: [0, 4, 0],
-                                opacity: [0.8, 1, 0.8],
-                                transition: {
-                                    delay: 2 + index * 0.08,
-                                    duration: 3,
-                                    repeat: Infinity,
-                                    repeatType: 'mirror',
-                                    ease: 'easeInOut'
-                                }
-                            }}
-                            whileHover={{ 
-                                scale: 1.15, 
-                                color: 'var(--primary-color)',
-                                opacity: 1, 
-                                y: 0,
-                                transition: { duration: 0.2 } 
-                            }}
-                        >
-                            {char === ' ' ? '\u00A0' : char}
-                        </motion.span>
-                    ))}
-                </motion.h2>
-                <motion.p variants={itemVariants}>
-                    Soluções inovadoras para modernizar a gestão pública e otimizar resultados.<br />
-                    Conheça nosso <strong>Portal de Licitações</strong>.
-                </motion.p>
-                <motion.a href="#" className="cta-button" variants={itemVariants}>
-                    Acessar Portal
-                </motion.a>
+          <motion.h1
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            Modernizando a{" "}
+            <span className="gradient-text">
+              Gestão Pública
+            </span>
+          </motion.h1>
 
-                <motion.div className="hero-cards" variants={containerVariants}>
-                    {cards.map((card, index) => (
-                        <motion.div className="hero-card" key={index} variants={itemVariants}>
-                            <div className="hero-card-inner">
-                                <div className="hero-card-front">
-                                    <h3>{card.front.title}</h3>
-                                    <p>{card.front.text}</p>
-                                </div>
-                                <div className="hero-card-back">
-                                    <p>{card.back.text}</p>
-                                </div>
-                            </div>
-                        </motion.div>
-                    ))}
-                </motion.div>
-            </div>
-        </motion.section>
-    );
-};
+          <p>
+            Simplifique processos de licitação, aumente a transparência e
+            conecte fornecedores com a administração pública de forma ágil e
+            digital.
+          </p>
 
-export default Hero;
+          <div className="banner-buttons">
+            <motion.div whileHover={{ scale: 1.05 }}>
+              <button
+                className="banner-button banner-button-primary"
+              >
+                <MdDescription className="icon" /> Cadastrar
+              </button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }}>
+              <button
+                className="banner-button banner-button-outline"
+              >
+                <MdSearch className="icon" /> Pesquisar Processos
+              </button>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* Ilustração com ícones flat animados */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="banner-illustration"
+        >
+          {/* Imagem principal */}
+          <motion.img
+            src="/banner-image.png"
+            alt="Gestão Pública"
+            animate={{ y: [0, -12, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          {/* Ícones decorativos (Flat Design) */}
+          <motion.div
+            className="banner-deco-1"
+            animate={{ y: [0, 20, 0] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <MdCheckCircle size={50} />
+          </motion.div>
+
+          <motion.div
+            className="banner-deco-2"
+            animate={{ y: [0, -20, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <MdLink size={52} />
+          </motion.div>
+
+          <motion.div
+            className="banner-deco-3"
+            animate={{ rotate: [0, 15, 0] }}
+            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <MdDescription size={46} />
+          </motion.div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
