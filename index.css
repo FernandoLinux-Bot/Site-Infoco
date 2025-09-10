@@ -4,17 +4,17 @@
 */
 
 :root {
-  --primary-color: #1C2A39; /* New Corporate Dark Blue */
+  --primary-color: #2D3748; /* Dark Charcoal */
   --secondary-color: #FFFFFF; /* White */
-  --accent-color: #007BFF; /* Brighter Blue for accents */
-  --background-color: #F8F9FA; /* Off-white */
-  --text-color: #343A40;
+  --accent-color: #4A90E2; /* Muted Blue */
+  --background-color: #F9FAFB; /* Ice White */
+  --text-color: #4A5568; /* Medium Gray */
   --text-light: #FFFFFF;
   --font-family: 'Poppins', sans-serif;
   --container-width: 1140px;
   --border-radius: 8px;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-hover: 0 12px 24px rgba(10, 37, 64, 0.15);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-hover: 0 12px 24px rgba(45, 55, 72, 0.1);
 }
 
 * {
@@ -206,7 +206,7 @@ body {
 }
 
 .cta-button:hover:not(:disabled) {
-    background-color: #0069d9;
+    background-color: #3B7BC2; /* Darker Accent */
     transform: translateY(-2px);
 }
 
@@ -993,9 +993,9 @@ textarea.form-input {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: linear-gradient(to bottom right, #1e3a8a, #1e40af, #1d4ed8); /* from-blue-900 via-blue-800 to-blue-700 */
+  background-color: var(--background-color);
   overflow: hidden;
-  color: white;
+  color: var(--text-color);
   padding: 5rem 0;
 }
 
@@ -1013,7 +1013,7 @@ textarea.form-input {
   position: absolute;
   width: 200%;
   height: 200%;
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
@@ -1037,10 +1037,11 @@ textarea.form-input {
   font-weight: 800; /* font-extrabold */
   line-height: 1.2;
   margin-bottom: 1.5rem; /* mb-6 */
+  color: var(--primary-color);
 }
 
 .banner-text .gradient-text {
-  background-image: linear-gradient(to right, #93c5fd, #22d3ee); /* from-blue-300 to-cyan-400 */
+  background-image: linear-gradient(to right, #63b3ed, #4299e1);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -1049,7 +1050,7 @@ textarea.form-input {
 .banner-text p {
   font-size: 1.125rem; /* text-lg */
   line-height: 1.75rem;
-  color: #dbeafe; /* text-blue-100 */
+  color: var(--text-color);
   margin-bottom: 2rem; /* mb-8 */
   line-height: 1.625; /* leading-relaxed */
 }
@@ -1076,21 +1077,21 @@ textarea.form-input {
 }
 
 .banner-button-primary {
-  background-color: #3b82f6; /* bg-blue-500 */
-  color: white;
+  background-color: var(--accent-color);
+  color: var(--text-light);
 }
 .banner-button-primary:hover {
-  background-color: #2563eb; /* hover:bg-blue-600 */
+  opacity: 0.9;
 }
 
 .banner-button-outline {
-  border-color: #93c5fd; /* border-blue-300 */
-  color: #93c5fd; /* text-blue-300 */
+  border-color: var(--accent-color);
+  color: var(--accent-color);
   background-color: transparent;
 }
 .banner-button-outline:hover {
-  background-color: #93c5fd; /* hover:bg-blue-300 */
-  color: #1e3a8a; /* hover:text-blue-900 */
+  background-color: var(--accent-color);
+  color: var(--text-light);
 }
 
 .banner-button .icon {
@@ -1115,19 +1116,22 @@ textarea.form-input {
   position: absolute;
   top: -3rem;
   left: -3rem;
-  color: rgba(96, 165, 250, 0.8); /* text-blue-400/80 */
+  color: var(--accent-color);
+  opacity: 0.5;
 }
 .banner-deco-2 {
   position: absolute;
   bottom: 1.5rem;
   right: -3rem;
-  color: rgba(34, 211, 238, 0.8); /* text-cyan-400/80 */
+  color: var(--accent-color);
+  opacity: 0.5;
 }
 .banner-deco-3 {
   position: absolute;
   top: 5rem;
   right: -4rem;
-  color: rgba(147, 197, 253, 0.8); /* text-blue-300/80 */
+  color: var(--accent-color);
+  opacity: 0.5;
 }
 
 
