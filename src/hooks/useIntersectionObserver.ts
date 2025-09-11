@@ -1,4 +1,4 @@
-// Fix: Import `React` to use `React.Dispatch` and `React.SetStateAction` types.
+// Fix: Import `React` to make the React namespace available for type annotations.
 import React, { useState, useEffect } from 'react';
 
 const useIntersectionObserver = (options: IntersectionObserverInit): [React.Dispatch<React.SetStateAction<Element | null>>, boolean] => {
