@@ -10,6 +10,7 @@
   --background-color: #F9FAFB; /* Ice White */
   --text-color: #4A5568; /* Medium Gray */
   --text-light: #FFFFFF;
+  --nav-background-color: #F0F4F8; /* Ice white with a bluish tone */
   --font-family: 'Poppins', sans-serif;
   --container-width: 1140px;
   --border-radius: 8px;
@@ -58,7 +59,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 70px;
+  height: 90px;
 }
 
 .header-actions {
@@ -68,7 +69,7 @@ body {
 }
 
 .header-nav {
-    background-color: var(--primary-color);
+    background-color: var(--nav-background-color);
 }
 
 .header-nav .container {
@@ -87,7 +88,7 @@ body {
 }
 
 .logo img {
-    max-height: 40px;
+    max-height: 55px;
     width: auto;
 }
 
@@ -104,8 +105,8 @@ body {
 
 .nav-link {
   text-decoration: none;
-  color: var(--text-light);
-  font-weight: 500;
+  color: var(--primary-color);
+  font-weight: 700;
   transition: color 0.3s ease, opacity 0.3s ease;
   padding: 0.5rem 1rem;
   display: flex;
@@ -117,6 +118,7 @@ body {
 
 .nav-link:hover {
   opacity: 1;
+  color: var(--accent-color);
 }
 
 .nav-link svg {
@@ -168,15 +170,15 @@ body {
     display: block;
     padding: 0.75rem 1.5rem;
     text-decoration: none;
-    color: var(--text-color);
-    font-weight: 400;
+    color: var(--primary-color);
+    font-weight: 700;
     transition: background-color 0.2s ease, color 0.2s ease;
     cursor: pointer;
 }
 
 .dropdown-item:hover {
     background-color: var(--background-color);
-    color: var(--primary-color);
+    color: var(--accent-color);
 }
 
 .cta-button {
@@ -854,7 +856,7 @@ textarea.form-input {
         right: -100%;
         width: 70%;
         height: 100vh;
-        background-color: var(--primary-color);
+        background-color: var(--nav-background-color);
         flex-direction: column;
         justify-content: center;
         align-items: center;
