@@ -11,13 +11,12 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 
 // Import page components
 import Home from './pages/Home';
+import Solucoes from './pages/Solucoes';
 import Fornecedor from './pages/Fornecedor';
 import Cadastro from './pages/Cadastro';
-import Sicc from './pages/Sicc';
-import AmxDigital from './pages/AmxDigital';
 import Contact from './pages/Contact';
 
-type Page = 'home' | 'fornecedor' | 'cadastro' | 'sicc' | 'amx-digital' | 'contact';
+type Page = 'home' | 'solucoes' | 'fornecedor' | 'cadastro' | 'contact';
 
 // Fix: Add `Variants` type to ensure the object structure is correct.
 const pageVariants: Variants = {
@@ -44,14 +43,12 @@ const App = () => {
 
   const renderPage = () => {
     switch (currentPage) {
+      case 'solucoes':
+        return <Solucoes />;
       case 'fornecedor':
         return <Fornecedor setCurrentPage={setCurrentPage} />;
       case 'cadastro':
         return <Cadastro />;
-      case 'sicc':
-        return <Sicc setCurrentPage={setCurrentPage} />;
-      case 'amx-digital':
-        return <AmxDigital setCurrentPage={setCurrentPage} />;
       case 'contact':
         return <Contact />;
       case 'home':
