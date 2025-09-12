@@ -21,7 +21,7 @@ const VideoSection = () => {
                             viewer_user_id: 'user-id-infoco-site', // Opcional: para analytics
                         }}
                         streamType="on-demand"
-                        accentColor="#4A90E2" // Cor de destaque do player
+                        accentColor="#2563EB" // Cor de destaque do player
                     />
                 </div>
             </div>
