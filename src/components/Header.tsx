@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-type Page = 'home' | 'solucoes' | 'institucional' | 'fornecedor' | 'cadastro' | 'contact';
+type Page = 'home' | 'solucoes' | 'institucional' | 'fornecedor' | 'cadastro' | 'contact' | 'noticias';
 
 interface HeaderProps {
     setCurrentPage: (page: Page) => void;
@@ -27,6 +27,7 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
                         <li><a onClick={() => handleNavClick('home')} className="nav-link">Home</a></li>
                         <li><a onClick={() => handleNavClick('solucoes')} className="nav-link">Soluções</a></li>
                         <li><a onClick={() => handleNavClick('institucional')} className="nav-link">Institucional</a></li>
+                        <li><a onClick={() => handleNavClick('noticias')} className="nav-link">Notícias</a></li>
                         <li><a onClick={() => handleNavClick('contact')} className="nav-link">Contato</a></li>
                     </ul>
                 </nav>
