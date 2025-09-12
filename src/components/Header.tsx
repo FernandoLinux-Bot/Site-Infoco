@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 type Page = 'home' | 'fornecedor' | 'cadastro' | 'sicc' | 'amx-digital' | 'contact';
 
@@ -21,29 +21,34 @@ interface DropdownProps {
 }
 const Dropdown: React.FC<DropdownProps> = ({ title, children }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const timeoutRef = useRef<number | null>(null);
+    const dropdownRef = useRef<HTMLLIElement>(null);
 
-    const handleMouseEnter = () => {
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-            timeoutRef.current = null;
-        }
-        setIsOpen(true);
+    // Toggle dropdown on click
+    const toggleDropdown = (e: React.MouseEvent) => {
+        e.preventDefault();
+        setIsOpen(prev => !prev);
     };
+    
+    // Close dropdown on click outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
 
-    const handleMouseLeave = () => {
-        timeoutRef.current = window.setTimeout(() => {
-            setIsOpen(false);
-        }, 200);
-    };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     return (
         <li
-            className="nav-item dropdown"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            ref={dropdownRef}
+            className={`nav-item dropdown ${isOpen ? 'open' : ''}`}
         >
-            <a href="#" className="nav-link" onClick={(e) => e.preventDefault()}>
+            <a href="#" className="nav-link" onClick={toggleDropdown}>
                 {title}
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
@@ -71,7 +76,7 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
              <div className="container header-container">
                 <div className="header-left">
                     <a onClick={() => handleNavClick('home')} className="logo" style={{ cursor: 'pointer' }}>
-                        <img src="/Logo.png" alt="INFOCO Logo" />
+                        <img src="/favicon.svg" alt="INFOCO Logo" />
                     </a>
                 </div>
                 <nav className="header-center">
