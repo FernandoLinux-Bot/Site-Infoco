@@ -6,7 +6,7 @@
 :root {
   --primary-color: #1F2937; /* Darker Charcoal */
   --secondary-color: #FFFFFF; /* White */
-  --accent-color: #0D253F; /* Navy Blue */
+  --accent-color: #2563EB; /* Vibrant Blue */
   --background-color: #F9FAFB; /* Ice White */
   --text-color: #374151; /* Medium Gray */
   --text-light: #FFFFFF;
@@ -130,7 +130,7 @@ body {
     transition: transform 0.3s ease;
 }
 
-.dropdown:hover .nav-link svg {
+.dropdown.open .nav-link svg {
     transform: rotate(180deg);
 }
 
@@ -192,7 +192,7 @@ body {
     border-radius: var(--border-radius);
     text-decoration: none;
     font-weight: 500;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    transition: filter 0.3s ease, transform 0.3s ease;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -211,7 +211,7 @@ body {
 }
 
 .cta-button:hover:not(:disabled) {
-    background-color: #081A2F; /* Darker Navy */
+    filter: brightness(0.9);
     transform: translateY(-2px);
 }
 
@@ -308,13 +308,13 @@ section {
 .hero .cta-button {
     padding: 14px 30px;
     border-radius: 50px;
-    box-shadow: 0 5px 15px rgba(13, 37, 63, 0.4);
+    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
     background: var(--accent-color);
     font-size: 1.1rem;
     font-weight: 600;
 }
 .hero .cta-button:hover {
-    box-shadow: 0 8px 20px rgba(13, 37, 63, 0.5);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.5);
     transform: translateY(-3px) scale(1.05);
 }
 
@@ -662,7 +662,7 @@ mux-player {
     opacity: 0;
     visibility: hidden;
     transform: translateY(20px);
-    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease, filter 0.3s ease;
     z-index: 999;
 }
 
@@ -673,7 +673,7 @@ mux-player {
 }
 
 .scroll-to-top:hover {
-    background-color: #081A2F; /* Darker Navy */
+    filter: brightness(0.9);
 }
 
 .scroll-to-top svg {
@@ -819,7 +819,7 @@ mux-player {
 .form-input:focus {
     outline: none;
     border-color: var(--accent-color);
-    box-shadow: 0 0 0 3px rgba(13, 37, 63, 0.25);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
 }
 
 textarea.form-input {
@@ -903,6 +903,28 @@ textarea.form-input {
     .hero-card {
         width: 100%;
         max-width: 400px;
+    }
+
+    .nav-links .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        border: none;
+        background-color: transparent;
+        padding: 0.5rem 0 0 1.5rem;
+        margin-top: 0;
+        min-width: auto;
+        width: 100%;
+    }
+
+    .nav-links .dropdown-item {
+        padding: 0.75rem 0;
+        text-align: center;
+        color: var(--primary-color);
+    }
+
+    .nav-links .dropdown-item:hover {
+        background-color: transparent;
+        color: var(--accent-color);
     }
 }
 
@@ -1051,10 +1073,7 @@ textarea.form-input {
 }
 
 .banner-text .gradient-text {
-  background-image: linear-gradient(to right, #63b3ed, var(--accent-color));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--accent-color);
 }
 
 .banner-text p {
