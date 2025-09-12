@@ -6,7 +6,7 @@
 :root {
   --primary-color: #1F2937; /* Darker Charcoal */
   --secondary-color: #FFFFFF; /* White */
-  --accent-color: #4338CA; /* Vibrant Indigo */
+  --accent-color: #0D253F; /* Navy Blue */
   --background-color: #F9FAFB; /* Ice White */
   --text-color: #374151; /* Medium Gray */
   --text-light: #FFFFFF;
@@ -211,7 +211,7 @@ body {
 }
 
 .cta-button:hover:not(:disabled) {
-    background-color: #3730A3; /* Darker Accent */
+    background-color: #081A2F; /* Darker Navy */
     transform: translateY(-2px);
 }
 
@@ -308,13 +308,13 @@ section {
 .hero .cta-button {
     padding: 14px 30px;
     border-radius: 50px;
-    box-shadow: 0 5px 15px rgba(67, 56, 202, 0.4);
+    box-shadow: 0 5px 15px rgba(13, 37, 63, 0.4);
     background: var(--accent-color);
     font-size: 1.1rem;
     font-weight: 600;
 }
 .hero .cta-button:hover {
-    box-shadow: 0 8px 20px rgba(67, 56, 202, 0.5);
+    box-shadow: 0 8px 20px rgba(13, 37, 63, 0.5);
     transform: translateY(-3px) scale(1.05);
 }
 
@@ -673,7 +673,7 @@ mux-player {
 }
 
 .scroll-to-top:hover {
-    background-color: #0069d9;
+    background-color: #081A2F; /* Darker Navy */
 }
 
 .scroll-to-top svg {
@@ -819,7 +819,7 @@ mux-player {
 .form-input:focus {
     outline: none;
     border-color: var(--accent-color);
-    box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.25);
+    box-shadow: 0 0 0 3px rgba(13, 37, 63, 0.25);
 }
 
 textarea.form-input {
