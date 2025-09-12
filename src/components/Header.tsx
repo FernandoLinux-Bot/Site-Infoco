@@ -1,98 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 
-type Page = 'home' | 'fornecedor' | 'cadastro' | 'sicc' | 'amx-digital' | 'contact';
+type Page = 'home' | 'solucoes' | 'fornecedor' | 'cadastro' | 'contact';
 
 interface HeaderProps {
     setCurrentPage: (page: Page) => void;
 }
-
-interface DropdownItemProps {
-    href: string;
-    children: React.ReactNode;
-    onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
-}
-const DropdownItem: React.FC<DropdownItemProps> = ({ href, children, onClick }) => (
-    <li><a href={href} className="dropdown-item" onClick={onClick}>{children}</a></li>
-);
-
-interface DropdownProps {
-    title: string;
-    children: React.ReactNode;
-}
-const Dropdown: React.FC<DropdownProps> = ({ title, children }) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const dropdownRef = useRef<HTMLLIElement>(null);
-
-    const isMobile = () => typeof window !== 'undefined' && window.innerWidth <= 992;
-
-    const handleToggle = (e: React.MouseEvent) => {
-        e.preventDefault();
-        if (isMobile()) {
-            setIsOpen(prev => !prev);
-        }
-    };
-
-    const handleMouseEnter = () => {
-        if (!isMobile()) {
-            setIsOpen(true);
-        }
-    };
-
-    const handleMouseLeave = () => {
-        if (!isMobile()) {
-            setIsOpen(false);
-        }
-    };
-    
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setIsOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
-    
-    const childrenWithProps = React.Children.map(children, child => {
-        if (React.isValidElement(child)) {
-            // Fix: Cast `child.props` to `any` to allow accessing `onClick`. This is necessary
-            // because `child.props` can be of type `unknown` when iterating over React children,
-            // and this change safely resolves the TypeScript error.
-            const originalOnClick = (child.props as any).onClick;
-            return React.cloneElement(child as React.ReactElement<any>, {
-                onClick: (e: React.MouseEvent<HTMLAnchorElement>) => {
-                    if (originalOnClick) originalOnClick(e);
-                    setIsOpen(false); // Close dropdown on item click
-                }
-            });
-        }
-        return child;
-    });
-
-    return (
-        <li
-            ref={dropdownRef}
-            className={`nav-item dropdown ${isOpen ? 'open' : ''}`}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-        >
-            <a href="#" className="nav-link" onClick={handleToggle}>
-                {title}
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
-                </svg>
-            </a>
-            {isOpen && (
-                <ul className="dropdown-menu">
-                    {childrenWithProps}
-                </ul>
-            )}
-        </li>
-    );
-};
 
 const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -112,10 +24,8 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
                 </div>
                 <nav className="header-center">
                     <ul className="nav-links">
-                        <Dropdown title="Soluções">
-                            <DropdownItem href="#" onClick={(e) => { e.preventDefault(); handleNavClick('sicc'); }}>SICC</DropdownItem>
-                            <DropdownItem href="#" onClick={(e) => { e.preventDefault(); handleNavClick('amx-digital'); }}>AMX Digital</DropdownItem>
-                        </Dropdown>
+                        <li><a onClick={() => handleNavClick('home')} className="nav-link">Home</a></li>
+                        <li><a onClick={() => handleNavClick('solucoes')} className="nav-link">Soluções</a></li>
                         <li><a onClick={() => handleNavClick('cadastro')} className="nav-link">Cadastrar</a></li>
                         <li><a onClick={() => handleNavClick('contact')} className="nav-link">Contato</a></li>
                     </ul>
