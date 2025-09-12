@@ -29,14 +29,17 @@ const Noticias = () => {
 
     useEffect(() => {
         const fetchNews = async () => {
-            if (!process.env.API_KEY) {
+            // Fix: Use `process.env.API_KEY` as per the coding guidelines.
+            const apiKey = process.env.API_KEY;
+
+            if (!apiKey) {
                 setError("A chave da API não foi configurada.");
                 setLoading(false);
                 return;
             }
 
             try {
-                const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+                const ai = new GoogleGenAI({ apiKey: apiKey });
 
                 const response = await ai.models.generateContent({
                     model: "gemini-2.5-flash",
