@@ -23,32 +23,63 @@ const Dropdown: React.FC<DropdownProps> = ({ title, children }) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLLIElement>(null);
 
-    // Toggle dropdown on click
-    const toggleDropdown = (e: React.MouseEvent) => {
+    const isMobile = () => typeof window !== 'undefined' && window.innerWidth <= 992;
+
+    const handleToggle = (e: React.MouseEvent) => {
         e.preventDefault();
-        setIsOpen(prev => !prev);
+        if (isMobile()) {
+            setIsOpen(prev => !prev);
+        }
+    };
+
+    const handleMouseEnter = () => {
+        if (!isMobile()) {
+            setIsOpen(true);
+        }
+    };
+
+    const handleMouseLeave = () => {
+        if (!isMobile()) {
+            setIsOpen(false);
+        }
     };
     
-    // Close dropdown on click outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
                 setIsOpen(false);
             }
         };
-
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+    
+    const childrenWithProps = React.Children.map(children, child => {
+        if (React.isValidElement(child)) {
+            // Fix: Cast `child.props` to `any` to allow accessing `onClick`. This is necessary
+            // because `child.props` can be of type `unknown` when iterating over React children,
+            // and this change safely resolves the TypeScript error.
+            const originalOnClick = (child.props as any).onClick;
+            return React.cloneElement(child as React.ReactElement<any>, {
+                onClick: (e: React.MouseEvent<HTMLAnchorElement>) => {
+                    if (originalOnClick) originalOnClick(e);
+                    setIsOpen(false); // Close dropdown on item click
+                }
+            });
+        }
+        return child;
+    });
 
     return (
         <li
             ref={dropdownRef}
             className={`nav-item dropdown ${isOpen ? 'open' : ''}`}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
         >
-            <a href="#" className="nav-link" onClick={toggleDropdown}>
+            <a href="#" className="nav-link" onClick={handleToggle}>
                 {title}
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
@@ -56,7 +87,7 @@ const Dropdown: React.FC<DropdownProps> = ({ title, children }) => {
             </a>
             {isOpen && (
                 <ul className="dropdown-menu">
-                    {children}
+                    {childrenWithProps}
                 </ul>
             )}
         </li>
@@ -76,7 +107,7 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
              <div className="container header-container">
                 <div className="header-left">
                     <a onClick={() => handleNavClick('home')} className="logo" style={{ cursor: 'pointer' }}>
-                        <img src="/favicon.svg" alt="INFOCO Logo" />
+                        <img src="/Logo.png" alt="INFOCO Logo" />
                     </a>
                 </div>
                 <nav className="header-center">
