@@ -1388,3 +1388,136 @@ textarea.form-input {
 .solution-modal-content strong {
     color: var(--primary-color);
 }
+
+/* --- Institutional Page Styles --- */
+
+.institucional-hero {
+    padding: 6rem 0;
+    text-align: center;
+    background-color: var(--background-color);
+}
+
+.institucional-hero h1 {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.institucional-hero p {
+    font-size: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto 2rem auto;
+}
+
+.institucional-content {
+    padding: 5rem 0;
+}
+
+.content-block {
+    margin-bottom: 5rem;
+}
+
+.content-block .section-title {
+    text-align: left;
+    margin-bottom: 2rem;
+}
+
+.content-block .section-title::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background-color: var(--accent-color);
+    margin-top: 0.5rem;
+}
+
+.content-text {
+    max-width: 900px;
+}
+
+.content-text p {
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.content-text strong {
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.content-block-highlight {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    padding: 4rem 2rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+    margin-bottom: 5rem;
+}
+
+.content-block-highlight .section-title {
+    color: var(--secondary-color);
+    margin-bottom: 2rem;
+}
+
+.content-block-highlight .content-text p {
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.content-block-highlight .content-text strong {
+    color: var(--secondary-color);
+    opacity: 1;
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.value-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    background-color: var(--secondary-color);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #EAECEF;
+}
+
+.value-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+}
+
+.value-card-icon {
+    font-size: 1.5rem;
+    color: var(--accent-color);
+    margin-top: 0.2rem;
+}
+
+.value-card-content h3 {
+    font-size: 1.25rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .institucional-hero h1 {
+        font-size: 2.2rem;
+    }
+    .content-block .section-title {
+        text-align: center;
+    }
+     .content-block .section-title::after {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
