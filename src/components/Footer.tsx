@@ -1,6 +1,6 @@
 import React from 'react';
 
-type Page = 'home' | 'solucoes' | 'institucional' | 'fornecedor' | 'cadastro' | 'contact';
+type Page = 'home' | 'solucoes' | 'institucional' | 'fornecedor' | 'cadastro' | 'contact' | 'noticias';
 
 interface FooterProps {
     setCurrentPage: (page: Page) => void;
@@ -23,6 +23,7 @@ const Footer: React.FC<FooterProps> = ({ setCurrentPage }) => (
                         <li><a style={{cursor: 'pointer'}} onClick={() => setCurrentPage('home')}>Início</a></li>
                         <li><a style={{cursor: 'pointer'}} onClick={() => setCurrentPage('solucoes')}>Soluções</a></li>
                         <li><a style={{cursor: 'pointer'}} onClick={() => setCurrentPage('institucional')}>Institucional</a></li>
+                        <li><a style={{cursor: 'pointer'}} onClick={() => setCurrentPage('noticias')}>Notícias</a></li>
                         <li><a style={{cursor: 'pointer'}} onClick={() => setCurrentPage('contact')}>Contato</a></li>
                     </ul>
                 </div>
