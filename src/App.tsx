@@ -16,8 +16,9 @@ import Institucional from './pages/Institucional';
 import Fornecedor from './pages/Fornecedor';
 import Cadastro from './pages/Cadastro';
 import Contact from './pages/Contact';
+import Noticias from './pages/Noticias';
 
-type Page = 'home' | 'solucoes' | 'institucional' | 'fornecedor' | 'cadastro' | 'contact';
+type Page = 'home' | 'solucoes' | 'institucional' | 'fornecedor' | 'cadastro' | 'contact' | 'noticias';
 
 // Fix: Add `Variants` type to ensure the object structure is correct.
 const pageVariants: Variants = {
@@ -54,6 +55,8 @@ const App = () => {
         return <Cadastro />;
       case 'contact':
         return <Contact />;
+      case 'noticias':
+        return <Noticias />;
       case 'home':
       default:
         return <Home />;
