@@ -548,7 +548,7 @@ mux-player {
 
 .footer-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr 2fr;
+    grid-template-columns: 2fr 1fr 1fr 2fr;
     gap: 3rem;
     text-align: left;
     width: 100%;
@@ -597,13 +597,22 @@ mux-player {
     font-size: 1rem;
 }
 
+.footer-address {
+    margin-top: 2rem;
+    font-style: normal;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    opacity: 0.8;
+}
+
 .footer-bottom {
     padding-top: 2rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     width: 100%;
+    text-align: center;
 }
 
 .footer-bottom p {
