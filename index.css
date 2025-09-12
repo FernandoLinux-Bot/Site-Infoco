@@ -4,13 +4,13 @@
 */
 
 :root {
-  --primary-color: #2D3748; /* Dark Charcoal */
+  --primary-color: #1F2937; /* Darker Charcoal */
   --secondary-color: #FFFFFF; /* White */
-  --accent-color: #4A90E2; /* Muted Blue */
+  --accent-color: #4338CA; /* Vibrant Indigo */
   --background-color: #F9FAFB; /* Ice White */
-  --text-color: #4A5568; /* Medium Gray */
+  --text-color: #374151; /* Medium Gray */
   --text-light: #FFFFFF;
-  --nav-background-color: #F0F4F8; /* Ice white with a bluish tone */
+  --nav-background-color: #FFFFFF; /* Nav is now white */
   --font-family: 'Poppins', sans-serif;
   --container-width: 1140px;
   --border-radius: 8px;
@@ -46,35 +46,38 @@ body {
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background-color: var(--secondary-color);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
   transition: all 0.3s ease-in-out;
 }
 
-.header-top {
-  background-color: var(--secondary-color);
-  border-bottom: 1px solid #e5e7eb;
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 80px;
 }
 
-.header-top-container {
+.header-left {
+  flex: 1 0 0;
+}
+
+.header-center {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+}
+
+.header-right {
+  flex: 1 0 0;
+  display: flex;
+  justify-content: flex-end;
   align-items: center;
-  height: 90px;
 }
 
 .header-actions {
     display: flex;
     align-items: center;
     gap: 1rem;
-}
-
-.header-nav {
-    background-color: var(--nav-background-color);
-}
-
-.header-nav .container {
-    display: flex;
-    justify-content: center;
 }
 
 .logo {
@@ -208,7 +211,7 @@ body {
 }
 
 .cta-button:hover:not(:disabled) {
-    background-color: #3B7BC2; /* Darker Accent */
+    background-color: #3730A3; /* Darker Accent */
     transform: translateY(-2px);
 }
 
@@ -305,13 +308,13 @@ section {
 .hero .cta-button {
     padding: 14px 30px;
     border-radius: 50px;
-    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+    box-shadow: 0 5px 15px rgba(67, 56, 202, 0.4);
     background: var(--accent-color);
     font-size: 1.1rem;
     font-weight: 600;
 }
 .hero .cta-button:hover {
-    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.5);
+    box-shadow: 0 8px 20px rgba(67, 56, 202, 0.5);
     transform: translateY(-3px) scale(1.05);
 }
 
@@ -816,7 +819,7 @@ mux-player {
 .form-input:focus {
     outline: none;
     border-color: var(--accent-color);
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.25);
 }
 
 textarea.form-input {
@@ -850,19 +853,24 @@ textarea.form-input {
 
 /* Mobile Responsiveness */
 @media (max-width: 992px) {
+    .header-center {
+        display: none;
+    }
+
     .nav-links {
         position: fixed;
         top: 0;
         right: -100%;
         width: 70%;
         height: 100vh;
-        background-color: var(--nav-background-color);
+        background-color: var(--secondary-color);
         flex-direction: column;
         justify-content: center;
         align-items: center;
         gap: 2rem;
         transition: right 0.4s ease-in-out;
         box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+        z-index: 1000;
     }
     
     .nav-open .nav-links {
@@ -1043,7 +1051,7 @@ textarea.form-input {
 }
 
 .banner-text .gradient-text {
-  background-image: linear-gradient(to right, #63b3ed, #4299e1);
+  background-image: linear-gradient(to right, #63b3ed, var(--accent-color));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
