@@ -160,13 +160,21 @@ body {
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     list-style: none;
-    padding: 1rem 0 0.5rem;
-    margin-top: 0;
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
     min-width: 200px;
-    opacity: 1;
-    visibility: visible;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
     z-index: 1001;
     border: 1px solid #eee;
+}
+
+.dropdown.open .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
 
 .dropdown-item {
@@ -174,7 +182,7 @@ body {
     padding: 0.75rem 1.5rem;
     text-decoration: none;
     color: var(--primary-color);
-    font-weight: 700;
+    font-weight: 500;
     transition: background-color 0.2s ease, color 0.2s ease;
     cursor: pointer;
 }
@@ -1191,4 +1199,192 @@ textarea.form-input {
   .banner-illustration img {
     max-width: 28rem; /* lg:max-w-md */
   }
+}
+
+/* --- Solutions Page Styles --- */
+
+.solutions-page {
+    background-color: var(--background-color);
+}
+
+.solutions-hero {
+    padding: 6rem 0;
+    text-align: center;
+    background-color: var(--secondary-color);
+}
+
+.solutions-hero h1 {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.solutions-hero p {
+    font-size: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto 2rem auto;
+}
+
+.solutions-tabs-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.solutions-tab {
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    opacity: 0.7;
+    position: relative;
+    transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.solutions-tab::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: var(--accent-color);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.solutions-tab.active {
+    color: var(--accent-color);
+    opacity: 1;
+}
+
+.solutions-tab.active::after {
+    transform: scaleX(1);
+}
+
+.solutions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+}
+
+.solution-card {
+    background-color: var(--secondary-color);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    border: 1px solid #EAECEF;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.solution-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+}
+
+.solution-card-icon {
+    width: 50px;
+    height: 50px;
+    color: var(--accent-color);
+    margin-bottom: 1.5rem;
+}
+
+.solution-card h3 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.solution-card p {
+    flex-grow: 1;
+    margin-bottom: 1.5rem;
+}
+
+.solution-card-button {
+    background: none;
+    border: none;
+    color: var(--accent-color);
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    padding: 0;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.solution-card-button:hover {
+    color: var(--primary-color);
+}
+
+
+/* Modal Styles */
+.solution-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.solution-modal-content {
+    background-color: var(--secondary-color);
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.solution-modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: var(--text-color);
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.solution-modal-close:hover {
+    opacity: 1;
+}
+
+.solution-modal-content h2 {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+}
+
+.solution-modal-content p, .solution-modal-content li {
+    line-height: 1.8;
+    margin-bottom: 1rem;
+}
+
+.solution-modal-content ul {
+    list-style-position: inside;
+    padding-left: 1rem;
+}
+
+.solution-modal-content strong {
+    color: var(--primary-color);
 }
