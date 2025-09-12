@@ -27,7 +27,6 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
                         <li><a onClick={() => handleNavClick('home')} className="nav-link">Home</a></li>
                         <li><a onClick={() => handleNavClick('solucoes')} className="nav-link">Soluções</a></li>
                         <li><a onClick={() => handleNavClick('institucional')} className="nav-link">Institucional</a></li>
-                        <li><a onClick={() => handleNavClick('cadastro')} className="nav-link">Cadastrar</a></li>
                         <li><a onClick={() => handleNavClick('contact')} className="nav-link">Contato</a></li>
                     </ul>
                 </nav>
