@@ -24,7 +24,6 @@ const Dropdown: React.FC<DropdownProps> = ({ title, children }) => {
     const timeoutRef = useRef<number | null>(null);
 
     const handleMouseEnter = () => {
-        // If there's a pending timeout to close the menu, clear it
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
             timeoutRef.current = null;
@@ -33,10 +32,9 @@ const Dropdown: React.FC<DropdownProps> = ({ title, children }) => {
     };
 
     const handleMouseLeave = () => {
-        // Set a timer to close the dropdown after a short delay
         timeoutRef.current = window.setTimeout(() => {
             setIsOpen(false);
-        }, 200); // A 200ms delay provides a smoother user experience
+        }, 200);
     };
 
     return (
@@ -70,11 +68,23 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
 
     return (
         <header className={`app-header ${isMobileMenuOpen ? 'nav-open' : ''}`}>
-             <div className="header-top">
-                <div className="container header-top-container">
+             <div className="container header-container">
+                <div className="header-left">
                     <a onClick={() => handleNavClick('home')} className="logo" style={{ cursor: 'pointer' }}>
                         <img src="/Logo.png" alt="INFOCO Logo" />
                     </a>
+                </div>
+                <nav className="header-center">
+                    <ul className="nav-links">
+                        <Dropdown title="Soluções">
+                            <DropdownItem href="#" onClick={(e) => { e.preventDefault(); handleNavClick('sicc'); }}>SICC</DropdownItem>
+                            <DropdownItem href="#" onClick={(e) => { e.preventDefault(); handleNavClick('amx-digital'); }}>AMX Digital</DropdownItem>
+                        </Dropdown>
+                        <li><a onClick={() => handleNavClick('cadastro')} className="nav-link">Cadastrar</a></li>
+                        <li><a onClick={() => handleNavClick('contact')} className="nav-link">Contato</a></li>
+                    </ul>
+                </nav>
+                <div className="header-right">
                     <div className="header-actions">
                          <a href="#" className="cta-button desktop-cta">
                             Acessar Plataforma
@@ -93,18 +103,6 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
                     </div>
                 </div>
             </div>
-            <nav className="header-nav">
-                <div className="container">
-                    <ul className="nav-links">
-                        <Dropdown title="Soluções">
-                            <DropdownItem href="#" onClick={(e) => { e.preventDefault(); handleNavClick('sicc'); }}>SICC</DropdownItem>
-                            <DropdownItem href="#" onClick={(e) => { e.preventDefault(); handleNavClick('amx-digital'); }}>AMX Digital</DropdownItem>
-                        </Dropdown>
-                        <li><a onClick={() => handleNavClick('cadastro')} className="nav-link">Cadastrar</a></li>
-                        <li><a onClick={() => handleNavClick('contact')} className="nav-link">Contato</a></li>
-                    </ul>
-                </div>
-            </nav>
         </header>
     );
 };
