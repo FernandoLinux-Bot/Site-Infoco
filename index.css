@@ -1708,8 +1708,107 @@ textarea.form-input {
     margin-bottom: 0.5rem;
 }
 
+/* --- Notícias Page Styles --- */
+
+.noticias-hero {
+    padding: 6rem 0;
+    text-align: center;
+    background-color: var(--background-color);
+}
+
+.noticias-hero h1 {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.noticias-hero p {
+    font-size: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto 2rem auto;
+}
+
+.noticias-page {
+    padding: 3rem 0 5rem 0;
+}
+
+.loading-spinner, .error-message {
+    text-align: center;
+    font-size: 1.2rem;
+    padding: 4rem 0;
+    color: var(--text-color);
+}
+
+.error-message {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+}
+
+.noticias-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+.news-card {
+    background-color: var(--secondary-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    border: 1px solid #EAECEF;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+.news-card-content {
+    padding: 1.5rem;
+}
+
+.news-card-source {
+    display: inline-block;
+    background-color: var(--accent-color);
+    color: var(--text-light);
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+.news-card h3 {
+    font-size: 1.25rem;
+    color: var(--primary-color);
+    line-height: 1.4;
+    margin: 0;
+}
+
+.news-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    background-color: var(--background-color);
+    color: var(--accent-color);
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.news-card:hover .news-card-footer {
+    background-color: var(--accent-color);
+    color: var(--text-light);
+}
+
+
 @media (max-width: 768px) {
-    .institucional-hero h1 {
+    .institucional-hero h1, .noticias-hero h1 {
         font-size: 2.2rem;
     }
     .content-block .section-title {
@@ -1718,5 +1817,8 @@ textarea.form-input {
      .content-block .section-title::after {
         margin-left: auto;
         margin-right: auto;
+    }
+    .noticias-grid {
+        grid-template-columns: 1fr;
     }
 }
