@@ -1,7 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { motion, Variants } from 'framer-motion';
-import FlipCard from '../components/AnimatedCard';
-import { FaAward } from 'react-icons/fa';
+import InfoCard from '../components/InfoCard';
+import { FaAward, FaBullseye, FaHeart, FaLightbulb, FaBuilding } from 'react-icons/fa';
 
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -29,27 +29,25 @@ const values = [
     { icon: <FaAward />, title: 'Responsabilidade Social', description: 'Acreditamos que cada melhoria na gestão pública reflete diretamente na qualidade de vida da população.' }
 ];
 
+const metaData = [
+    {
+        icon: <FaLightbulb />,
+        title: 'Eficiência',
+        description: 'Empoderar gestores com ferramentas modernas, simples e seguras, capazes de otimizar recursos e processos.',
+    },
+    {
+        icon: <FaBullseye />,
+        title: 'Transparência',
+        description: 'Fortalecer a confiança entre governo e sociedade, tornando cada processo administrativo mais claro e acessível.',
+    },
+    {
+        icon: <FaHeart />,
+        title: 'Humanização',
+        description: 'Construir pontes entre tecnologia e cidadania, tornando cada serviço público mais próximo do cidadão.',
+    }
+];
+
 const Institucional = () => {
-    const spotlightRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        const spotlightEl = spotlightRef.current;
-        if (!spotlightEl) return;
-
-        const handleMouseMove = (event: MouseEvent) => {
-            const { clientX, clientY } = event;
-            const { left, top } = spotlightEl.getBoundingClientRect();
-            spotlightEl.style.setProperty('--mouse-x', `${clientX - left}px`);
-            spotlightEl.style.setProperty('--mouse-y', `${clientY - top}px`);
-        };
-
-        spotlightEl.addEventListener('mousemove', handleMouseMove);
-
-        return () => {
-            spotlightEl.removeEventListener('mousemove', handleMouseMove);
-        };
-    }, []);
-
     return (
         <>
             <motion.section
@@ -76,7 +74,13 @@ const Institucional = () => {
                     <motion.div className="content-block" variants={itemVariants}>
                         <h2 className="section-title">Quem Somos</h2>
                         <div className="institutional-grid">
-                            <FlipCard />
+                            <div className="identity-card">
+                                <div className="identity-card-icon-wrapper">
+                                    <FaBuilding />
+                                </div>
+                                <h3>Parceiros da Gestão Pública</h3>
+                                <p>"Unimos tecnologia, conhecimento e experiência para entregar confiança, segurança e resultados."</p>
+                            </div>
                             <div className="content-text">
                                 <p>Na Infoco Gestão Pública, acreditamos que a tecnologia é uma aliada estratégica para transformar a administração pública em um espaço mais eficiente, transparente e próximo do cidadão.</p>
                                 <p>Somos uma empresa especializada no desenvolvimento de soluções em software voltadas exclusivamente para a gestão pública, oferecendo ferramentas que simplificam processos, ampliam o controle administrativo e fortalecem a tomada de decisão.</p>
@@ -88,15 +92,23 @@ const Institucional = () => {
                     </motion.div>
 
                     {/* Nossa Meta */}
-                    <motion.div ref={spotlightRef} className="content-block-highlight" variants={itemVariants}>
+                    <motion.div className="content-block" variants={itemVariants}>
                         <h2 className="section-title">Nossa Meta</h2>
-                        <div className="content-text">
-                           <p>Na Infoco Gestão Pública, nossa meta é clara: ser referência nacional em tecnologia aplicada à gestão pública, oferecendo soluções que transformem a administração em um processo mais eficiente, transparente e humano.</p>
-                           <p>Queremos empoderar gestores com ferramentas modernas, simples e seguras, capazes de otimizar recursos e fortalecer a confiança entre governo e sociedade.</p>
-                           <p>Nossa meta não se limita a desenvolver softwares. Ela está em construir pontes entre tecnologia e cidadania, tornando cada processo administrativo mais ágil, cada decisão mais fundamentada e cada serviço público mais acessível ao cidadão.</p>
-                           <strong>Infoco Gestão Pública: a meta é transformar gestão em resultado.</strong>
+                        <p className="section-subtitle" style={{ textAlign: 'left', marginLeft: 0, maxWidth: '900px' }}>
+                            Nossa meta é clara: ser referência nacional em tecnologia aplicada à gestão pública, oferecendo soluções que transformem a administração em um processo mais eficiente, transparente e humano.
+                        </p>
+                        <div className="meta-grid">
+                            {metaData.map((item, index) => (
+                                <InfoCard 
+                                    key={index}
+                                    icon={item.icon}
+                                    title={item.title}
+                                    description={item.description}
+                                />
+                            ))}
                         </div>
                     </motion.div>
+
 
                     {/* Nossos Valores */}
                      <motion.div className="content-block" variants={itemVariants}>
