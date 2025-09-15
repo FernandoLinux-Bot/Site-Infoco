@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { motion, Variants } from 'framer-motion';
-import FlipCard from '../components/FlipCard';
+import FlipCard from '../components/AnimatedCard';
 import { FaAward } from 'react-icons/fa';
 
 const containerVariants: Variants = {
