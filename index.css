@@ -1847,6 +1847,16 @@ textarea.form-input {
     color: var(--text-light);
 }
 
+.noticias-fallback-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 1rem;
+    min-height: 50vh;
+}
+
 
 @media (max-width: 768px) {
     .institucional-hero h1, .noticias-hero h1 {
