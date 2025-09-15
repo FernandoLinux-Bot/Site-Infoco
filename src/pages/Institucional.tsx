@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { motion, Variants } from 'framer-motion';
-import AnimatedCard from '../components/AnimatedCard';
+import FlipCard from '../components/FlipCard';
 import { FaAward } from 'react-icons/fa';
 
 const containerVariants: Variants = {
@@ -76,7 +76,7 @@ const Institucional = () => {
                     <motion.div className="content-block" variants={itemVariants}>
                         <h2 className="section-title">Quem Somos</h2>
                         <div className="institutional-grid">
-                            <AnimatedCard />
+                            <FlipCard />
                             <div className="content-text">
                                 <p>Na Infoco Gestão Pública, acreditamos que a tecnologia é uma aliada estratégica para transformar a administração pública em um espaço mais eficiente, transparente e próximo do cidadão.</p>
                                 <p>Somos uma empresa especializada no desenvolvimento de soluções em software voltadas exclusivamente para a gestão pública, oferecendo ferramentas que simplificam processos, ampliam o controle administrativo e fortalecem a tomada de decisão.</p>
