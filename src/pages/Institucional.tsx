@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { motion, Variants } from 'framer-motion';
 import AnimatedCard from '../components/AnimatedCard';
+import { FaAward } from 'react-icons/fa';
 
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -20,15 +21,35 @@ const itemVariants: Variants = {
 };
 
 const values = [
-    { icon: '🔹', title: 'Ética e Transparência', description: 'Agimos com responsabilidade e clareza em todas as relações, fortalecendo a confiança entre gestão pública e sociedade.' },
-    { icon: '🔹', title: 'Inovação com Propósito', description: 'Desenvolvemos soluções tecnológicas que simplificam processos e geram impacto social positivo.' },
-    { icon: '🔹', title: 'Compromisso com o Cliente', description: 'Somos parceiros estratégicos dos gestores públicos, oferecendo suporte próximo, personalizado e contínuo.' },
-    { icon: '🔹', title: 'Excelência e Qualidade', description: 'Buscamos constantemente superar expectativas, garantindo softwares seguros, modernos e eficientes.' },
-    { icon: '🔹', title: 'Valorização das Pessoas', description: 'Respeitamos e reconhecemos nossos colaboradores, clientes e cidadãos como protagonistas da transformação pública.' },
-    { icon: '🔹', title: 'Responsabilidade Social', description: 'Acreditamos que cada melhoria na gestão pública reflete diretamente na qualidade de vida da população.' }
+    { icon: <FaAward />, title: 'Ética e Transparência', description: 'Agimos com responsabilidade e clareza em todas as relações, fortalecendo a confiança entre gestão pública e sociedade.' },
+    { icon: <FaAward />, title: 'Inovação com Propósito', description: 'Desenvolvemos soluções tecnológicas que simplificam processos e geram impacto social positivo.' },
+    { icon: <FaAward />, title: 'Compromisso com o Cliente', description: 'Somos parceiros estratégicos dos gestores públicos, oferecendo suporte próximo, personalizado e contínuo.' },
+    { icon: <FaAward />, title: 'Excelência e Qualidade', description: 'Buscamos constantemente superar expectativas, garantindo softwares seguros, modernos e eficientes.' },
+    { icon: <FaAward />, title: 'Valorização das Pessoas', description: 'Respeitamos e reconhecemos nossos colaboradores, clientes e cidadãos como protagonistas da transformação pública.' },
+    { icon: <FaAward />, title: 'Responsabilidade Social', description: 'Acreditamos que cada melhoria na gestão pública reflete diretamente na qualidade de vida da população.' }
 ];
 
 const Institucional = () => {
+    const spotlightRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const spotlightEl = spotlightRef.current;
+        if (!spotlightEl) return;
+
+        const handleMouseMove = (event: MouseEvent) => {
+            const { clientX, clientY } = event;
+            const { left, top } = spotlightEl.getBoundingClientRect();
+            spotlightEl.style.setProperty('--mouse-x', `${clientX - left}px`);
+            spotlightEl.style.setProperty('--mouse-y', `${clientY - top}px`);
+        };
+
+        spotlightEl.addEventListener('mousemove', handleMouseMove);
+
+        return () => {
+            spotlightEl.removeEventListener('mousemove', handleMouseMove);
+        };
+    }, []);
+
     return (
         <>
             <motion.section
@@ -67,7 +88,7 @@ const Institucional = () => {
                     </motion.div>
 
                     {/* Nossa Meta */}
-                    <motion.div className="content-block-highlight" variants={itemVariants}>
+                    <motion.div ref={spotlightRef} className="content-block-highlight" variants={itemVariants}>
                         <h2 className="section-title">Nossa Meta</h2>
                         <div className="content-text">
                            <p>Na Infoco Gestão Pública, nossa meta é clara: ser referência nacional em tecnologia aplicada à gestão pública, oferecendo soluções que transformem a administração em um processo mais eficiente, transparente e humano.</p>
