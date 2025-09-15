@@ -1662,50 +1662,94 @@ textarea.form-input {
     font-size: 1.2rem;
 }
 
-.content-block-highlight {
-    background-color: var(--primary-color);
+.identity-card {
+    background: var(--primary-color);
     color: var(--text-light);
-    padding: 5rem 2rem;
+    padding: 3rem 2.5rem;
     border-radius: var(--border-radius);
     text-align: center;
-    margin-bottom: 5rem;
-    position: relative;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }
 
-.content-block-highlight::before {
-    content: '';
-    position: absolute;
-    left: var(--mouse-x, 50%);
-    top: var(--mouse-y, 50%);
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(37, 99, 235, 0.3) 0%, transparent 70%);
-    transform: translate(-50%, -50%);
-    transition: left 0.6s ease-out, top 0.6s ease-out;
-    pointer-events: none;
+.identity-card-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1.5rem;
+    background-color: var(--accent-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-light);
+    font-size: 2.5rem;
 }
 
-.content-block-highlight .content-text {
-    position: relative; /* ensure text is on top of the spotlight */
-    z-index: 2;
-}
-
-.content-block-highlight .section-title {
+.identity-card h3 {
+    font-size: 1.8rem;
     color: var(--secondary-color);
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
 }
 
-.content-block-highlight .content-text p {
-    color: rgba(255, 255, 255, 0.9);
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
+.identity-card p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    line-height: 1.6;
 }
 
-.content-block-highlight .content-text strong {
-    color: var(--secondary-color);
-    opacity: 1;
+.meta-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.info-card {
+    background-color: var(--secondary-color);
+    border-radius: var(--border-radius);
+    padding: 2.5rem 2rem;
+    text-align: center;
+    border: 1px solid #EAECEF;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--accent-color);
+}
+
+.info-card-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 1.5rem auto;
+    color: var(--text-light);
+    background-color: var(--accent-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.info-card-icon-wrapper svg {
+    width: 30px;
+    height: 30px;
+}
+
+.info-card-title {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 0.75rem;
+}
+
+.info-card-description {
+    font-size: 1rem;
+    line-height: 1.6;
 }
 
 .values-grid {
@@ -1722,18 +1766,15 @@ textarea.form-input {
     padding: 2rem;
     border-radius: var(--border-radius);
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-    /* Glassmorphism styles */
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: var(--secondary-color);
+    border: 1px solid #EAECEF;
     box-shadow: var(--shadow);
 }
 
 .value-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 16px 30px rgba(37, 99, 235, 0.2);
-    border-color: rgba(37, 99, 235, 0.5);
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--accent-color);
 }
 
 .value-card-icon {
@@ -1874,83 +1915,6 @@ textarea.form-input {
     }
 }
 
-/* --- Flip Card Styles --- */
-.flip-card-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
-.flip-card {
-  width: 290px;
-  height: 300px;
-  perspective: 1000px;
-  background-color: transparent;
-}
-
-.flip-card-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  transition: transform 0.8s;
-  transform-style: preserve-3d;
-}
-
-.flip-card:hover .flip-card-inner {
-  transform: rotateY(180deg);
-}
-
-.flip-card-front,
-.flip-card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  -webkit-backface-visibility: hidden; /* Safari */
-  backface-visibility: hidden;
-  border-radius: var(--border-radius);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-  box-shadow: var(--shadow);
-}
-
-.flip-card-front {
-  background-color: var(--primary-color);
-  color: var(--text-light);
-}
-
-.flip-card-front h3 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-}
-
-.flip-card-front p {
-    font-size: 1.1rem;
-    opacity: 0.9;
-}
-
-.flip-card-back {
-  background: linear-gradient(145deg, var(--accent-color) 0%, #1a4db3 100%);
-  color: var(--text-light);
-  transform: rotateY(180deg);
-}
-
-.flip-card-back h4 {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-    opacity: 0.8;
-}
-
-.flip-card-back p {
-    font-size: 1.5rem;
-    font-weight: 600;
-    font-style: italic;
-}
-
 /* --- Institutional Page Grid --- */
 .institutional-grid {
     display: grid;
@@ -1961,7 +1925,7 @@ textarea.form-input {
 
 @media (min-width: 992px) {
     .institutional-grid {
-        grid-template-columns: 320px 1fr; /* Fixed width for card, flexible for text */
+        grid-template-columns: 1fr 2fr; /* Card takes 1/3, text takes 2/3 */
         gap: 4rem; /* More gap on desktop */
     }
 }
