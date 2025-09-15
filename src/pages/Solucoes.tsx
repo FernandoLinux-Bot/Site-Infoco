@@ -230,14 +230,19 @@ const Solucoes = () => {
                             transition={{ duration: 0.3 }}
                         >
                             {solutionsData[activeTab].map(solution => (
-                                <motion.div key={solution.id} className="solution-card" variants={itemVariants}>
+                                <motion.div
+                                    key={solution.id}
+                                    className="solution-card"
+                                    variants={itemVariants}
+                                    onClick={() => solution.details && setSelectedSolution(solution)}
+                                >
                                     <div className="solution-card-icon">{solution.icon}</div>
                                     <h3>{solution.title}</h3>
                                     <p>{solution.description}</p>
                                     {solution.details && (
-                                        <button className="solution-card-button" onClick={() => setSelectedSolution(solution)}>
+                                        <div className="solution-card-button">
                                             Saiba Mais <FaArrowRight />
-                                        </button>
+                                        </div>
                                     )}
                                 </motion.div>
                             ))}
