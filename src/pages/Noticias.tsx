@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, Variants } from 'framer-motion';
 import { GoogleGenAI, Type } from '@google/genai';
 import { FaExternalLinkAlt } from 'react-icons/fa';
+import NotFoundAnimation from '../components/NotFoundAnimation';
 
 interface NewsArticle {
     title: string;
@@ -135,6 +136,9 @@ const Noticias = () => {
 
             <section className="noticias-page">
                 <div className="container">
+                    <div style={{ marginBottom: '4rem' }}>
+                        <NotFoundAnimation />
+                    </div>
                     {renderContent()}
                 </div>
             </section>
