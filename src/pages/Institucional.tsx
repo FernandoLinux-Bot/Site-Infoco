@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, Variants } from 'framer-motion';
-import InfoCard from '../components/InfoCard';
+import InfoCard from '../components/InfoCard.tsx';
 import { FaAward, FaBullseye, FaHeart, FaLightbulb, FaBuilding } from 'react-icons/fa';
 
 const containerVariants: Variants = {
