@@ -11,7 +11,7 @@
   --background-color: #F9FAFB; /* Ice White background */
   --text-color: #4B5563; /* Gray for body text */
   --text-light: #FFFFFF; /* Text on dark/accent backgrounds */
-  --footer-background: #1F2937; /* Dark footer */
+  --footer-background: var(--accent-color); /* Vibrant Blue footer */
   
   --border-color: #E5E7EB; /* Light border color */
   --font-family: 'Poppins', sans-serif;
@@ -1179,8 +1179,8 @@ section {
     line-height: 1.6;
 }
 .footer-address a {
-    color: var(--accent-color);
-    text-decoration: none;
+    color: var(--text-light);
+    text-decoration: underline;
 }
 .footer-bottom {
     padding: 1.5rem 0;
