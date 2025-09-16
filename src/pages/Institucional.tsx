@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import InfoCard from '../components/InfoCard.tsx';
 import { FaAward, FaBullseye, FaHeart, FaLightbulb, FaBuilding } from 'react-icons/fa';
+import BannerAnimado from '../components/BannerAnimado.tsx';
 
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -61,6 +62,8 @@ const Institucional = () => {
                     <p>Unimos tecnologia, conhecimento e experiência para entregar confiança, segurança e resultados.</p>
                 </div>
             </motion.section>
+
+            <BannerAnimado />
 
             <motion.section 
                 className="institucional-content"
