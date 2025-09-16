@@ -18,17 +18,17 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
         <header className={`app-header ${isMobileMenuOpen ? 'nav-open' : ''}`}>
              <div className="container header-container">
                 <div className="header-left">
-                    <a onClick={() => handleNavClick('home')} className="logo" style={{ cursor: 'pointer' }}>
+                    <button onClick={() => handleNavClick('home')} className="logo">
                         <img src="/Logo.png" alt="INFOCO Logo" />
-                    </a>
+                    </button>
                 </div>
                 <nav className="header-center">
                     <ul className="nav-links">
-                        <li><a onClick={() => handleNavClick('home')} className="nav-link">Home</a></li>
-                        <li><a onClick={() => handleNavClick('solucoes')} className="nav-link">Soluções</a></li>
-                        <li><a onClick={() => handleNavClick('institucional')} className="nav-link">Institucional</a></li>
-                        <li><a onClick={() => handleNavClick('noticias')} className="nav-link">Notícias</a></li>
-                        <li><a onClick={() => handleNavClick('contact')} className="nav-link">Contato</a></li>
+                        <li><button onClick={() => handleNavClick('home')} className="nav-link">Home</button></li>
+                        <li><button onClick={() => handleNavClick('solucoes')} className="nav-link">Soluções</button></li>
+                        <li><button onClick={() => handleNavClick('institucional')} className="nav-link">Institucional</button></li>
+                        <li><button onClick={() => handleNavClick('noticias')} className="nav-link">Notícias</button></li>
+                        <li><button onClick={() => handleNavClick('contact')} className="nav-link">Contato</button></li>
                     </ul>
                 </nav>
                 <div className="header-right">
