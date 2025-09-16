@@ -1,26 +1,28 @@
 {
-  "name": "infoco-licitacoes",
+  "name": "infoco-portal-contratos",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@google/genai": "^0.14.0",
-    "@mux/mux-player-react": "^2.5.1",
-    "@vercel/analytics": "^1.3.1",
-    "@vercel/speed-insights": "^1.0.12",
-    "framer-motion": "^11.2.10",
+    "@vercel/blob": "^0.23.4",
+    "@vercel/postgres": "^0.9.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-icons": "^5.2.1"
+    "chart.js": "^4.4.3",
+    "react-chartjs-2": "^5.2.0",
+    "resend": "^3.4.0",
+    "framer-motion": "^11.0.8",
+    "lucide-react": "^0.344.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
+    "@vercel/node": "^3.2.0",
     "@vitejs/plugin-react": "^4.0.3",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
