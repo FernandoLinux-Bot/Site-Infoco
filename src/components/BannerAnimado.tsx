@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { FaStar, FaMicrochip, FaChartBar, FaShieldAlt } from "react-icons/fa";
+import { FaLandmark, FaMicrochip, FaChartBar, FaShieldAlt } from "react-icons/fa";
 
 export default function BannerAnimado() {
   return (
@@ -29,11 +29,11 @@ export default function BannerAnimado() {
       {/* Ícone principal animado */}
       <motion.div
         initial={{ opacity: 0, scale: 0.5 }}
-        animate={{ opacity: 1, scale: 1, rotate: [0, 10, -10, 0] }}
-        transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
+        animate={{ opacity: 1, scale: 1, rotate: [0, 5, -5, 0] }}
+        transition={{ duration: 3, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
         className="banner-main-icon"
       >
-        <FaStar className="banner-sparkles-icon" />
+        <FaLandmark className="banner-sparkles-icon" />
       </motion.div>
 
       {/* Conteúdo principal */}
@@ -43,7 +43,7 @@ export default function BannerAnimado() {
         transition={{ duration: 1 }}
         className="banner-title"
       >
-        Soluções Completas para a Gestão Pública
+        Parceiros da Gestão Pública
       </motion.h1>
       
       <motion.p
@@ -52,8 +52,8 @@ export default function BannerAnimado() {
         transition={{ duration: 1, delay: 0.5 }}
         className="banner-subtitle-text"
       >
-        Tecnologia e inovação para transformar a administração pública, garantindo
-        eficiência, transparência e economia.
+        Unimos tecnologia, conhecimento e experiência para entregar confiança,
+        segurança e resultados.
       </motion.p>
 
       {/* Ícones representativos animados em cascata + brilho */}
