@@ -1,8 +1,12 @@
 import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import InfoCard from '../components/InfoCard.tsx';
-import { FaAward, FaBullseye, FaHeart, FaLightbulb, FaBuilding } from 'react-icons/fa';
+import { 
+    FaBullseye, FaHeart, FaLightbulb, FaBuilding,
+    FaBalanceScale, FaHandshake, FaTrophy, FaUsers, FaGlobeAmericas
+} from 'react-icons/fa';
 import BannerAnimado from '../components/BannerAnimado.tsx';
+import AnimatedIdentityCard from '../components/AnimatedIdentityCard.tsx';
 
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -22,12 +26,12 @@ const itemVariants: Variants = {
 };
 
 const values = [
-    { icon: <FaAward />, title: 'Ética e Transparência', description: 'Agimos com responsabilidade e clareza em todas as relações, fortalecendo a confiança entre gestão pública e sociedade.' },
-    { icon: <FaAward />, title: 'Inovação com Propósito', description: 'Desenvolvemos soluções tecnológicas que simplificam processos e geram impacto social positivo.' },
-    { icon: <FaAward />, title: 'Compromisso com o Cliente', description: 'Somos parceiros estratégicos dos gestores públicos, oferecendo suporte próximo, personalizado e contínuo.' },
-    { icon: <FaAward />, title: 'Excelência e Qualidade', description: 'Buscamos constantemente superar expectativas, garantindo softwares seguros, modernos e eficientes.' },
-    { icon: <FaAward />, title: 'Valorização das Pessoas', description: 'Respeitamos e reconhecemos nossos colaboradores, clientes e cidadãos como protagonistas da transformação pública.' },
-    { icon: <FaAward />, title: 'Responsabilidade Social', description: 'Acreditamos que cada melhoria na gestão pública reflete diretamente na qualidade de vida da população.' }
+    { icon: <FaBalanceScale />, title: 'Ética e Transparência', description: 'Agimos com responsabilidade e clareza em todas as relações, fortalecendo a confiança entre gestão pública e sociedade.' },
+    { icon: <FaLightbulb />, title: 'Inovação com Propósito', description: 'Desenvolvemos soluções tecnológicas que simplificam processos e geram impacto social positivo.' },
+    { icon: <FaHandshake />, title: 'Compromisso com o Cliente', description: 'Somos parceiros estratégicos dos gestores públicos, oferecendo suporte próximo, personalizado e contínuo.' },
+    { icon: <FaTrophy />, title: 'Excelência e Qualidade', description: 'Buscamos constantemente superar expectativas, garantindo softwares seguros, modernos e eficientes.' },
+    { icon: <FaUsers />, title: 'Valorização das Pessoas', description: 'Respeitamos e reconhecemos nossos colaboradores, clientes e cidadãos como protagonistas da transformação pública.' },
+    { icon: <FaGlobeAmericas />, title: 'Responsabilidade Social', description: 'Acreditamos que cada melhoria na gestão pública reflete diretamente na qualidade de vida da população.' }
 ];
 
 const metaData = [
@@ -65,13 +69,7 @@ const Institucional = () => {
                     <motion.div className="content-block" variants={itemVariants}>
                         <h2 className="section-title">Quem Somos</h2>
                         <div className="institutional-grid">
-                            <div className="identity-card">
-                                <div className="identity-card-icon-wrapper">
-                                    <FaBuilding />
-                                </div>
-                                <h3>Parceiros da Gestão Pública</h3>
-                                <p>"Unimos tecnologia, conhecimento e experiência para entregar confiança, segurança e resultados."</p>
-                            </div>
+                            <AnimatedIdentityCard />
                             <div className="content-text">
                                 <p>Na Infoco Gestão Pública, acreditamos que a tecnologia é uma aliada estratégica para transformar a administração pública em um espaço mais eficiente, transparente e próximo do cidadão.</p>
                                 <p>Somos uma empresa especializada no desenvolvimento de soluções em software voltadas exclusivamente para a gestão pública, oferecendo ferramentas que simplificam processos, ampliam o controle administrativo e fortalecem a tomada de decisão.</p>
