@@ -20,23 +20,23 @@ const Footer: React.FC<FooterProps> = ({ setCurrentPage }) => (
                 <div className="footer-column">
                     <h4>Navegação</h4>
                     <ul className="footer-links">
-                        <li><a style={{cursor: 'pointer'}} onClick={() => setCurrentPage('home')}>Início</a></li>
-                        <li><a style={{cursor: 'pointer'}} onClick={() => setCurrentPage('solucoes')}>Soluções</a></li>
-                        <li><a style={{cursor: 'pointer'}} onClick={() => setCurrentPage('institucional')}>Institucional</a></li>
-                        <li><a style={{cursor: 'pointer'}} onClick={() => setCurrentPage('noticias')}>Notícias</a></li>
-                        <li><a style={{cursor: 'pointer'}} onClick={() => setCurrentPage('contact')}>Contato</a></li>
+                        <li><button className="footer-link" onClick={() => setCurrentPage('home')}>Início</button></li>
+                        <li><button className="footer-link" onClick={() => setCurrentPage('solucoes')}>Soluções</button></li>
+                        <li><button className="footer-link" onClick={() => setCurrentPage('institucional')}>Institucional</button></li>
+                        <li><button className="footer-link" onClick={() => setCurrentPage('noticias')}>Notícias</button></li>
+                        <li><button className="footer-link" onClick={() => setCurrentPage('contact')}>Contato</button></li>
                     </ul>
                 </div>
                 <div className="footer-column">
                     <h4>Demais links</h4>
                     <ul className="footer-links">
-                        <li><a href="#" style={{cursor: 'pointer'}}>FAQ</a></li>
-                        <li><a href="#" style={{cursor: 'pointer'}}>Trabalhe Conosco</a></li>
-                        <li><a href="#" style={{cursor: 'pointer'}}>Crie sua conta grátis</a></li>
-                        <li><a href="#" style={{cursor: 'pointer'}}>LGPD</a></li>
-                        <li><a href="#" style={{cursor: 'pointer'}}>Política de Qualidade</a></li>
-                        <li><a href="#" style={{cursor: 'pointer'}}>Política de Privacidade</a></li>
-                        <li><a href="#" style={{cursor: 'pointer'}}>Código de Conduta e Ética</a></li>
+                        <li><a href="#" className="footer-link">FAQ</a></li>
+                        <li><a href="#" className="footer-link">Trabalhe Conosco</a></li>
+                        <li><a href="#" className="footer-link">Crie sua conta grátis</a></li>
+                        <li><a href="#" className="footer-link">LGPD</a></li>
+                        <li><a href="#" className="footer-link">Política de Qualidade</a></li>
+                        <li><a href="#" className="footer-link">Política de Privacidade</a></li>
+                        <li><a href="#" className="footer-link">Código de Conduta e Ética</a></li>
                     </ul>
                 </div>
                 <div className="footer-column footer-contact">
