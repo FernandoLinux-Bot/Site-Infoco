@@ -51,18 +51,6 @@ const metaData = [
 const Institucional = () => {
     return (
         <>
-            <motion.section
-                className="institucional-hero"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-            >
-                <div className="container">
-                    <h1>Parceiros da Gestão Pública</h1>
-                    <p>Unimos tecnologia, conhecimento e experiência para entregar confiança, segurança e resultados.</p>
-                </div>
-            </motion.section>
-
             <BannerAnimado />
 
             <motion.section 
