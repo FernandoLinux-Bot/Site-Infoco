@@ -86,7 +86,14 @@ const Noticias = () => {
         }
 
         if (articles.length === 0) {
-            return <p className="section-subtitle">Nenhuma notícia encontrada no momento.</p>;
+            return (
+                <div className="not-found-container">
+                    <NotFoundAnimation />
+                    <p className="section-subtitle" style={{ marginTop: '2rem' }}>
+                        Nenhuma notícia encontrada no momento.
+                    </p>
+                </div>
+            );
         }
 
         return (
@@ -136,9 +143,6 @@ const Noticias = () => {
 
             <section className="noticias-page">
                 <div className="container">
-                    <div style={{ marginBottom: '4rem' }}>
-                        <NotFoundAnimation />
-                    </div>
                     {renderContent()}
                 </div>
             </section>
