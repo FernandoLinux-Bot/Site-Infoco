@@ -1,88 +1,65 @@
-import { motion } from "framer-motion";
-import { FaLandmark, FaMicrochip, FaChartBar, FaShieldAlt } from "react-icons/fa";
+import { motion, Variants } from "framer-motion";
+import { FaLandmark } from "react-icons/fa";
+
+// Fix: Add Variants type to ensure the object structure is correct for framer-motion.
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.3,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+// Fix: Add Variants type to fix type incompatibility for `transition` prop.
+const itemVariants: Variants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+    },
+  },
+};
+
+// Fix: Add Variants type to fix type incompatibility for `transition` prop.
+const iconVariants: Variants = {
+  hidden: { scale: 0.5, opacity: 0 },
+  visible: {
+    scale: 1,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      damping: 15,
+      stiffness: 100,
+    },
+  },
+};
+
 
 export default function BannerAnimado() {
   return (
-    <section className="banner-animado">
-      {/* Fundo animado com shapes e partículas */}
-      <div className="banner-animado-bg">
-        <motion.div
-          className="banner-shape-1"
-          animate={{
-            x: [0, 120, -120, 0],
-            y: [0, -80, 80, 0],
-            rotate: [0, 45, -45, 0],
-          }}
-          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="banner-shape-2"
-          animate={{
-            x: [0, -150, 150, 0],
-            y: [0, 100, -100, 0],
-            scale: [1, 1.2, 0.8, 1],
-          }}
-          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-        />
-      </div>
-
-      {/* Ícone principal animado */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.5 }}
-        animate={{ opacity: 1, scale: 1, rotate: [0, 5, -5, 0] }}
-        transition={{ duration: 3, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
-        className="banner-main-icon"
-      >
-        <FaLandmark className="banner-sparkles-icon" />
+    <motion.section
+      className="hero-card-section"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.div className="hero-card-icon-wrapper" variants={iconVariants}>
+        <FaLandmark className="hero-card-icon" />
       </motion.div>
 
-      {/* Conteúdo principal */}
-      <motion.h1
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-        className="banner-title"
-      >
+      <motion.h1 className="hero-card-title" variants={itemVariants}>
         Parceiros da Gestão Pública
       </motion.h1>
       
-      <motion.p
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 0.5 }}
-        className="banner-subtitle-text"
-      >
-        Unimos tecnologia, conhecimento e experiência para entregar confiança,
-        segurança e resultados.
+      <motion.p className="hero-card-subtitle" variants={itemVariants}>
+        "Unimos tecnologia, conhecimento e experiência para entregar confiança, segurança e resultados."
       </motion.p>
-
-      {/* Ícones representativos animados em cascata + brilho */}
-      <div className="banner-features-grid">
-        {[{
-          icon: <FaMicrochip className="banner-feature-icon" />, label: "Inovação Tecnológica"
-        }, {
-          icon: <FaChartBar className="banner-feature-icon" />, label: "Eficiência e Resultados"
-        }, {
-          icon: <FaShieldAlt className="banner-feature-icon" />, label: "Transparência e Segurança"
-        }].map((item, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1 + index * 0.3 }}
-            whileHover={{ scale: 1.1, rotate: index % 2 === 0 ? 5 : -5 }}
-            className="banner-feature-item"
-          >
-            <motion.div
-              animate={{ opacity: [1, 0.6, 1] }}
-              transition={{ duration: 2, repeat: Infinity, delay: index * 0.5 }}
-            >
-              {item.icon}
-            </motion.div>
-            <p className="banner-feature-label">{item.label}</p>
-          </motion.div>
-        ))}
-      </div>
-    </section>
+    </motion.section>
   );
 }
