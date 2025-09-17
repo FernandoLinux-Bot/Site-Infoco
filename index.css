@@ -240,6 +240,12 @@ body.mobile-nav-is-open {
 .mobile-nav-cta .cta-button {
   width: 100%;
   justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.mobile-nav-cta .cta-text-wrapper {
+  text-align: center;
 }
 
 
