@@ -5,7 +5,7 @@ import {
     FaBullseye, FaHeart, FaLightbulb, FaBuilding,
     FaBalanceScale, FaHandshake, FaTrophy, FaUsers, FaGlobeAmericas
 } from 'react-icons/fa';
-import BannerAnimado from '../components/BannerAnimado.tsx';
+import BannerGestaoPublica from '../components/BannerGestaoPublica.tsx';
 import AnimatedIdentityCard from '../components/AnimatedIdentityCard.tsx';
 
 const containerVariants: Variants = {
@@ -55,7 +55,7 @@ const metaData = [
 const Institucional = () => {
     return (
         <>
-            <BannerAnimado />
+            <BannerGestaoPublica />
 
             <motion.section 
                 className="institucional-content"
