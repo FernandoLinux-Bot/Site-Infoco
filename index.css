@@ -504,15 +504,15 @@ section {
 
 /* Video Section */
 .video-player-container {
-    max-width: 1024px; /* Reduced width for better visual alignment */
+    max-width: 1024px;
     width: 100%;
     margin: 3rem auto 0 auto;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-hover);
     overflow: hidden;
     border: 1px solid var(--border-color);
-    aspect-ratio: 16 / 9; /* Ensures correct aspect ratio and prevents layout shift */
-    background-color: #f3f4f6; /* Placeholder color while video loads */
+    aspect-ratio: 16 / 9;
+    background-color: #f3f4f6;
 }
 
 .video-player-container mux-player {
@@ -874,6 +874,10 @@ section {
 }
 
 /* Stats Section */
+.stats {
+    background-color: var(--accent-color);
+    color: var(--text-light);
+}
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -882,13 +886,13 @@ section {
 }
 .stat-item p {
     font-size: 1.1rem;
-    color: var(--text-color);
+    color: rgba(255, 255, 255, 0.9);
     margin-top: 0.5rem;
 }
 .stat-number {
     font-size: 3.5rem;
     font-weight: 700;
-    color: var(--primary-color);
+    color: var(--text-light);
 }
 
 /* How It Works Section */
