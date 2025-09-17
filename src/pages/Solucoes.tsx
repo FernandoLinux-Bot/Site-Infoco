@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { FaCalendarAlt, FaBullhorn, FaShoppingCart, FaClipboardList, FaDatabase, FaFolderOpen, FaBuilding, FaBoxes, FaArrowRight, FaTimes } from 'react-icons/fa';
+import SolucoesBanner from '../components/SolucoesBanner';
 
 interface Solution {
     id: string;
@@ -193,32 +194,14 @@ const Solucoes = () => {
 
     return (
         <>
-            <motion.section 
-                className="solutions-hero"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-            >
-                <div className="container">
-                    <h1>Soluções Completas para a Gestão Pública</h1>
-                    <p>Tecnologia e inovação para transformar a administração pública, garantindo eficiência, transparência e economia.</p>
-                </div>
-            </motion.section>
+            <SolucoesBanner 
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                TABS={TABS}
+            />
 
             <section className="solutions-page">
                 <div className="container">
-                    <div className="solutions-tabs-container">
-                        {TABS.map(tab => (
-                            <button
-                                key={tab}
-                                className={`solutions-tab ${activeTab === tab ? 'active' : ''}`}
-                                onClick={() => setActiveTab(tab)}
-                            >
-                                {tab}
-                            </button>
-                        ))}
-                    </div>
-
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={activeTab}
