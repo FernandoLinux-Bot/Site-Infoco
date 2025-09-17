@@ -233,9 +233,9 @@ body.mobile-nav-is-open {
   text-align: left;
 }
 .mobile-nav-cta {
-  margin-top: auto;
-  padding-top: 2rem;
-  border-top: 1px solid var(--border-color);
+  margin-top: 3rem;
+  padding-top: 0;
+  border-top: none;
 }
 .mobile-nav-cta .cta-button {
   width: 100%;
@@ -1545,16 +1545,15 @@ section {
         justify-content: center;
     }
     .solucoes-banner-icon,
-    .noticias-floating-icon {
-        display: none;
+    .noticias-floating-icon,
+    .gestao-publica-banner .floating-icon {
+        transform: scale(0.6);
+        opacity: 0.15;
     }
     .gestao-publica-banner {
         height: auto;
         min-height: 450px;
         padding: 4rem 1.5rem;
-    }
-    .gestao-publica-banner .floating-icon {
-        display: none; /* Hide floating icons on small screens to reduce clutter */
     }
 }
 
