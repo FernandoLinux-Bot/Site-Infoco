@@ -4,7 +4,7 @@ import AnimatedSection from './AnimatedSection';
 
 const VideoSection = () => {
     // O Playback ID do seu vídeo foi atualizado.
-    const muxPlaybackId = "FPT9OkUxOEs02S79RkBWYebul02Ayawrfblpm8skPFW2g";
+    const muxPlaybackId = "xtZc01I5jslYlEajuAnUnan02BT5yMrEhrWrG7DTN7EAw";
 
     return (
         <AnimatedSection id="video" className="video-section">
