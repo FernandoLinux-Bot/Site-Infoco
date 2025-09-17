@@ -4,6 +4,25 @@ import { MdSearch, MdDescription, MdCheckCircle, MdLink } from "react-icons/md";
 export default function Hero() {
   return (
     <section className="banner-section">
+      {/* Fundo com formas azuis animadas */}
+      <div className="banner-animated-bg">
+        <motion.div
+          className="banner-bg-shape shape-1"
+          animate={{ x: [0, 80, 0], y: [0, -60, 0] }}
+          transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="banner-bg-shape shape-2"
+          animate={{ x: [0, -70, 0], y: [0, 50, 0] }}
+          transition={{ duration: 28, repeat: Infinity, ease: 'easeInOut', delay: 4 }}
+        />
+         <motion.div
+          className="banner-bg-shape shape-3"
+          animate={{ scale: [1, 1.15, 1] }}
+          transition={{ duration: 32, repeat: Infinity, ease: 'easeInOut', delay: 8 }}
+        />
+      </div>
+
       {/* Fundo com grid animado */}
       <div className="banner-grid-bg">
         <motion.div
