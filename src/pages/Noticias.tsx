@@ -3,6 +3,7 @@ import { motion, Variants } from 'framer-motion';
 import { GoogleGenAI, Type } from '@google/genai';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import NotFoundAnimation from '../components/NotFoundAnimation';
+import NoticiasBanner from '../components/NoticiasBanner';
 
 interface NewsArticle {
     title: string;
@@ -129,17 +130,7 @@ const Noticias = () => {
 
     return (
         <>
-            <motion.section
-                className="noticias-hero"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-            >
-                <div className="container">
-                    <h1>Últimas Notícias</h1>
-                    <p>Mantenha-se atualizado com as informações mais recentes sobre o universo da gestão pública e licitações.</p>
-                </div>
-            </motion.section>
+            <NoticiasBanner />
 
             <section className="noticias-page">
                 <div className="container">
