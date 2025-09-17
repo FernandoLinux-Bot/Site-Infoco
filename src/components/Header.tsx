@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { motion, Variants } from 'framer-motion';
+import { FaArrowRight } from 'react-icons/fa';
 
 type Page = 'home' | 'solucoes' | 'institucional' | 'fornecedor' | 'cadastro' | 'contact' | 'noticias';
 
 interface HeaderProps {
     setCurrentPage: (page: Page) => void;
 }
+
+const iconVariants: Variants = {
+    rest: { x: 0, transition: { type: 'spring', stiffness: 300, damping: 20 } },
+    hover: { x: 5, transition: { type: 'spring', stiffness: 300, damping: 20 } }
+};
 
 const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -30,6 +37,24 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
         };
     }, [isMobileMenuOpen]);
 
+    const CtaButton = () => (
+        <motion.a
+            href="#"
+            className="cta-button"
+            whileHover="hover"
+            initial="rest"
+            animate="rest"
+        >
+            <span className="cta-text-wrapper">
+                <span>Acessar</span>
+                <span>Plataforma</span>
+            </span>
+            <motion.span className="cta-icon-wrapper" variants={iconVariants}>
+                <FaArrowRight />
+            </motion.span>
+        </motion.a>
+    );
+
     return (
         <>
             <header className={`app-header ${isMobileMenuOpen ? 'nav-open' : ''}`}>
@@ -51,12 +76,9 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
                     </nav>
                     <div className="header-right">
                         <div className="header-actions">
-                             <a href="#" className="cta-button desktop-cta">
-                                Acessar Plataforma
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                                </svg>
-                            </a>
+                             <div className="desktop-cta">
+                                <CtaButton />
+                             </div>
                             <button
                                 className="hamburger-menu"
                                 onClick={toggleMenu}
@@ -85,12 +107,7 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
                     <li><button onClick={() => handleNavClick('contact')} className="nav-link">Contato</button></li>
                 </ul>
                 <div className="mobile-nav-cta">
-                    <a href="#" className="cta-button">
-                        Acessar Plataforma
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                        </svg>
-                    </a>
+                    <CtaButton />
                 </div>
             </nav>
         </>
