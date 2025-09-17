@@ -369,7 +369,7 @@ section {
   justify-content: center;
   min-height: 90vh;
   overflow: hidden;
-  background-color: var(--background-color);
+  background-color: #f7f9ff;
 }
 
 .banner-animated-bg {
@@ -415,16 +415,18 @@ section {
   position: absolute;
   inset: 0;
   z-index: 1;
-  opacity: 0.5;
+  overflow: hidden;
+  mask-image: radial-gradient(ellipse 100% 60% at 50% 50%, black 50%, transparent 100%);
 }
 
 .banner-grid-bg > div {
   position: absolute;
-  inset: -10%; /* Make it larger to avoid edges showing during animation */
+  inset: -100%;
   background-image:
-    linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
+    linear-gradient(rgba(37, 99, 235, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37, 99, 235, 0.07) 1px, transparent 1px);
+  background-size: 60px 60px;
+  will-change: transform;
 }
 
 .banner-content {
