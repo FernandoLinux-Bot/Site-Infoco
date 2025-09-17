@@ -536,48 +536,67 @@ section {
     height: 100%;
 }
 
-
-/* Hero Card Section (Institucional Page) */
-.hero-card-section {
-    background-color: var(--accent-color);
+/* Banner Gestao Publica (Institucional Page) */
+.gestao-publica-banner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    overflow: hidden;
+    background: linear-gradient(to right, var(--accent-color), #1D4ED8); /* Uses theme color */
     color: var(--text-light);
-    padding: 6rem 1.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     text-align: center;
-    min-height: 50vh;
 }
 
-.hero-card-icon-wrapper {
-    width: 100px;
-    height: 100px;
-    border-radius: 20px;
-    background-color: rgba(255, 255, 255, 0.1);
+.gestao-publica-banner .bg-gradient-motion {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, #3B82F6, var(--accent-color), #1D4ED8);
+    opacity: 0.4;
+    background-size: 200% 200%;
+}
+
+.gestao-publica-banner .banner-main-content {
+    position: relative;
+    z-index: 10;
+    padding: 0 1.5rem;
+}
+
+.gestao-publica-banner .main-icon-container {
     display: flex;
-    align-items: center;
     justify-content: center;
-    margin-bottom: 2rem;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.hero-card-icon {
-    font-size: 3rem;
-}
-
-.hero-card-title {
-    font-size: clamp(2.2rem, 5vw, 3rem);
-    font-weight: 700;
     margin-bottom: 1rem;
-    max-width: 800px;
 }
 
-.hero-card-subtitle {
-    font-size: 1.25rem;
-    max-width: 650px;
+.gestao-publica-banner .main-icon-wrapper {
+    padding: 1rem;
+    background-color: rgba(37, 99, 235, 0.8); /* Slightly transparent accent color */
+    border-radius: 1rem;
+    box-shadow: var(--shadow);
+    display: inline-flex;
+}
+
+.gestao-publica-banner .banner-title {
+    font-size: clamp(2rem, 5vw, 2.5rem);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.gestao-publica-banner .banner-subtitle {
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
     opacity: 0.9;
 }
+
+.gestao-publica-banner .floating-icon {
+    position: absolute;
+    color: var(--text-light);
+    opacity: 0.2; /* Make them subtle */
+    z-index: 1;
+}
+
 
 /* Institucional Page Content */
 .content-block {
@@ -1454,6 +1473,14 @@ section {
     }
     .solucoes-banner-icon {
         display: none;
+    }
+    .gestao-publica-banner {
+        height: auto;
+        min-height: 450px;
+        padding: 4rem 1.5rem;
+    }
+    .gestao-publica-banner .floating-icon {
+        display: none; /* Hide floating icons on small screens to reduce clutter */
     }
 }
 
