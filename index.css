@@ -372,10 +372,49 @@ section {
   background-color: var(--background-color);
 }
 
+.banner-animated-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.banner-bg-shape {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0) 70%);
+  filter: blur(80px);
+  will-change: transform;
+}
+
+.banner-bg-shape.shape-1 {
+  width: 500px;
+  height: 500px;
+  top: -10%;
+  left: 5%;
+}
+
+.banner-bg-shape.shape-2 {
+  width: 400px;
+  height: 400px;
+  bottom: -15%;
+  right: 10%;
+}
+
+.banner-bg-shape.shape-3 {
+  width: 350px;
+  height: 350px;
+  top: 40%;
+  left: 45%;
+}
+
 .banner-grid-bg {
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: 1;
   opacity: 0.5;
 }
 
@@ -390,7 +429,7 @@ section {
 
 .banner-content {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
