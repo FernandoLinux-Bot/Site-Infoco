@@ -8,26 +8,44 @@ export default function Hero() {
       <div className="banner-animated-bg">
         <motion.div
           className="banner-bg-shape shape-1"
-          animate={{ x: [0, 80, 0], y: [0, -60, 0] }}
-          transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0, x: [0, 80, 0] }}
+          transition={{
+            opacity: { duration: 1.5, ease: "easeOut" },
+            y: { duration: 1.5, ease: "easeOut" },
+            x: { duration: 22, repeat: Infinity, ease: "easeInOut" },
+          }}
         />
         <motion.div
           className="banner-bg-shape shape-2"
-          animate={{ x: [0, -70, 0], y: [0, 50, 0] }}
-          transition={{ duration: 28, repeat: Infinity, ease: 'easeInOut', delay: 4 }}
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: [0, 50, 0], x: [0, -70, 0] }}
+          transition={{
+            opacity: { duration: 1.5, ease: "easeOut", delay: 0.2 },
+            y: { duration: 28, repeat: Infinity, ease: "easeInOut", delay: 4 },
+            x: { duration: 28, repeat: Infinity, ease: "easeInOut", delay: 4 },
+          }}
         />
-         <motion.div
+        <motion.div
           className="banner-bg-shape shape-3"
-          animate={{ scale: [1, 1.15, 1] }}
-          transition={{ duration: 32, repeat: Infinity, ease: 'easeInOut', delay: 8 }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: [1, 1.15, 1] }}
+          transition={{
+            opacity: { duration: 1.5, ease: "easeOut", delay: 0.4 },
+            scale: { duration: 32, repeat: Infinity, ease: "easeInOut", delay: 8 },
+          }}
         />
       </div>
 
-      {/* Fundo com grid animado */}
+      {/* Fundo com grade de tecnologia animada */}
       <div className="banner-grid-bg">
         <motion.div
-          animate={{ x: ["0%", "-15%"], y: ["0%", "-15%"] }}
-          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          initial={{ opacity: 0, rotate: 0 }}
+          animate={{ opacity: 1, rotate: 360 }}
+          transition={{
+            opacity: { duration: 2, ease: "easeIn" },
+            rotate: { duration: 90, repeat: Infinity, ease: "linear" },
+          }}
         />
       </div>
 
