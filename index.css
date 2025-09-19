@@ -99,12 +99,16 @@ body.mobile-nav-is-open {
   cursor: pointer;
   width: 210px;
   height: 65px;
+  overflow: hidden; /* Clip the scaled image */
 }
 
 .logo img {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    /* Scale up to zoom past whitespace */
+    transform: scale(1.8); 
+    transition: transform 0.3s ease;
 }
 
 .nav-links {
