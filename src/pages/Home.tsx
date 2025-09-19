@@ -2,7 +2,6 @@ import React from 'react';
 import Hero from '../components/Hero';
 import VideoSection from '../components/VideoSection';
 import Features from '../components/Features';
-import Stats from '../components/Stats';
 import HowItWorks from '../components/HowItWorks';
 import AnimatedSection from '../components/AnimatedSection';
 
@@ -25,7 +24,29 @@ const Home = () => {
             <Hero />
             <VideoSection />
             <Features />
-            <Stats />
+
+            {/* Nova Seção com GIF Animado */}
+            <AnimatedSection id="tecnologia" className="animated-banner-section">
+                <div className="container">
+                    <div className="animated-banner-grid">
+                        <div className="animated-banner-content">
+                            <h2 className="animated-item" style={{ transitionDelay: '200ms' }}>
+                                Tecnologia que Transforma a Gestão Pública
+                            </h2>
+                            <p className="animated-item" style={{ transitionDelay: '300ms' }}>
+                                Nossas soluções integram dados, automatizam processos e geram insights valiosos, permitindo que gestores públicos tomem decisões mais rápidas, seguras e com maior impacto social.
+                            </p>
+                            <a href="#solucoes" className="cta-link animated-item" style={{ transitionDelay: '400ms' }}>
+                                Descubra Nossas Soluções
+                            </a>
+                        </div>
+                        <div className="animated-banner-gif animated-item" style={{ transitionDelay: '100ms' }}>
+                            <img src="/animated-banner.gif" alt="Animação de tecnologia para gestão pública" />
+                        </div>
+                    </div>
+                </div>
+            </AnimatedSection>
+
             <HowItWorks />
 
             <AnimatedSection id="clients" className="clients-section">
