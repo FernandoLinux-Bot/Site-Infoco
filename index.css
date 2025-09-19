@@ -1508,6 +1508,65 @@ section {
     transform: translateY(0);
 }
 
+/* Clients Section */
+.clients-section {
+    background-color: var(--secondary-color);
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.scroller {
+    max-width: 900px;
+    margin: 3rem auto 0;
+    -webkit-mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+    mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+    overflow: hidden;
+}
+
+.scroller__inner {
+    display: flex;
+    gap: 3rem;
+    padding-block: 1rem;
+    flex-wrap: nowrap;
+    width: max-content;
+    animation: scroll 30s linear infinite;
+}
+
+@keyframes scroll {
+    to {
+        transform: translate(calc(-50% - 1.5rem)); /* 50% for half the logos, 1.5rem for half the gap */
+    }
+}
+
+.scroller[data-speed="slow"] {
+    animation-duration: 40s;
+}
+
+.scroller:hover .scroller__inner {
+    animation-play-state: paused;
+}
+
+.client-logo {
+    height: 100px;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.client-logo img {
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
+    filter: grayscale(100%);
+    opacity: 0.7;
+    transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+.client-logo img:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+}
 
 /* Responsive Design */
 @media (max-width: 992px) {
