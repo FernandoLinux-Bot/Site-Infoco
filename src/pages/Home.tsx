@@ -1,6 +1,7 @@
 import React from 'react';
 import Hero from '../components/Hero';
 import VideoSection from '../components/VideoSection';
+import Stats from '../components/Stats';
 import Features from '../components/Features';
 import HowItWorks from '../components/HowItWorks';
 import AnimatedSection from '../components/AnimatedSection';
@@ -23,6 +24,7 @@ const Home = () => {
         <>
             <Hero />
             <VideoSection />
+            <Stats />
             <Features />
 
             {/* Nova Seção com GIF Animado */}
