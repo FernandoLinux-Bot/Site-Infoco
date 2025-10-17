@@ -97,8 +97,8 @@ body.mobile-nav-is-open {
   border: none;
   padding: 0;
   cursor: pointer;
-  width: 210px;
-  height: 65px;
+  width: 180px;
+  height: 55px;
   overflow: hidden; /* Clip the scaled image */
 }
 
