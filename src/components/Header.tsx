@@ -39,7 +39,9 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
 
     const CtaButton = () => (
         <motion.a
-            href="#"
+            href="https://app2.infocolicitacoes.com.br/cadastro/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="cta-button"
             whileHover="hover"
             initial="rest"
