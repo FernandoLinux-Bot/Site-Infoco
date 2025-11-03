@@ -79,6 +79,7 @@ export default function Hero() {
             <motion.div whileHover={{ scale: 1.05 }}>
               <button
                 className="banner-button banner-button-primary"
+                onClick={() => window.open('https://app2.infocolicitacoes.com.br/cadastro/', '_blank', 'noopener,noreferrer')}
               >
                 <MdDescription className="icon" /> Cadastrar
               </button>
@@ -86,6 +87,7 @@ export default function Hero() {
             <motion.div whileHover={{ scale: 1.05 }}>
               <button
                 className="banner-button banner-button-outline"
+                onClick={() => window.open('https://app2.infocolicitacoes.com.br/cadastro/', '_blank', 'noopener,noreferrer')}
               >
                 <MdSearch className="icon" /> Pesquisar Processos
               </button>
