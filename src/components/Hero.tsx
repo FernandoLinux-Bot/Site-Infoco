@@ -1,5 +1,5 @@
 import { motion, Variants } from "framer-motion";
-import { FaCheckCircle, FaFileContract, FaChartLine, FaBoxes } from "react-icons/fa";
+import { FaCheckCircle, FaFileContract, FaChartLine, FaBoxes, FaShieldAlt, FaBalanceScale, FaSearchDollar, FaLock } from "react-icons/fa";
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
@@ -16,11 +16,7 @@ const cardFloat: Variants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: {
-      duration: 0.9,
-      delay: 0.5 + i * 0.15,
-      ease: [0.16, 1, 0.3, 1],
-    },
+    transition: { duration: 0.9, delay: 0.5 + i * 0.15, ease: [0.16, 1, 0.3, 1] },
   }),
 };
 
@@ -29,6 +25,13 @@ const ArrowIcon = () => (
     <path d="M2 8h12M9 3l5 5-5 5" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
+
+const compliance = [
+  { icon: <FaBalanceScale />, label: "Lei 14.133/2021", description: "Nova Lei de Licitações e Contratos" },
+  { icon: <FaSearchDollar />, label: "IN 65/2021", description: "Pesquisa de preços conforme SEGES/ME" },
+  { icon: <FaShieldAlt />, label: "LGPD", description: "Lei Geral de Proteção de Dados" },
+  { icon: <FaLock />, label: "Dados em nuvem", description: "Infraestrutura segura e auditável" },
+];
 
 const Hero = () => {
   return (
@@ -55,8 +58,7 @@ const Hero = () => {
               animate="visible"
               custom={1}
             >
-              Modernizando <br className="hide-sm" />
-              a <span className="serif">gestão pública</span>.
+              Modernizando a <em>gestão pública</em>.
             </motion.h1>
 
             <motion.p
@@ -67,8 +69,9 @@ const Hero = () => {
               custom={2}
             >
               Sistemas integrados de licitação, contratos, patrimônio e protocolo
-              para prefeituras, câmaras e órgãos públicos. Tecnologia que entrega
-              eficiência, transparência e segurança jurídica.
+              para prefeituras, câmaras e órgãos públicos — em total conformidade
+              com a Nova Lei de Licitações (14.133/2021) e a Instrução Normativa SEGES/ME
+              nº 65/2021.
             </motion.p>
 
             <motion.div
@@ -105,11 +108,13 @@ const Hero = () => {
                 <span>NV</span>
                 <span>+4</span>
               </span>
-              <span>Mais de 7 prefeituras já confiam na INFOCO.</span>
+              <span className="hero-trustline-text">
+                <strong>Mais de 70 prefeituras</strong> já confiam na INFOCO.
+              </span>
             </motion.div>
           </div>
 
-          {/* VISUAL SIDE — animated floating cards */}
+          {/* VISUAL SIDE */}
           <div className="hero-visual" aria-hidden="true">
             <div className="hero-confetti">
               <span className="c1" />
@@ -118,20 +123,12 @@ const Hero = () => {
               <span className="c4" />
             </div>
 
-            <motion.div
-              className="hero-card hero-card-1"
-              variants={cardFloat}
-              custom={0}
-              initial="hidden"
-              animate="visible"
-            >
+            <motion.div className="hero-card hero-card-1" variants={cardFloat} custom={0} initial="hidden" animate="visible">
               <motion.div
                 animate={{ y: [0, -8, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
               >
-                <span className="hero-card-label">
-                  <span className="pill" /> Licitação aprovada
-                </span>
+                <span className="hero-card-label"><span className="pill" /> Licitação aprovada</span>
                 <div className="hero-card-title" style={{ marginTop: "0.4rem" }}>
                   Pregão Eletrônico Nº 042/2026
                 </div>
@@ -141,13 +138,7 @@ const Hero = () => {
               </motion.div>
             </motion.div>
 
-            <motion.div
-              className="hero-card hero-card-2"
-              variants={cardFloat}
-              custom={1}
-              initial="hidden"
-              animate="visible"
-            >
+            <motion.div className="hero-card hero-card-2" variants={cardFloat} custom={1} initial="hidden" animate="visible">
               <motion.div
                 animate={{ y: [0, 10, 0] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
@@ -171,13 +162,7 @@ const Hero = () => {
               </motion.div>
             </motion.div>
 
-            <motion.div
-              className="hero-card hero-card-3"
-              variants={cardFloat}
-              custom={2}
-              initial="hidden"
-              animate="visible"
-            >
+            <motion.div className="hero-card hero-card-3" variants={cardFloat} custom={2} initial="hidden" animate="visible">
               <motion.div
                 animate={{ y: [0, -12, 0] }}
                 transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
@@ -194,13 +179,7 @@ const Hero = () => {
               </motion.div>
             </motion.div>
 
-            <motion.div
-              className="hero-card hero-card-4"
-              variants={cardFloat}
-              custom={3}
-              initial="hidden"
-              animate="visible"
-            >
+            <motion.div className="hero-card hero-card-4" variants={cardFloat} custom={3} initial="hidden" animate="visible">
               <motion.div
                 animate={{ y: [0, 8, 0] }}
                 transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
@@ -218,6 +197,27 @@ const Hero = () => {
             </motion.div>
           </div>
         </div>
+
+        {/* COMPLIANCE BAR */}
+        <motion.div
+          className="hero-compliance"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <div className="hero-compliance-label">Em conformidade com</div>
+          <div className="hero-compliance-grid">
+            {compliance.map((c) => (
+              <div className="hero-compliance-item" key={c.label}>
+                <div className="hero-compliance-icon">{c.icon}</div>
+                <div className="hero-compliance-text">
+                  <strong>{c.label}</strong>
+                  <span>{c.description}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </section>
   );

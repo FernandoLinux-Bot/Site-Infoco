@@ -23,9 +23,9 @@
   --accent: #FFD338;
   --accent-deep: #F0B800;
 
-  /* Typography */
-  --font-body: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: "Instrument Serif", "Plus Jakarta Sans", serif;
+  /* Typography — single family for uniformity */
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
 
   /* Layout */
   --maxw: 1280px;
@@ -96,9 +96,9 @@ p { margin: 0; }
 .hero-headline em,
 h1 em, h2 em, .footer-mark-headline em {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 500;
   font-style: italic;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   color: var(--blue);
 }
 
@@ -179,7 +179,7 @@ section { position: relative; padding: clamp(4rem, 9vw, 7rem) 0; }
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  height: 76px;
+  height: 92px;
   gap: 2rem;
 }
 
@@ -187,7 +187,8 @@ section { position: relative; padding: clamp(4rem, 9vw, 7rem) 0; }
 .header-right { display: flex; justify-content: flex-end; }
 
 .logo { display: inline-flex; align-items: center; border: none; background: none; padding: 0; }
-.logo img { height: 36px; width: auto; }
+.logo img { height: 56px; width: auto; }
+@media (max-width: 540px) { .logo img { height: 44px; } }
 
 .nav-links { list-style: none; display: flex; gap: 0.1rem; margin: 0; padding: 0; align-items: center; }
 
@@ -414,11 +415,14 @@ section { position: relative; padding: clamp(4rem, 9vw, 7rem) 0; }
 .hero-trustline {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-  margin-top: 2.5rem;
-  font-size: 0.92rem;
+  gap: 0.9rem;
+  margin-top: 2.25rem;
+  font-size: 0.95rem;
   color: var(--ink-soft);
+  flex-wrap: wrap;
 }
+.hero-trustline-text { line-height: 1.4; }
+.hero-trustline-text strong { color: var(--ink); font-weight: 600; }
 
 .hero-trustline-avatars { display: inline-flex; }
 .hero-trustline-avatars span {
@@ -541,6 +545,73 @@ section { position: relative; padding: clamp(4rem, 9vw, 7rem) 0; }
 .hero-confetti .c2 { width: 14px; height: 14px; top: 10%; right: 30%; }
 .hero-confetti .c3 { width: 8px; height: 8px; top: 80%; right: 20%; background: var(--accent); }
 .hero-confetti .c4 { width: 12px; height: 12px; top: 45%; left: 8%; }
+
+/* Compliance bar */
+.hero-compliance {
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.hero-compliance-label {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.hero-compliance-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.hero-compliance-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  transition: background 0.3s var(--ease-out);
+}
+
+.hero-compliance-item:hover { background: var(--blue-50); }
+
+.hero-compliance-icon {
+  width: 42px; height: 42px;
+  border-radius: var(--radius-md);
+  background: var(--blue-50);
+  color: var(--blue);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.hero-compliance-text { display: flex; flex-direction: column; gap: 0.05rem; }
+.hero-compliance-text strong {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+}
+.hero-compliance-text span {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  line-height: 1.35;
+}
+
+@media (max-width: 880px) {
+  .hero-compliance-grid { grid-template-columns: repeat(2, 1fr); gap: 0.85rem; }
+}
+@media (max-width: 480px) {
+  .hero-compliance-grid { grid-template-columns: 1fr; }
+}
 
 /* Logo strip below hero */
 .logo-strip {
@@ -1491,6 +1562,148 @@ textarea.form-input { resize: vertical; min-height: 110px; }
 }
 
 .not-found-container { padding: 3rem 0; text-align: center; }
+
+/* ============================================================
+   Instagram Page (Noticias route)
+   ============================================================ */
+
+.instagram-hero {
+  padding: clamp(4rem, 8vw, 6rem) 0 clamp(2rem, 4vw, 3rem);
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+
+.instagram-profile {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+}
+
+.instagram-avatar {
+  width: clamp(110px, 14vw, 160px);
+  height: clamp(110px, 14vw, 160px);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
+  color: var(--white);
+  font-size: clamp(3rem, 5vw, 4.5rem);
+  flex-shrink: 0;
+  box-shadow: var(--shadow-md);
+}
+
+.instagram-profile-info { display: flex; flex-direction: column; gap: 1rem; padding-top: 0.5rem; }
+
+.instagram-handle {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.instagram-handle h1 {
+  font-family: var(--font-body);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0;
+}
+
+.instagram-bio { font-size: 0.96rem; color: var(--ink-soft); line-height: 1.55; }
+.instagram-bio strong { color: var(--ink); font-weight: 600; }
+
+.instagram-stats {
+  display: flex;
+  gap: 2rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+.instagram-stats > div { display: flex; flex-direction: column; align-items: flex-start; gap: 0.1rem; }
+.instagram-stats strong { font-size: 1.4rem; font-weight: 700; color: var(--ink); letter-spacing: -0.02em; }
+.instagram-stats span { font-size: 0.82rem; color: var(--ink-soft); }
+
+.instagram-feed { padding: clamp(2.5rem, 5vw, 4rem) 0 clamp(4rem, 8vw, 7rem); background: var(--white); }
+
+.instagram-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.instagram-post {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 4px;
+  overflow: hidden;
+  display: block;
+  text-decoration: none;
+  color: var(--white);
+  cursor: pointer;
+  transition: transform 0.4s var(--ease-out);
+}
+.instagram-post:hover { transform: scale(1.02); z-index: 2; }
+
+.instagram-post-type {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  color: var(--white);
+  z-index: 2;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+
+.instagram-post-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.25rem;
+  gap: 0.6rem;
+}
+.instagram-post:hover .instagram-post-overlay { opacity: 1; }
+
+.instagram-post-stats {
+  display: flex;
+  gap: 1.2rem;
+  color: var(--white);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.instagram-post-stats span { display: inline-flex; align-items: center; gap: 0.4rem; }
+
+.instagram-post-caption {
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.95);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.instagram-cta {
+  margin-top: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.instagram-cta p { color: var(--ink-soft); font-size: 0.95rem; }
+
+@media (max-width: 720px) {
+  .instagram-profile { grid-template-columns: 1fr; text-align: center; }
+  .instagram-avatar { margin: 0 auto; }
+  .instagram-handle { justify-content: center; }
+  .instagram-stats { justify-content: center; gap: 1.5rem; }
+  .instagram-grid { grid-template-columns: repeat(2, 1fr); gap: 4px; }
+}
 
 /* ============================================================
    Cadastro & Fornecedor

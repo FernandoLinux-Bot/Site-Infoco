@@ -1,18 +1,96 @@
-import { useState, useEffect } from 'react';
 import { motion, Variants } from 'framer-motion';
-import { GoogleGenAI, Type } from '@google/genai';
-import { FaExternalLinkAlt } from 'react-icons/fa';
-import NotFoundAnimation from '../components/NotFoundAnimation';
+import { FaInstagram, FaHeart, FaRegComment } from 'react-icons/fa';
 
-interface NewsArticle {
-    title: string;
-    url: string;
-    source: string;
+const PROFILE_URL = 'https://www.instagram.com/infocogestaopublica/';
+const HANDLE = '@infocogestaopublica';
+
+interface PostPreview {
+    id: string;
+    caption: string;
+    type: 'photo' | 'video' | 'carousel';
+    likes: number;
+    comments: number;
+    gradient: string;
 }
+
+const posts: PostPreview[] = [
+    {
+        id: '1',
+        caption: 'Nova Lei 14.133/2021: o que muda nas licitações públicas a partir de 2024.',
+        type: 'photo',
+        likes: 142,
+        comments: 18,
+        gradient: 'linear-gradient(135deg, #2253F0 0%, #6F8DFF 100%)',
+    },
+    {
+        id: '2',
+        caption: 'Conheça o módulo de Banco de Preços da INFOCO — cotação em menos de 2 minutos.',
+        type: 'video',
+        likes: 287,
+        comments: 32,
+        gradient: 'linear-gradient(135deg, #0F2FA0 0%, #2253F0 100%)',
+    },
+    {
+        id: '3',
+        caption: 'Caso de sucesso: Prefeitura de Almadina moderniza sua gestão de contratos.',
+        type: 'carousel',
+        likes: 196,
+        comments: 24,
+        gradient: 'linear-gradient(135deg, #2253F0 0%, #FFD338 100%)',
+    },
+    {
+        id: '4',
+        caption: 'PCA — Plano de Contratações Anual: como planejar com inteligência.',
+        type: 'photo',
+        likes: 154,
+        comments: 21,
+        gradient: 'linear-gradient(135deg, #1B43C9 0%, #DDE6FF 100%)',
+    },
+    {
+        id: '5',
+        caption: 'Webinar: IN 65/2021 e a pesquisa de preços conforme a SEGES/ME.',
+        type: 'video',
+        likes: 312,
+        comments: 41,
+        gradient: 'linear-gradient(135deg, #FFD338 0%, #2253F0 100%)',
+    },
+    {
+        id: '6',
+        caption: 'Equipe INFOCO em mais um treinamento para gestores municipais.',
+        type: 'photo',
+        likes: 268,
+        comments: 35,
+        gradient: 'linear-gradient(135deg, #6F8DFF 0%, #0F2FA0 100%)',
+    },
+    {
+        id: '7',
+        caption: 'Sistema de Protocolo Web: organize processos e documentos com transparência total.',
+        type: 'carousel',
+        likes: 174,
+        comments: 19,
+        gradient: 'linear-gradient(135deg, #2253F0 0%, #1B43C9 100%)',
+    },
+    {
+        id: '8',
+        caption: 'Patrimônio Público: controle integrado de bens móveis, imóveis e intangíveis.',
+        type: 'photo',
+        likes: 201,
+        comments: 27,
+        gradient: 'linear-gradient(135deg, #0E1A3D 0%, #2253F0 100%)',
+    },
+    {
+        id: '9',
+        caption: 'INFOCO no Encontro UPB: levando tecnologia para gestores de toda a Bahia.',
+        type: 'photo',
+        likes: 245,
+        comments: 38,
+        gradient: 'linear-gradient(135deg, #FFD338 0%, #FF8A33 100%)',
+    },
+];
 
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.08 } }
+    visible: { opacity: 1, transition: { staggerChildren: 0.07 } }
 };
 
 const itemVariants: Variants = {
@@ -20,121 +98,106 @@ const itemVariants: Variants = {
     visible: { y: 0, opacity: 1, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } }
 };
 
-const Noticias = () => {
-    const [articles, setArticles] = useState<NewsArticle[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        const fetchNews = async () => {
-            const apiKey = (import.meta as any).env?.VITE_API_KEY ?? (globalThis as any).process?.env?.API_KEY;
-
-            if (!apiKey) {
-                setError("A chave da API não foi configurada.");
-                setLoading(false);
-                return;
-            }
-
-            try {
-                const ai = new GoogleGenAI({ apiKey: apiKey });
-
-                const response = await ai.models.generateContent({
-                    model: "gemini-2.5-flash",
-                    contents: "Busque as 6 notícias mais recentes e relevantes sobre os seguintes tópicos da gestão pública brasileira: e-TCM (Tribunais de Contas dos Municípios), UPB (União dos Municípios da Bahia), Licitações e Contratos Públicos (Lei 14.133), e decisões do STF (Supremo Tribunal Federal) que impactam os municípios. Para cada notícia, forneça o título, o link original e o nome da fonte.",
-                    config: {
-                        responseMimeType: "application/json",
-                        responseSchema: {
-                            type: Type.ARRAY,
-                            items: {
-                                type: Type.OBJECT,
-                                properties: {
-                                    title: { type: Type.STRING, description: 'O título da notícia.' },
-                                    url: { type: Type.STRING, description: 'O link (URL) para a notícia completa.' },
-                                    source: { type: Type.STRING, description: 'O nome do site ou portal da notícia (Ex: G1, Conjur).' }
-                                },
-                                required: ["title", "url", "source"]
-                            }
-                        }
-                    }
-                });
-
-                const jsonStr = (response.text ?? '').trim();
-                if (!jsonStr) {
-                    throw new Error('Resposta vazia da API.');
-                }
-                const parsedArticles = JSON.parse(jsonStr);
-                setArticles(parsedArticles);
-            } catch (err) {
-                console.error("Erro ao buscar notícias:", err);
-                setError("Não foi possível carregar as notícias. Tente novamente mais tarde.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchNews();
-    }, []);
-
-    const renderContent = () => {
-        if (loading) return <div className="loading-spinner">Carregando notícias…</div>;
-        if (error) return <div className="error-message">{error}</div>;
-        if (articles.length === 0) {
-            return (
-                <div className="not-found-container">
-                    <NotFoundAnimation />
-                    <p className="section-subtitle" style={{ marginTop: '2rem' }}>
-                        Nenhuma notícia encontrada no momento.
-                    </p>
-                </div>
-            );
-        }
-
+const PostIcon = ({ type }: { type: PostPreview['type'] }) => {
+    if (type === 'video') {
         return (
-            <motion.div
-                className="noticias-grid"
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-            >
-                {articles.map((article, index) => (
-                    <motion.a
-                        key={index}
-                        href={article.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="news-card"
-                        variants={itemVariants}
-                    >
-                        <div className="news-card-content">
-                            <span className="news-card-source">{article.source}</span>
-                            <h3>{article.title}</h3>
-                        </div>
-                        <div className="news-card-footer">
-                            <span>Ler matéria</span>
-                            <FaExternalLinkAlt />
-                        </div>
-                    </motion.a>
-                ))}
-            </motion.div>
+            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                <path d="M8 5v14l11-7z" />
+            </svg>
         );
-    };
+    }
+    if (type === 'carousel') {
+        return (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20">
+                <rect x="3" y="3" width="14" height="14" rx="2" />
+                <path d="M7 21h12a2 2 0 002-2V9" />
+            </svg>
+        );
+    }
+    return null;
+};
 
+const Noticias = () => {
     return (
         <>
-            <section className="noticias-hero">
+            <section className="instagram-hero">
                 <div className="container">
-                    <span className="eyebrow">Imprensa / Atualização semanal</span>
-                    <h1 className="section-title" style={{ marginTop: '1.5rem', maxWidth: '20ch' }}>
-                        Notícias da <em>gestão pública</em>.
-                    </h1>
-                    <p className="section-subtitle" style={{ marginTop: '1.5rem' }}>
-                        Decisões dos Tribunais de Contas, atualizações da Lei 14.133, jurisprudência do STF e movimentos da UPB — em um único lugar.
-                    </p>
+                    <div className="instagram-profile">
+                        <div className="instagram-avatar">
+                            <FaInstagram />
+                        </div>
+                        <div className="instagram-profile-info">
+                            <div className="instagram-handle">
+                                <h1>{HANDLE}</h1>
+                                <a
+                                    href={PROFILE_URL}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="cta-button"
+                                >
+                                    Seguir
+                                </a>
+                            </div>
+                            <p className="instagram-bio">
+                                <strong>INFOCO Gestão Pública</strong><br />
+                                Tecnologia para licitações, contratos, patrimônio e protocolo.<br />
+                                Itabuna · Bahia · Estabelecida em 2014.
+                            </p>
+                            <div className="instagram-stats">
+                                <div><strong>{posts.length}+</strong><span>publicações</span></div>
+                                <div><strong>70+</strong><span>prefeituras</span></div>
+                                <div><strong>10</strong><span>anos de mercado</span></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            <section className="noticias-page">
-                <div className="container">{renderContent()}</div>
+            <section className="instagram-feed">
+                <div className="container">
+                    <motion.div
+                        className="instagram-grid"
+                        variants={containerVariants}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, amount: 0.05 }}
+                    >
+                        {posts.map((post) => (
+                            <motion.a
+                                key={post.id}
+                                href={PROFILE_URL}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="instagram-post"
+                                style={{ background: post.gradient }}
+                                variants={itemVariants}
+                            >
+                                <span className="instagram-post-type">
+                                    <PostIcon type={post.type} />
+                                </span>
+                                <div className="instagram-post-overlay">
+                                    <div className="instagram-post-stats">
+                                        <span><FaHeart /> {post.likes.toLocaleString('pt-BR')}</span>
+                                        <span><FaRegComment /> {post.comments}</span>
+                                    </div>
+                                    <p className="instagram-post-caption">{post.caption}</p>
+                                </div>
+                            </motion.a>
+                        ))}
+                    </motion.div>
+
+                    <div className="instagram-cta">
+                        <p>Mais publicações no nosso perfil.</p>
+                        <a
+                            href={PROFILE_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="cta-button cta-button-outline"
+                        >
+                            <FaInstagram style={{ marginRight: '0.5rem' }} /> Ver no Instagram
+                        </a>
+                    </div>
+                </div>
             </section>
         </>
     );
