@@ -18,13 +18,40 @@ Este arquivo orienta o Claude Code ao trabalhar neste repositório.
 | Framework | React 18 + TypeScript (strict) |
 | Bundler | Vite 4 (`@vitejs/plugin-react`) |
 | Roteamento | `react-router-dom` v6 (BrowserRouter) |
-| Animação | `framer-motion` |
-| Ícones | `react-icons` (FA + Material) |
+| Animação | `framer-motion` + CSS transitions |
+| Ícones | `react-icons` (FA + Material) + SVGs inline |
 | IA | `@google/genai` (Gemini 2.5 Flash) — usado em Notícias |
 | Vídeo | `@mux/mux-player-react` |
 | Analytics | `@vercel/analytics` + `@vercel/speed-insights` |
 | Hospedagem | Vercel |
 | Formulário | submit-form.com (endpoint `Z4G5K3MOm`) + Google reCAPTCHA v2 |
+
+## Design System — "Editorial Civic"
+
+**Tipografia (Google Fonts)**
+- **Display:** `Fraunces` — serif variável com `opsz` e `SOFT`; use `font-variation-settings: "opsz" 144, "SOFT" 30` para headlines. Itálico de Fraunces é o destaque visual da marca (`<em>` em accent orange).
+- **Body:** `Manrope` (300–800) — humanista geométrica.
+- **Mono:** `JetBrains Mono` — usado em eyebrows (`01 — Seção`), labels e numeração de cards.
+
+**Paleta (CSS vars em `:root`)**
+```
+--paper       #F4EFE4   fundo principal (cream warm)
+--paper-soft  #FAF5EA   variante mais clara
+--ink         #0A1429   texto principal / fundo escuro
+--ink-soft    rgba ink/.66
+--blue        #1947E5   marca
+--accent      #FF4A1C   accent sharp (itálicos, hovers, números)
+--rule        rgba ink/.14   hairlines de grids
+```
+
+**Padrões visuais**
+- Grids com bordas hairline (border-top/left no container, border-right/bottom nos itens) — usado em `.features-grid`, `.solutions-grid`, `.benefits-grid`, `.meta-grid`, `.values-grid`, `.contact-cards-container`, `.noticias-grid`.
+- Eyebrow mono `XX — Tema` antes de cada `section-title`.
+- Headlines com `<em>` italic em `var(--accent)` para palavras-chave.
+- Hover em feature-cards: slide up de fundo `--ink` revelando o conteúdo em paper.
+- Marquee no Hero com palavras-chave separadas por dot orange.
+- Footer em `--ink` com mark editorial gigante no topo.
+- Botões flutuantes em `.float-stack` (canto inferior direito) com classe `.float-btn` (squared pill, branco + border, hover ink/orange).
 
 > Nota: `index.html` tem um `importmap` apontando para React 19 / framer-motion 12 do `aistudiocdn.com`. Em build/dev pelo Vite, as versões reais vêm de `node_modules` conforme `package.json`. Não confundir as duas fontes.
 
@@ -142,6 +169,7 @@ Almadina, Itamaraju, Nova Viçosa, Itororó, Anagé, Itabela, Prado (todos da Ba
 
 - **2026-05-16:** removido componente `Stats` (banner azul "150+ / 5.000+ / 10+") da Home — usuário considerou inadequado. Componente `src/components/Contact.tsx` (órfão, e-mail desatualizado) removido. Corrigidos 15 erros de TypeScript estrito. Corrigido número do WhatsApp em `WhatsAppButton.tsx` (faltava dígito 9 do celular). Em `Noticias.tsx`, leitura do API key feita via `import.meta.env.VITE_API_KEY` com fallback para `process.env.API_KEY`; `response.text` agora tem tratamento de `undefined`. Build limpo.
 - **2026-05-16:** migração para `react-router-dom` v6. SPA agora tem URLs reais (`/solucoes`, `/contato`, etc.) em vez de `useState<Page>`. `Header` usa `NavLink` com classe `.nav-link.is-active`. `Footer` usa `Link`. `Fornecedor` usa `useNavigate()`. `vercel.json` recebeu rewrite `/(.*)` → `/index.html` para SPA fallback. Tipos `Page` duplicados eliminados.
+- **2026-05-16:** redesign completo "Editorial Civic". Novo design system com Fraunces (display serif variável) + Manrope (sans body) + JetBrains Mono (labels), paleta paper warm (#F4EFE4) + ink (#0A1429) + blue (#1947E5) + accent orange (#FF4A1C). `index.css` reescrito do zero (~1100 linhas). Todas as páginas e componentes refatorados para o novo layout: hero editorial com marquee, grids com bordas hairline (estilo `.features-grid`/`.solutions-grid`/`.values-grid`/etc.), eyebrows mono `01 — Seção`, headlines com `<em>` italic em accent. Botões flutuantes (WhatsApp/Instagram/ScrollTop) unificados em `.float-stack` com a classe `.float-btn`. Componentes órfãos apagados: `SolucoesBanner`, `NoticiasBanner`, `BannerGestaoPublica`, `AnimatedCard`, `Sicc.tsx`, `AmxDigital.tsx`. `AnimatedIdentityCard` substituído por flip card que usa o novo CSS. Novas fontes carregadas via Google Fonts em `index.html`.
 
 ## Ao fazer alterações
 

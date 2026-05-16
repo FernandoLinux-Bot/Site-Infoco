@@ -3,7 +3,6 @@ import { motion, Variants } from 'framer-motion';
 import { GoogleGenAI, Type } from '@google/genai';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import NotFoundAnimation from '../components/NotFoundAnimation';
-import NoticiasBanner from '../components/NoticiasBanner';
 
 interface NewsArticle {
     title: string;
@@ -13,15 +12,12 @@ interface NewsArticle {
 
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: { staggerChildren: 0.1 }
-    }
+    visible: { opacity: 1, transition: { staggerChildren: 0.08 } }
 };
 
 const itemVariants: Variants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1 }
+    hidden: { y: 18, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } }
 };
 
 const Noticias = () => {
@@ -61,7 +57,7 @@ const Noticias = () => {
                         }
                     }
                 });
-                
+
                 const jsonStr = (response.text ?? '').trim();
                 if (!jsonStr) {
                     throw new Error('Resposta vazia da API.');
@@ -80,14 +76,8 @@ const Noticias = () => {
     }, []);
 
     const renderContent = () => {
-        if (loading) {
-            return <div className="loading-spinner">Carregando notícias...</div>;
-        }
-
-        if (error) {
-            return <div className="error-message">{error}</div>;
-        }
-
+        if (loading) return <div className="loading-spinner">Carregando notícias…</div>;
+        if (error) return <div className="error-message">{error}</div>;
         if (articles.length === 0) {
             return (
                 <div className="not-found-container">
@@ -114,14 +104,13 @@ const Noticias = () => {
                         rel="noopener noreferrer"
                         className="news-card"
                         variants={itemVariants}
-                        whileHover={{ y: -5, boxShadow: 'var(--shadow-hover)' }}
                     >
                         <div className="news-card-content">
                             <span className="news-card-source">{article.source}</span>
                             <h3>{article.title}</h3>
                         </div>
                         <div className="news-card-footer">
-                            <span>Ler mais</span>
+                            <span>Ler matéria</span>
                             <FaExternalLinkAlt />
                         </div>
                     </motion.a>
@@ -132,12 +121,20 @@ const Noticias = () => {
 
     return (
         <>
-            <NoticiasBanner />
+            <section className="noticias-hero">
+                <div className="container">
+                    <span className="eyebrow">Imprensa / Atualização semanal</span>
+                    <h1 className="section-title" style={{ marginTop: '1.5rem', maxWidth: '20ch' }}>
+                        Notícias da <em>gestão pública</em>.
+                    </h1>
+                    <p className="section-subtitle" style={{ marginTop: '1.5rem' }}>
+                        Decisões dos Tribunais de Contas, atualizações da Lei 14.133, jurisprudência do STF e movimentos da UPB — em um único lugar.
+                    </p>
+                </div>
+            </section>
 
             <section className="noticias-page">
-                <div className="container">
-                    {renderContent()}
-                </div>
+                <div className="container">{renderContent()}</div>
             </section>
         </>
     );

@@ -62,9 +62,11 @@ const App = () => (
       <AnimatedRoutes />
     </main>
     <Footer />
-    <WhatsAppButton />
-    <InstagramButton />
-    <ScrollToTopButton />
+    <div className="float-stack">
+      <WhatsAppButton />
+      <InstagramButton />
+      <ScrollToTopButton />
+    </div>
     <Analytics />
     <SpeedInsights />
   </BrowserRouter>

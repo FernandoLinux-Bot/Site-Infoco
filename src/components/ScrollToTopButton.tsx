@@ -3,34 +3,23 @@ import { useState, useEffect } from 'react';
 const ScrollToTopButton = () => {
     const [isVisible, setIsVisible] = useState(false);
 
-    const toggleVisibility = () => {
-        if (window.scrollY > 300) {
-            setIsVisible(true);
-        } else {
-            setIsVisible(false);
-        }
-    };
-
-    const scrollToTop = () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    };
-
     useEffect(() => {
+        const toggleVisibility = () => setIsVisible(window.scrollY > 400);
         window.addEventListener('scroll', toggleVisibility);
+        toggleVisibility();
         return () => window.removeEventListener('scroll', toggleVisibility);
     }, []);
 
+    const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
     return (
         <button
-            className={`scroll-to-top ${isVisible ? 'visible' : ''}`}
+            className={`float-btn scroll-to-top ${isVisible ? 'visible' : ''}`}
             onClick={scrollToTop}
             aria-label="Voltar ao topo"
         >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
             </svg>
         </button>
     );

@@ -2,12 +2,23 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => (
     <footer className="app-footer">
-        <div className="container footer-container">
+        <div className="container">
+            <div className="footer-mark">
+                <h2 className="footer-mark-headline">
+                    Vamos construir<br />uma gestão pública <em>mais inteligente</em>.
+                </h2>
+                <div className="footer-mark-meta">
+                    Infoco Gestão Pública<br />
+                    Itabuna · BA<br />
+                    Est. 2014
+                </div>
+            </div>
+
             <div className="footer-grid">
                 <div className="footer-column">
-                    <h4>Sobre a INFOCO</h4>
-                    <p style={{ opacity: 0.8, lineHeight: 1.6 }}>
-                        Somos uma empresa especializada no desenvolvimento de soluções em software voltadas exclusivamente para a gestão pública, oferecendo ferramentas que simplificam processos e fortalecem a tomada de decisão.
+                    <h4>Sobre</h4>
+                    <p>
+                        Empresa especializada no desenvolvimento de soluções em software voltadas exclusivamente para a gestão pública — ferramentas que simplificam processos, ampliam o controle administrativo e fortalecem a tomada de decisão.
                     </p>
                 </div>
                 <div className="footer-column">
@@ -21,37 +32,34 @@ const Footer = () => (
                     </ul>
                 </div>
                 <div className="footer-column">
-                    <h4>Demais links</h4>
+                    <h4>Recursos</h4>
                     <ul className="footer-links">
+                        <li><a href="https://app2.infocolicitacoes.com.br/cadastro/" target="_blank" rel="noopener noreferrer" className="footer-link">Plataforma</a></li>
                         <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>FAQ</a></li>
                         <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Trabalhe Conosco</a></li>
-                        <li><a href="https://app2.infocolicitacoes.com.br/cadastro/" target="_blank" rel="noopener noreferrer" className="footer-link">Crie sua conta grátis</a></li>
                         <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>LGPD</a></li>
-                        <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Política de Qualidade</a></li>
                         <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Política de Privacidade</a></li>
-                        <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Código de Conduta e Ética</a></li>
                     </ul>
                 </div>
                 <div className="footer-column footer-contact">
-                    <h4>Fale Conosco</h4>
+                    <h4>Contato</h4>
                     <ul>
                         <li><strong>Telefone</strong><span>(73) 3301-2710</span></li>
-                        <li><strong>Administrativo</strong><span>(73) 98118-5210</span></li>
                         <li><strong>Comercial</strong><span>(71) 98205-3822</span></li>
-                        <li><strong>Suporte Técnico</strong><span>(73) 98101-9313</span></li>
+                        <li><strong>Suporte</strong><span>(73) 98101-9313</span></li>
                     </ul>
                     <address className="footer-address">
                         <a href="mailto:contato@infocogestaopublica.com.br">contato@infocogestaopublica.com.br</a><br />
-                        Infoco Gestão Pública Ltda.<br />
-                        CNPJ: 46.554.439/0001-67<br />
-                        Avenida Princesa Isabel, nº 1206 – 2º andar, Salas 201 e 202<br />
-                        Bairro São Caetano – Itabuna/BA – CEP 45607-127
+                        Av. Princesa Isabel, 1206 — 2º andar<br />
+                        São Caetano, Itabuna/BA — 45607-127<br />
+                        CNPJ: 46.554.439/0001-67
                     </address>
                 </div>
             </div>
 
             <div className="footer-bottom">
-                <p>&copy; {new Date().getFullYear()} INFOCO GESTÃO PÚBLICA. Todos os direitos reservados.</p>
+                <p>&copy; {new Date().getFullYear()} Infoco Gestão Pública Ltda.</p>
+                <p>Todos os direitos reservados</p>
             </div>
         </div>
     </footer>

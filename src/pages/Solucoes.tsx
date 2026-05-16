@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { FaCalendarAlt, FaBullhorn, FaShoppingCart, FaClipboardList, FaDatabase, FaFolderOpen, FaBuilding, FaBoxes, FaArrowRight, FaTimes } from 'react-icons/fa';
-import SolucoesBanner from '../components/SolucoesBanner';
 
 interface Solution {
     id: string;
@@ -16,12 +15,10 @@ const solutionsData: Record<string, Solution[]> = {
         {
             id: 'pca',
             icon: <FaCalendarAlt />,
-            title: 'PCA – Plano de Contratações Anual',
+            title: 'PCA — Plano de Contratações Anual',
             description: 'Planeje de forma prática e inteligente, permitindo à administração pública antecipar necessidades e otimizar recursos.',
             details: () => (
-                <>
-                    <p>Com nosso sistema, o Plano de Contratação Anual é planejado de forma prática e inteligente, permitindo à administração pública antecipar necessidades, otimizar recursos, aumentar a transparência em cada etapa e garantir decisões mais eficientes e econômicas.</p>
-                </>
+                <p>Com nosso sistema, o Plano de Contratação Anual é planejado de forma prática e inteligente, permitindo à administração pública antecipar necessidades, otimizar recursos, aumentar a transparência em cada etapa e garantir decisões mais eficientes e econômicas.</p>
             )
         }
     ],
@@ -44,9 +41,7 @@ const solutionsData: Record<string, Solution[]> = {
             title: 'Gestão de Compras Públicas',
             description: 'Solução completa para otimização e controle das aquisições de materiais e serviços com agilidade e precisão.',
             details: () => (
-                <>
-                    <p>Solução completa para otimização e controle das aquisições de materiais e serviços. As solicitações são feitas diretamente pelo sistema, analisadas pelo setor de compras e, após aprovação, a autorização de fornecimento é possível ser enviada ao fornecedor com um único clique, contendo todas as informações detalhadas da demanda. Isso garante agilidade, precisão e eficiência total em cada etapa do processo de compras.</p>
-                </>
+                <p>Solução completa para otimização e controle das aquisições de materiais e serviços. As solicitações são feitas diretamente pelo sistema, analisadas pelo setor de compras e, após aprovação, a autorização de fornecimento é possível ser enviada ao fornecedor com um único clique, contendo todas as informações detalhadas da demanda. Isso garante agilidade, precisão e eficiência total em cada etapa do processo de compras.</p>
             )
         },
         {
@@ -55,9 +50,7 @@ const solutionsData: Record<string, Solution[]> = {
             title: 'Planejamento e Licitações',
             description: 'Ambiente digital completo para gestão de processos licitatórios, da criação do PA à geração de documentos com auxílio de IA.',
             details: () => (
-                <>
-                    <p>Ambiente digital completo para planejamento e gestão de processos licitatórios, integrando desde a criação do Processo Administrativo (PA) até a geração inteligente de DFDs, ETP, Mapa de Riscos e Termos de Referência com auxílio da IA, até a inserção na plataforma, garantindo eficiência, transparência e controle total.</p>
-                </>
+                <p>Ambiente digital completo para planejamento e gestão de processos licitatórios, integrando desde a criação do Processo Administrativo (PA) até a geração inteligente de DFDs, ETP, Mapa de Riscos e Termos de Referência com auxílio da IA, até a inserção na plataforma, garantindo eficiência, transparência e controle total.</p>
             )
         },
         {
@@ -66,9 +59,7 @@ const solutionsData: Record<string, Solution[]> = {
             title: 'Banco de Preços (Cotações)',
             description: 'Realize cotações de até 50 itens em menos de 2 minutos, garantindo conformidade e máxima economia.',
             details: () => (
-                <>
-                    <p>Sistema inteligente para consulta e registro de preços de mercado, garantindo total conformidade com a Lei 14.133/2021. Em poucos cliques, realize cotações de até 50 itens em menos de 2 minutos, otimizando recursos, acelerando decisões e promovendo máxima transparência e economia nas compras públicas.</p>
-                </>
+                <p>Sistema inteligente para consulta e registro de preços de mercado, garantindo total conformidade com a Lei 14.133/2021. Em poucos cliques, realize cotações de até 50 itens em menos de 2 minutos, otimizando recursos, acelerando decisões e promovendo máxima transparência e economia nas compras públicas.</p>
             )
         }
     ],
@@ -89,7 +80,7 @@ const solutionsData: Record<string, Solution[]> = {
                         <li>Anexo de arquivos digitalizados, textos e imagens.</li>
                         <li>Histórico completo de movimentações, registrando quem e quando uma operação foi realizada.</li>
                     </ul>
-                    <p><strong>Outras Funcionalidades da nossa solução:</strong></p>
+                    <p><strong>Outras Funcionalidades:</strong></p>
                     <ul>
                         <li><strong>Cadastro de Procedências:</strong> Permite definir a origem do processo (interno, externo, outros).</li>
                         <li><strong>Gestão de Contribuintes:</strong> Cadastro completo de documentos, endereços, telefones e e-mails.</li>
@@ -107,7 +98,7 @@ const solutionsData: Record<string, Solution[]> = {
             description: 'Controle integrado e automatizado de bens móveis, imóveis e intangíveis, do inventário à baixa.',
             details: () => (
                 <>
-                    <p><strong>Visão Geral:</strong> A ferramenta de gestão de patrimônio oferece um conjunto de funcionalidades essenciais para órgãos públicos que buscam eficiência, transparência e controle total sobre seus bens.</p>
+                    <p><strong>Visão Geral:</strong> A ferramenta oferece um conjunto de funcionalidades essenciais para órgãos públicos que buscam eficiência, transparência e controle total sobre seus bens.</p>
                     <p><strong>Controle Patrimonial Integrado e Automatizado:</strong></p>
                     <ul>
                         <li>Controle completo de bens móveis, imóveis e intangíveis.</li>
@@ -161,21 +152,18 @@ const TABS = Object.keys(solutionsData);
 
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: { staggerChildren: 0.1 }
-    }
+    visible: { opacity: 1, transition: { staggerChildren: 0.08 } }
 };
 
 const itemVariants: Variants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1 }
+    hidden: { y: 18, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } }
 };
 
 const modalVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    visible: { opacity: 1, scale: 1 },
-    exit: { opacity: 0, scale: 0.95 }
+    hidden: { opacity: 0, scale: 0.96, y: 10 },
+    visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } },
+    exit: { opacity: 0, scale: 0.96, y: 10 }
 };
 
 const SolutionModal: React.FC<{ solution: Solution; onClose: () => void }> = ({ solution, onClose }) => (
@@ -194,11 +182,29 @@ const Solucoes = () => {
 
     return (
         <>
-            <SolucoesBanner 
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-                TABS={TABS}
-            />
+            <section className="solucoes-hero">
+                <div className="container">
+                    <span className="eyebrow">Soluções / Portfólio Completo</span>
+                    <h1 className="section-title" style={{ marginTop: '1.5rem', maxWidth: '18ch' }}>
+                        Ferramentas para uma <em>gestão pública moderna</em>.
+                    </h1>
+                    <p className="section-subtitle" style={{ marginTop: '1.5rem' }}>
+                        Três grandes áreas, soluções pensadas para cada etapa do ciclo administrativo público. Da estratégia ao operacional.
+                    </p>
+
+                    <div className="solucoes-tabs">
+                        {TABS.map((tab) => (
+                            <button
+                                key={tab}
+                                onClick={() => setActiveTab(tab)}
+                                className={`solucoes-tab${activeTab === tab ? ' is-active' : ''}`}
+                            >
+                                {tab}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </section>
 
             <section className="solutions-page">
                 <div className="container">
@@ -224,7 +230,7 @@ const Solucoes = () => {
                                     <p>{solution.description}</p>
                                     {solution.details && (
                                         <div className="solution-card-button">
-                                            Saiba Mais <FaArrowRight />
+                                            Saiba mais <FaArrowRight />
                                         </div>
                                     )}
                                 </motion.div>
@@ -233,7 +239,7 @@ const Solucoes = () => {
                     </AnimatePresence>
                 </div>
             </section>
-            
+
             <AnimatePresence>
                 {selectedSolution && (
                     <SolutionModal solution={selectedSolution} onClose={() => setSelectedSolution(null)} />

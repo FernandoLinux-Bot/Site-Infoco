@@ -4,24 +4,16 @@ import {
     FaBullseye, FaHeart, FaLightbulb,
     FaBalanceScale, FaHandshake, FaTrophy, FaUsers, FaGlobeAmericas
 } from 'react-icons/fa';
-import BannerGestaoPublica from '../components/BannerGestaoPublica.tsx';
 import AnimatedIdentityCard from '../components/AnimatedIdentityCard.tsx';
 
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: { staggerChildren: 0.15, delayChildren: 0.2 }
-    }
+    visible: { opacity: 1, transition: { staggerChildren: 0.12, delayChildren: 0.1 } }
 };
 
 const itemVariants: Variants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { 
-        y: 0, 
-        opacity: 1,
-        transition: { type: 'spring', stiffness: 100 }
-    }
+    hidden: { y: 22, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
 };
 
 const values = [
@@ -34,29 +26,24 @@ const values = [
 ];
 
 const metaData = [
-    {
-        icon: <FaLightbulb />,
-        title: 'Eficiência',
-        description: 'Empoderar gestores com ferramentas modernas, simples e seguras, capazes de otimizar recursos e processos.',
-    },
-    {
-        icon: <FaBullseye />,
-        title: 'Transparência',
-        description: 'Fortalecer a confiança entre governo e sociedade, tornando cada processo administrativo mais claro e acessível.',
-    },
-    {
-        icon: <FaHeart />,
-        title: 'Humanização',
-        description: 'Construir pontes entre tecnologia e cidadania, tornando cada serviço público mais próximo do cidadão.',
-    }
+    { icon: <FaLightbulb />, title: 'Eficiência', description: 'Empoderar gestores com ferramentas modernas, simples e seguras, capazes de otimizar recursos e processos.' },
+    { icon: <FaBullseye />, title: 'Transparência', description: 'Fortalecer a confiança entre governo e sociedade, tornando cada processo administrativo mais claro e acessível.' },
+    { icon: <FaHeart />, title: 'Humanização', description: 'Construir pontes entre tecnologia e cidadania, tornando cada serviço público mais próximo do cidadão.' }
 ];
 
 const Institucional = () => {
     return (
         <>
-            <BannerGestaoPublica />
+            <section className="institucional-hero">
+                <div className="container">
+                    <span className="eyebrow">Institucional / Quem somos</span>
+                    <h1 className="section-title" style={{ marginTop: '1.5rem', maxWidth: '20ch' }}>
+                        Mais que software. <em>Parceiros da gestão pública.</em>
+                    </h1>
+                </div>
+            </section>
 
-            <motion.section 
+            <motion.section
                 className="institucional-content"
                 initial="hidden"
                 whileInView="visible"
@@ -64,9 +51,9 @@ const Institucional = () => {
                 variants={containerVariants}
             >
                 <div className="container">
-                    {/* Quem Somos */}
                     <motion.div className="content-block" variants={itemVariants}>
-                        <h2 className="section-title">Quem Somos</h2>
+                        <span className="eyebrow">01 — Identidade</span>
+                        <h2 className="section-title" style={{ marginTop: '1.25rem' }}>Quem somos</h2>
                         <div className="institutional-grid">
                             <AnimatedIdentityCard />
                             <div className="content-text">
@@ -74,20 +61,20 @@ const Institucional = () => {
                                 <p>Somos uma empresa especializada no desenvolvimento de soluções em software voltadas exclusivamente para a gestão pública, oferecendo ferramentas que simplificam processos, ampliam o controle administrativo e fortalecem a tomada de decisão.</p>
                                 <p>Com sede em Itabuna-BA, atuamos em parceria com prefeituras, câmaras municipais e demais órgãos públicos, levando inovação e suporte de excelência para diferentes regiões do país. Nosso compromisso é gerar valor real para a sociedade, ajudando gestores a otimizar recursos e entregar serviços públicos de maior qualidade.</p>
                                 <p>Na Infoco, unimos tecnologia, conhecimento jurídico-administrativo e experiência prática para entregar sistemas que vão além do digital: entregamos confiança, segurança e resultados.</p>
-                                <strong>Somos mais que uma empresa de software. Somos parceiros da gestão pública.</strong>
+                                <strong>Somos mais que uma empresa de software — somos parceiros da gestão pública.</strong>
                             </div>
                         </div>
                     </motion.div>
 
-                    {/* Nossa Meta */}
                     <motion.div className="content-block" variants={itemVariants}>
-                        <h2 className="section-title">Nossa Meta</h2>
-                        <p className="section-subtitle" style={{ textAlign: 'left', marginLeft: 0, maxWidth: '900px' }}>
-                            Nossa meta é clara: ser referência nacional em tecnologia aplicada à gestão pública, oferecendo soluções que transformem a administração em um processo mais eficiente, transparente e humano.
+                        <span className="eyebrow">02 — Direção</span>
+                        <h2 className="section-title" style={{ marginTop: '1.25rem' }}>Nossa <em>meta</em></h2>
+                        <p className="section-subtitle" style={{ marginTop: '1rem' }}>
+                            Ser referência nacional em tecnologia aplicada à gestão pública, oferecendo soluções que transformem a administração em um processo mais eficiente, transparente e humano.
                         </p>
                         <div className="meta-grid">
                             {metaData.map((item, index) => (
-                                <InfoCard 
+                                <InfoCard
                                     key={index}
                                     icon={item.icon}
                                     title={item.title}
@@ -97,14 +84,10 @@ const Institucional = () => {
                         </div>
                     </motion.div>
 
-
-                    {/* Nossos Valores */}
-                     <motion.div className="content-block" variants={itemVariants}>
-                        <h2 className="section-title">Nossos Valores</h2>
-                         <motion.div 
-                            className="values-grid"
-                            variants={containerVariants}
-                         >
+                    <motion.div className="content-block" variants={itemVariants}>
+                        <span className="eyebrow">03 — Princípios</span>
+                        <h2 className="section-title" style={{ marginTop: '1.25rem' }}>Nossos <em>valores</em></h2>
+                        <motion.div className="values-grid" variants={containerVariants}>
                             {values.map((value, index) => (
                                 <motion.div key={index} className="value-card" variants={itemVariants}>
                                     <div className="value-card-icon">{value.icon}</div>

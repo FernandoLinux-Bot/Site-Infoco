@@ -1,28 +1,43 @@
 import AnimatedSection from './AnimatedSection';
 
+const steps = [
+    {
+        title: 'Cadastre-se',
+        description: 'Crie sua conta em minutos e tenha acesso a milhares de oportunidades em todo o país.',
+    },
+    {
+        title: 'Encontre Licitações',
+        description: 'Utilize filtros inteligentes para encontrar as licitações que realmente importam para o seu negócio.',
+    },
+    {
+        title: 'Envie sua Proposta',
+        description: 'Participe dos certames de forma segura e aumente suas chances de fechar grandes negócios.',
+    },
+];
+
 const HowItWorks = () => (
     <AnimatedSection id="como-funciona" className="how-it-works">
         <div className="container">
-            <h2 className="section-title animated-item">Como Funciona</h2>
-            <p className="section-subtitle animated-item" style={{ transitionDelay: '100ms' }}>
-                Nossa plataforma simplifica o complexo mundo das licitações em três passos simples.
-            </p>
+            <div className="features-head animated-item">
+                <div>
+                    <span className="eyebrow">04 — Processo</span>
+                    <h2 className="section-title" style={{ marginTop: '1.5rem' }}>
+                        Como <em>funciona</em>.
+                    </h2>
+                </div>
+                <p className="section-subtitle">
+                    Três passos para transformar a forma como sua empresa participa de licitações públicas — sem burocracia, com tecnologia.
+                </p>
+            </div>
+
             <div className="how-it-works-grid">
-                <div className="step-card animated-item" style={{ transitionDelay: '200ms' }}>
-                    <div className="step-number">1</div>
-                    <h3>Cadastre-se</h3>
-                    <p>Crie sua conta em minutos e tenha acesso a milhares de oportunidades.</p>
-                </div>
-                 <div className="step-card animated-item" style={{ transitionDelay: '300ms' }}>
-                    <div className="step-number">2</div>
-                    <h3>Encontre Licitações</h3>
-                    <p>Utilize nossos filtros inteligentes para encontrar as melhores licitações para o seu negócio.</p>
-                </div>
-                 <div className="step-card animated-item" style={{ transitionDelay: '400ms' }}>
-                    <div className="step-number">3</div>
-                    <h3>Envie sua Proposta</h3>
-                    <p>Participe dos certames de forma segura e aumente suas chances de ganhar.</p>
-                </div>
+                {steps.map((step, index) => (
+                    <div className="step-card animated-item" key={step.title} style={{ transitionDelay: `${index * 80}ms` }}>
+                        <span className="step-num">0{index + 1}</span>
+                        <h3>{step.title}</h3>
+                        <p>{step.description}</p>
+                    </div>
+                ))}
             </div>
         </div>
     </AnimatedSection>

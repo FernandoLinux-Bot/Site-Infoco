@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, Variants } from 'framer-motion';
 import { FaPhone, FaUserTie, FaHeadset, FaWhatsapp } from 'react-icons/fa';
 
 type SubmitStatus = 'idle' | 'submitting' | 'success' | 'error';
 
-// Define grecaptcha on the window type to avoid TypeScript errors
 declare global {
     interface Window {
         grecaptcha: any;
@@ -13,46 +12,19 @@ declare global {
 
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: { staggerChildren: 0.15, delayChildren: 0.2 }
-    }
+    visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.15 } }
 };
 
 const itemVariants: Variants = {
-    hidden: { x: -20, opacity: 0 },
-    visible: {
-        x: 0,
-        opacity: 1,
-        transition: { type: 'spring', stiffness: 100 }
-    }
+    hidden: { y: 22, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } }
 };
 
 const contactInfo = [
-    {
-        icon: <FaPhone />,
-        title: 'Telefone',
-        value: '(73) 3301-2710',
-        href: 'tel:+557333012710'
-    },
-    {
-        icon: <FaUserTie />,
-        title: 'Administrativo',
-        value: '(73) 98118-5210',
-        href: 'https://wa.me/5573981185210'
-    },
-    {
-        icon: <FaWhatsapp />,
-        title: 'Comercial',
-        value: '(71) 98205-3822',
-        href: 'https://wa.me/5571982053822'
-    },
-    {
-        icon: <FaHeadset />,
-        title: 'Suporte Técnico',
-        value: '(73) 98101-9313',
-        href: 'https://wa.me/5573981019313'
-    }
+    { icon: <FaPhone />, title: 'Telefone', value: '(73) 3301-2710', href: 'tel:+557333012710' },
+    { icon: <FaUserTie />, title: 'Administrativo', value: '(73) 98118-5210', href: 'https://wa.me/5573981185210' },
+    { icon: <FaWhatsapp />, title: 'Comercial', value: '(71) 98205-3822', href: 'https://wa.me/5571982053822' },
+    { icon: <FaHeadset />, title: 'Suporte Técnico', value: '(73) 98101-9313', href: 'https://wa.me/5573981019313' }
 ];
 
 const ContactForm = () => {
@@ -61,7 +33,7 @@ const ContactForm = () => {
     const recaptchaContainer = useRef<HTMLDivElement>(null);
     const recaptchaWidgetId = useRef<number | null>(null);
 
-     useEffect(() => {
+    useEffect(() => {
         const renderRecaptcha = () => {
             if (recaptchaContainer.current && window.grecaptcha?.render && recaptchaWidgetId.current === null) {
                 recaptchaWidgetId.current = window.grecaptcha.render(recaptchaContainer.current, {
@@ -112,17 +84,14 @@ const ContactForm = () => {
     if (submitStatus === 'success') {
         return (
             <div className="submit-success">
-                <h3>Obrigado!</h3>
-                <p>Sua mensagem foi enviada com sucesso. Retornaremos em breve.</p>
+                <h3>Obrigado.</h3>
+                <p style={{ marginTop: '0.5rem', color: 'var(--ink-soft)' }}>Sua mensagem foi enviada com sucesso. Retornaremos em breve.</p>
             </div>
         );
     }
 
     return (
         <div className="contact-container">
-            <p className="section-subtitle">
-                Tem alguma dúvida ou precisa de uma demonstração? Preencha o formulário abaixo e nossa equipe retornará em breve.
-            </p>
             <form className="contact-form" onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="nome">Nome Completo</label>
@@ -137,7 +106,7 @@ const ContactForm = () => {
                     <input type="tel" id="telefone" name="telefone" className="form-input" />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="mensagem">Sua Mensagem</label>
+                    <label htmlFor="mensagem">Mensagem</label>
                     <textarea id="mensagem" name="mensagem" className="form-input" rows={5} required></textarea>
                 </div>
                 <div className="form-group recaptcha-container">
@@ -146,21 +115,20 @@ const ContactForm = () => {
                 <button
                     type="submit"
                     className="cta-button"
-                    style={{ width: '100%', justifyContent: 'center' }}
+                    style={{ width: '100%', justifyContent: 'center', marginTop: '1rem' }}
                     disabled={submitStatus === 'submitting' || !isRecaptchaVerified}
                 >
-                    {submitStatus === 'submitting' ? 'Enviando...' : 'Enviar Mensagem'}
+                    {submitStatus === 'submitting' ? 'Enviando…' : 'Enviar mensagem'}
                 </button>
                 {submitStatus === 'error' && (
                     <p className="submit-error">
-                        Ocorreu um erro ao enviar a mensagem. Por favor, tente novamente mais tarde.
+                        Ocorreu um erro ao enviar a mensagem. Tente novamente mais tarde.
                     </p>
                 )}
             </form>
         </div>
     );
 };
-
 
 const Contact = () => {
     return (
@@ -171,25 +139,26 @@ const Contact = () => {
             transition={{ duration: 0.5 }}
         >
             <div className="container contact-page-grid">
-                <motion.div 
+                <motion.div
                     className="contact-info"
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.2 }}
                     variants={containerVariants}
                 >
-                    <motion.h1 variants={itemVariants}>Entre em Contato</motion.h1>
+                    <motion.span className="eyebrow" variants={itemVariants}>Contato / Estamos prontos</motion.span>
+                    <motion.h1 variants={itemVariants}>Entre em <em>contato</em>.</motion.h1>
                     <motion.p className="section-subtitle" variants={itemVariants}>
-                        Estamos prontos para atender você. Escolha o melhor canal de comunicação ou nos envie uma mensagem.
+                        Escolha o melhor canal de comunicação ou envie uma mensagem pelo formulário ao lado.
                     </motion.p>
                     <div className="contact-cards-container">
                         {contactInfo.map((item, index) => (
-                           <motion.a 
-                                key={index} 
-                                href={item.href} 
+                            <motion.a
+                                key={index}
+                                href={item.href}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="contact-card" 
+                                className="contact-card"
                                 variants={itemVariants}
                             >
                                 <div className="contact-card-icon">{item.icon}</div>
@@ -201,12 +170,12 @@ const Contact = () => {
                         ))}
                     </div>
                 </motion.div>
-                <motion.div 
+                <motion.div
                     className="contact-form-wrapper"
                     initial={{ opacity: 0, x: 20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, amount: 0.2 }}
-                    transition={{ duration: 0.6, ease: 'easeOut' }}
+                    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                 >
                     <ContactForm />
                 </motion.div>

@@ -1,12 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { motion, Variants } from 'framer-motion';
-import { FaArrowRight } from 'react-icons/fa';
 
 const iconVariants: Variants = {
     rest: { x: 0, transition: { type: 'spring', stiffness: 300, damping: 20 } },
-    hover: { x: 5, transition: { type: 'spring', stiffness: 300, damping: 20 } }
+    hover: { x: 4, transition: { type: 'spring', stiffness: 300, damping: 20 } }
 };
+
+const ArrowIcon = () => (
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" width="13" height="13">
+        <path d="M2 8h12M9 3l5 5-5 5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+);
 
 const navItems = [
     { to: '/', label: 'Home', end: true },
@@ -43,12 +48,9 @@ const Header = () => {
             initial="rest"
             animate="rest"
         >
-            <span className="cta-text-wrapper">
-                <span>Acessar</span>
-                <span>Plataforma</span>
-            </span>
+            <span>Acessar plataforma</span>
             <motion.span className="cta-icon-wrapper" variants={iconVariants}>
-                <FaArrowRight />
+                <ArrowIcon />
             </motion.span>
         </motion.a>
     );

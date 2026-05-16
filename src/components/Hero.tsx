@@ -1,141 +1,154 @@
-import { motion } from "framer-motion";
-import { MdSearch, MdDescription, MdCheckCircle, MdLink } from "react-icons/md";
+import { motion, Variants } from "framer-motion";
 
-export default function Hero() {
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
+  },
+};
+
+const lineVariants: Variants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 1, delay: 0.1 + i * 0.08, ease: [0.16, 1, 0.3, 1] },
+  }),
+};
+
+const marqueeWords = [
+  "Licitações",
+  "Contratos",
+  "Patrimônio",
+  "Almoxarifado",
+  "Protocolo",
+  "Lei 14.133/2021",
+  "Transparência",
+  "Compras Públicas",
+  "Banco de Preços",
+  "PCA",
+];
+
+const Hero = () => {
   return (
-    <section className="banner-section">
-      {/* Fundo com formas azuis animadas */}
-      <div className="banner-animated-bg">
+    <section className="hero">
+      <div className="container">
         <motion.div
-          className="banner-bg-shape shape-1"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0, x: [0, 80, 0] }}
-          transition={{
-            opacity: { duration: 1.5, ease: "easeOut" },
-            y: { duration: 1.5, ease: "easeOut" },
-            x: { duration: 22, repeat: Infinity, ease: "easeInOut" },
-          }}
-        />
-        <motion.div
-          className="banner-bg-shape shape-2"
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: [0, 50, 0], x: [0, -70, 0] }}
-          transition={{
-            opacity: { duration: 1.5, ease: "easeOut", delay: 0.2 },
-            y: { duration: 28, repeat: Infinity, ease: "easeInOut", delay: 4 },
-            x: { duration: 28, repeat: Infinity, ease: "easeInOut", delay: 4 },
-          }}
-        />
-        <motion.div
-          className="banner-bg-shape shape-3"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: [1, 1.15, 1] }}
-          transition={{
-            opacity: { duration: 1.5, ease: "easeOut", delay: 0.4 },
-            scale: { duration: 32, repeat: Infinity, ease: "easeInOut", delay: 8 },
-          }}
-        />
-      </div>
-
-      {/* Fundo com grade de tecnologia animada */}
-      <div className="banner-grid-bg">
-        <motion.div
-          initial={{ opacity: 0, rotate: 0 }}
-          animate={{ opacity: 1, rotate: 360 }}
-          transition={{
-            opacity: { duration: 2, ease: "easeIn" },
-            rotate: { duration: 90, repeat: Infinity, ease: "linear" },
-          }}
-        />
-      </div>
-
-      {/* Conteúdo */}
-      <div className="container banner-content">
-        {/* Texto */}
-        <motion.div
-          initial={{ y: 40, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-          className="banner-text"
+          className="hero-eyebrow-row"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
         >
-          <motion.h1
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
-            Modernizando a{" "}
-            <span className="gradient-text">
-              Gestão Pública
-            </span>
-          </motion.h1>
-
-          <p>
-            Simplifique processos de licitação, aumente a transparência e
-            conecte fornecedores com a administração pública de forma ágil e
-            digital.
-          </p>
-
-          <div className="banner-buttons">
-            <motion.div whileHover={{ scale: 1.05 }}>
-              <button
-                className="banner-button banner-button-primary"
-                onClick={() => window.open('https://app2.infocolicitacoes.com.br/cadastro/', '_blank', 'noopener,noreferrer')}
-              >
-                <MdDescription className="icon" /> Cadastrar
-              </button>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.05 }}>
-              <button
-                className="banner-button banner-button-outline"
-                onClick={() => window.open('https://app2.infocolicitacoes.com.br/cadastro/', '_blank', 'noopener,noreferrer')}
-              >
-                <MdSearch className="icon" /> Pesquisar Processos
-              </button>
-            </motion.div>
-          </div>
+          <span>Edição 01 — Itabuna, BA</span>
+          <span>Software para Gestão Pública / Est. 2014</span>
         </motion.div>
 
-        {/* Ilustração com ícones flat animados */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          className="banner-illustration"
+          className="hero-grid"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
         >
-          {/* Imagem principal */}
-          <motion.img
-            src="/patrao.png"
-            alt="Gestão Pública"
-            animate={{ y: [0, -12, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          />
+          <div>
+            <h1 className="hero-headline">
+              <motion.span
+                style={{ display: "block" }}
+                custom={0}
+                variants={lineVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                Modernizando
+              </motion.span>
+              <motion.span
+                style={{ display: "block" }}
+                custom={1}
+                variants={lineVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                a <span className="accent-word">gestão pública</span>.
+              </motion.span>
+            </h1>
 
-          {/* Ícones decorativos (Flat Design) */}
-          <motion.div
-            className="banner-deco-1"
-            animate={{ y: [0, 20, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <MdCheckCircle size={50} />
-          </motion.div>
+            <motion.p className="hero-lede" variants={itemVariants}>
+              Sistemas integrados de licitação, contratos, patrimônio e protocolo
+              para prefeituras, câmaras e órgãos públicos. Tecnologia que entrega
+              eficiência, transparência e segurança jurídica.
+            </motion.p>
 
-          <motion.div
-            className="banner-deco-2"
-            animate={{ y: [0, -20, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <MdLink size={52} />
-          </motion.div>
+            <motion.div className="hero-actions" variants={itemVariants}>
+              <a
+                href="https://app2.infocolicitacoes.com.br/cadastro/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cta-button"
+              >
+                Acessar plataforma
+                <span className="cta-icon-wrapper">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8">
+                    <path d="M2 8h12M9 3l5 5-5 5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+              </a>
+              <a href="#solucoes" className="cta-button cta-button-outline">
+                Ver soluções
+              </a>
+            </motion.div>
+          </div>
 
-          <motion.div
-            className="banner-deco-3"
-            animate={{ rotate: [0, 15, 0] }}
-            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <MdDescription size={46} />
-          </motion.div>
+          <motion.aside className="hero-aside" variants={itemVariants}>
+            <div className="hero-aside-row">
+              <span className="label">Sede</span>
+              <span className="value">
+                Itabuna, <em>Bahia</em>
+              </span>
+            </div>
+            <div className="hero-aside-row">
+              <span className="label">Atendimento</span>
+              <span className="value">
+                Prefeituras &<br /> Câmaras Municipais
+              </span>
+            </div>
+            <div className="hero-aside-row">
+              <span className="label">Marco Legal</span>
+              <span className="value">
+                Lei <em>14.133/2021</em>
+              </span>
+            </div>
+          </motion.aside>
+        </motion.div>
+
+        <motion.div
+          className="hero-marquee"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2, delay: 0.5 }}
+        >
+          <div className="hero-marquee-track">
+            <span>
+              {[...marqueeWords, ...marqueeWords].map((word, i) => (
+                <span key={i}>
+                  {word}
+                  <span className="dot" />
+                </span>
+              ))}
+            </span>
+          </div>
         </motion.div>
       </div>
     </section>
   );
-}
+};
+
+export default Hero;
