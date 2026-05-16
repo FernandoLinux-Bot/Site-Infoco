@@ -1,7 +1,7 @@
 const InstagramButton = () => (
     <a
       href="https://www.instagram.com/infocogestaopublica/"
-      className="float-btn"
+      className="float-btn is-instagram"
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Siga-nos no Instagram"

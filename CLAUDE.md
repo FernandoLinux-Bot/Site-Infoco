@@ -26,32 +26,42 @@ Este arquivo orienta o Claude Code ao trabalhar neste repositório.
 | Hospedagem | Vercel |
 | Formulário | submit-form.com (endpoint `Z4G5K3MOm`) + Google reCAPTCHA v2 |
 
-## Design System — "Editorial Civic"
+## Design System — "Modern SaaS Blue"
 
 **Tipografia (Google Fonts)**
-- **Display:** `Fraunces` — serif variável com `opsz` e `SOFT`; use `font-variation-settings: "opsz" 144, "SOFT" 30` para headlines. Itálico de Fraunces é o destaque visual da marca (`<em>` em accent orange).
-- **Body:** `Manrope` (300–800) — humanista geométrica.
-- **Mono:** `JetBrains Mono` — usado em eyebrows (`01 — Seção`), labels e numeração de cards.
+- **Body/Display:** `Plus Jakarta Sans` (300–800) — sans humanista moderna, weight 700+ para headlines.
+- **Acento serif:** `Instrument Serif` italic — usado em palavras-chave dentro de headlines (`<em>` ou `.serif`), cor azul.
 
 **Paleta (CSS vars em `:root`)**
 ```
---paper       #F4EFE4   fundo principal (cream warm)
---paper-soft  #FAF5EA   variante mais clara
---ink         #0A1429   texto principal / fundo escuro
+--white       #FFFFFF       fundo predominante
+--paper       #F6F8FE       fundo alt (azul tint sutil)
+--paper-deep  #EDF2FE       fundo de seções secundárias
+--blue        #2253F0       brand vivido
+--blue-600    #1B43C9       hover
+--blue-700    #0F2FA0       deep (gradiente)
+--blue-300    #6F8DFF       light variant
+--blue-100    #DDE6FF       backgrounds suaves
+--blue-50     #EDF2FE       eyebrows/icons
+--ink         #0E1A3D       texto/dark surfaces
 --ink-soft    rgba ink/.66
---blue        #1947E5   marca
---accent      #FF4A1C   accent sharp (itálicos, hovers, números)
---rule        rgba ink/.14   hairlines de grids
+--accent      #FFD338       yellow para destaques (mín. uso)
+--rule        rgba ink/.08  bordas leves
 ```
 
+**Radii / Sombras**
+- `--radius-sm/md/lg/xl/full` — 10/16/24/32/999px.
+- `--shadow-sm/md/lg`, `--shadow-blue` (sombra azul colorida para CTAs), `--shadow-card` (sombra de card SaaS).
+
 **Padrões visuais**
-- Grids com bordas hairline (border-top/left no container, border-right/bottom nos itens) — usado em `.features-grid`, `.solutions-grid`, `.benefits-grid`, `.meta-grid`, `.values-grid`, `.contact-cards-container`, `.noticias-grid`.
-- Eyebrow mono `XX — Tema` antes de cada `section-title`.
-- Headlines com `<em>` italic em `var(--accent)` para palavras-chave.
-- Hover em feature-cards: slide up de fundo `--ink` revelando o conteúdo em paper.
-- Marquee no Hero com palavras-chave separadas por dot orange.
-- Footer em `--ink` com mark editorial gigante no topo.
-- Botões flutuantes em `.float-stack` (canto inferior direito) com classe `.float-btn` (squared pill, branco + border, hover ink/orange).
+- Hero "toggl-inspired": grid 2 colunas (texto esq. + visual dir.), 4 cards UI flutuantes animados (motion floating loops), mesh gradient blur de fundo (`.hero-mesh`), trustline com avatares overlapping.
+- Cards arredondados com hover lift (translateY(-4px) + shadow-md).
+- CTAs: pílulas azuis com `box-shadow: var(--shadow-blue)` que aumenta no hover.
+- Eyebrows pílulas com fundo `--blue-50` e dot azul.
+- `<em>` global mapeia para Instrument Serif italic azul (ou amarelo dentro do banner editorial gradient).
+- Editorial banner com gradient azul + accent yellow glow.
+- Floating buttons (`.float-stack`): círculos com hover colorido por marca (verde WhatsApp, gradient Instagram, azul scroll-top).
+- Sem grids hairline — substituído por cards independentes com gap.
 
 > Nota: `index.html` tem um `importmap` apontando para React 19 / framer-motion 12 do `aistudiocdn.com`. Em build/dev pelo Vite, as versões reais vêm de `node_modules` conforme `package.json`. Não confundir as duas fontes.
 
@@ -170,6 +180,7 @@ Almadina, Itamaraju, Nova Viçosa, Itororó, Anagé, Itabela, Prado (todos da Ba
 - **2026-05-16:** removido componente `Stats` (banner azul "150+ / 5.000+ / 10+") da Home — usuário considerou inadequado. Componente `src/components/Contact.tsx` (órfão, e-mail desatualizado) removido. Corrigidos 15 erros de TypeScript estrito. Corrigido número do WhatsApp em `WhatsAppButton.tsx` (faltava dígito 9 do celular). Em `Noticias.tsx`, leitura do API key feita via `import.meta.env.VITE_API_KEY` com fallback para `process.env.API_KEY`; `response.text` agora tem tratamento de `undefined`. Build limpo.
 - **2026-05-16:** migração para `react-router-dom` v6. SPA agora tem URLs reais (`/solucoes`, `/contato`, etc.) em vez de `useState<Page>`. `Header` usa `NavLink` com classe `.nav-link.is-active`. `Footer` usa `Link`. `Fornecedor` usa `useNavigate()`. `vercel.json` recebeu rewrite `/(.*)` → `/index.html` para SPA fallback. Tipos `Page` duplicados eliminados.
 - **2026-05-16:** redesign completo "Editorial Civic". Novo design system com Fraunces (display serif variável) + Manrope (sans body) + JetBrains Mono (labels), paleta paper warm (#F4EFE4) + ink (#0A1429) + blue (#1947E5) + accent orange (#FF4A1C). `index.css` reescrito do zero (~1100 linhas). Todas as páginas e componentes refatorados para o novo layout: hero editorial com marquee, grids com bordas hairline (estilo `.features-grid`/`.solutions-grid`/`.values-grid`/etc.), eyebrows mono `01 — Seção`, headlines com `<em>` italic em accent. Botões flutuantes (WhatsApp/Instagram/ScrollTop) unificados em `.float-stack` com a classe `.float-btn`. Componentes órfãos apagados: `SolucoesBanner`, `NoticiasBanner`, `BannerGestaoPublica`, `AnimatedCard`, `Sicc.tsx`, `AmxDigital.tsx`. `AnimatedIdentityCard` substituído por flip card que usa o novo CSS. Novas fontes carregadas via Google Fonts em `index.html`.
+- **2026-05-16:** pivot estético para **Modern SaaS Blue** após feedback do usuário (cream warm e laranja não funcionaram). Fontes trocadas para Plus Jakarta Sans + Instrument Serif. Paleta agora azul + branco predominantes com amarelo `#FFD338` como accent mínimo. Hero refeito toggl.com-inspired: layout responsivo com 4 cards UI flutuantes animados (Licitação aprovada, Economia anual, Contratos, Patrimônio), mesh gradient azul/amarelo blur de fundo, trustline com avatares. Cards arredondados + sombras em vez de grids hairline. Hover lift padrão em todos os cards. CTAs com sombra azul colorida. `<em>` global mapeia para Instrument Serif italic azul. Floating buttons com hover por marca (verde WhatsApp, gradient Instagram).
 
 ## Ao fazer alterações
 
