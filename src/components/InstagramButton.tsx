@@ -1,5 +1,3 @@
-import React from 'react';
-
 const InstagramButton = () => (
     <a
       href="https://www.instagram.com/infocogestaopublica/"

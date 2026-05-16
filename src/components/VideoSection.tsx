@@ -1,4 +1,3 @@
-import React from 'react';
 import MuxPlayer from '@mux/mux-player-react';
 import AnimatedSection from './AnimatedSection';
 

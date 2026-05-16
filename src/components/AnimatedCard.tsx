@@ -1,5 +1,3 @@
-import React from 'react';
-
 const FlipCard = () => {
   return (
     <div className="flip-card-container">

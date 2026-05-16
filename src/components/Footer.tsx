@@ -30,13 +30,13 @@ const Footer: React.FC<FooterProps> = ({ setCurrentPage }) => (
                 <div className="footer-column">
                     <h4>Demais links</h4>
                     <ul className="footer-links">
-                        <li><a href="#" className="footer-link">FAQ</a></li>
-                        <li><a href="#" className="footer-link">Trabalhe Conosco</a></li>
-                        <li><a href="#" className="footer-link">Crie sua conta grátis</a></li>
-                        <li><a href="#" className="footer-link">LGPD</a></li>
-                        <li><a href="#" className="footer-link">Política de Qualidade</a></li>
-                        <li><a href="#" className="footer-link">Política de Privacidade</a></li>
-                        <li><a href="#" className="footer-link">Código de Conduta e Ética</a></li>
+                        <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>FAQ</a></li>
+                        <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Trabalhe Conosco</a></li>
+                        <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Crie sua conta grátis</a></li>
+                        <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>LGPD</a></li>
+                        <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Política de Qualidade</a></li>
+                        <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Política de Privacidade</a></li>
+                        <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Código de Conduta e Ética</a></li>
                     </ul>
                 </div>
                 <div className="footer-column footer-contact">

@@ -1,8 +1,7 @@
-import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import InfoCard from '../components/InfoCard.tsx';
-import { 
-    FaBullseye, FaHeart, FaLightbulb, FaBuilding,
+import {
+    FaBullseye, FaHeart, FaLightbulb,
     FaBalanceScale, FaHandshake, FaTrophy, FaUsers, FaGlobeAmericas
 } from 'react-icons/fa';
 import BannerGestaoPublica from '../components/BannerGestaoPublica.tsx';

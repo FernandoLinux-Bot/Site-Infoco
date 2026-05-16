@@ -1,8 +1,6 @@
-import React from 'react';
-
 const WhatsAppButton = () => (
     <a
-      href="https://wa.me/557381019313"
+      href="https://wa.me/5573981019313"
       className="whatsapp-fab"
       target="_blank"
       rel="noopener noreferrer"

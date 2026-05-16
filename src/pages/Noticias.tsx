@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, Variants } from 'framer-motion';
 import { GoogleGenAI, Type } from '@google/genai';
 import { FaExternalLinkAlt } from 'react-icons/fa';
@@ -31,8 +31,7 @@ const Noticias = () => {
 
     useEffect(() => {
         const fetchNews = async () => {
-            // Fix: Use `process.env.API_KEY` as per the coding guidelines.
-            const apiKey = process.env.API_KEY;
+            const apiKey = (import.meta as any).env?.VITE_API_KEY ?? (globalThis as any).process?.env?.API_KEY;
 
             if (!apiKey) {
                 setError("A chave da API não foi configurada.");
@@ -63,7 +62,10 @@ const Noticias = () => {
                     }
                 });
                 
-                const jsonStr = response.text.trim();
+                const jsonStr = (response.text ?? '').trim();
+                if (!jsonStr) {
+                    throw new Error('Resposta vazia da API.');
+                }
                 const parsedArticles = JSON.parse(jsonStr);
                 setArticles(parsedArticles);
             } catch (err) {

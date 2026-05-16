@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 // Fix: Import `Transition` and `Variants` to explicitly type framer-motion configurations.
 import { motion, AnimatePresence, Transition, Variants } from 'framer-motion';
 import Header from './components/Header';
