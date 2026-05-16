@@ -1,12 +1,5 @@
-import React from 'react';
-// Fix: Import `Variants` to explicitly type framer-motion animation variants.
 import { motion, Variants } from 'framer-motion';
-
-type Page = 'home' | 'fornecedor' | 'cadastro';
-
-interface FornecedorProps {
-  setCurrentPage: (page: Page) => void;
-}
+import { useNavigate } from 'react-router-dom';
 
 // Fix: Add `Variants` type to ensure the object structure is correct.
 const containerVariants: Variants = {
@@ -65,10 +58,11 @@ const benefits = [
     }
 ];
 
-const Fornecedor: React.FC<FornecedorProps> = ({ setCurrentPage }) => {
+const Fornecedor = () => {
+  const navigate = useNavigate();
   return (
     <>
-      <motion.section 
+      <motion.section
         className="fornecedor-hero"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -77,7 +71,7 @@ const Fornecedor: React.FC<FornecedorProps> = ({ setCurrentPage }) => {
         <div className="container">
           <h1>Venda para o Governo com a Melhor Plataforma</h1>
           <p>Simplificamos o processo de licitação para que você foque no que realmente importa: fechar grandes negócios.</p>
-          <button onClick={() => setCurrentPage('cadastro')} className="cta-button">
+          <button onClick={() => navigate('/cadastro')} className="cta-button">
             Comece a Vender Agora
           </button>
         </div>

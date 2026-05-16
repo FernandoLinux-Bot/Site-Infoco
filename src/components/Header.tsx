@@ -1,29 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import { motion, Variants } from 'framer-motion';
 import { FaArrowRight } from 'react-icons/fa';
-
-type Page = 'home' | 'solucoes' | 'institucional' | 'fornecedor' | 'cadastro' | 'contact' | 'noticias';
-
-interface HeaderProps {
-    setCurrentPage: (page: Page) => void;
-}
 
 const iconVariants: Variants = {
     rest: { x: 0, transition: { type: 'spring', stiffness: 300, damping: 20 } },
     hover: { x: 5, transition: { type: 'spring', stiffness: 300, damping: 20 } }
 };
 
-const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
+const navItems = [
+    { to: '/', label: 'Home', end: true },
+    { to: '/solucoes', label: 'Soluções' },
+    { to: '/institucional', label: 'Institucional' },
+    { to: '/noticias', label: 'Notícias' },
+    { to: '/contato', label: 'Contato' },
+];
+
+const Header = () => {
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-    const handleNavClick = (page: Page) => {
-        setCurrentPage(page);
-        setMobileMenuOpen(false); // Close menu on navigation
-    };
-
-    const toggleMenu = () => {
-        setMobileMenuOpen(isOpen => !isOpen);
-    };
+    const closeMenu = () => setMobileMenuOpen(false);
+    const toggleMenu = () => setMobileMenuOpen(isOpen => !isOpen);
 
     useEffect(() => {
         if (isMobileMenuOpen) {
@@ -31,7 +28,6 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
         } else {
             document.body.classList.remove('mobile-nav-is-open');
         }
-        // Cleanup function to ensure the class is removed on component unmount
         return () => {
             document.body.classList.remove('mobile-nav-is-open');
         };
@@ -62,18 +58,24 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
             <header className={`app-header ${isMobileMenuOpen ? 'nav-open' : ''}`}>
                  <div className="container header-container">
                     <div className="header-left">
-                        <button onClick={() => handleNavClick('home')} className="logo">
+                        <Link to="/" onClick={closeMenu} className="logo">
                             <img src="/Logo.png" alt="INFOCO Logo" />
-                        </button>
+                        </Link>
                     </div>
-                    {/* Desktop Navigation */}
                     <nav className="header-center">
                         <ul className="nav-links">
-                            <li><button onClick={() => handleNavClick('home')} className="nav-link">Home</button></li>
-                            <li><button onClick={() => handleNavClick('solucoes')} className="nav-link">Soluções</button></li>
-                            <li><button onClick={() => handleNavClick('institucional')} className="nav-link">Institucional</button></li>
-                            <li><button onClick={() => handleNavClick('noticias')} className="nav-link">Notícias</button></li>
-                            <li><button onClick={() => handleNavClick('contact')} className="nav-link">Contato</button></li>
+                            {navItems.map(item => (
+                                <li key={item.to}>
+                                    <NavLink
+                                        to={item.to}
+                                        end={item.end}
+                                        onClick={closeMenu}
+                                        className={({ isActive }) => `nav-link${isActive ? ' is-active' : ''}`}
+                                    >
+                                        {item.label}
+                                    </NavLink>
+                                </li>
+                            ))}
                         </ul>
                     </nav>
                     <div className="header-right">
@@ -93,20 +95,26 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage }) => {
                     </div>
                 </div>
             </header>
-            
-            {/* Mobile Navigation Menu & Overlay */}
-            <div 
-                className={`mobile-nav-overlay ${isMobileMenuOpen ? 'is-open' : ''}`} 
-                onClick={toggleMenu} 
+
+            <div
+                className={`mobile-nav-overlay ${isMobileMenuOpen ? 'is-open' : ''}`}
+                onClick={toggleMenu}
                 aria-hidden="true"
             ></div>
             <nav className={`mobile-nav-menu ${isMobileMenuOpen ? 'is-open' : ''}`}>
                 <ul className="mobile-nav-links">
-                    <li><button onClick={() => handleNavClick('home')} className="nav-link">Home</button></li>
-                    <li><button onClick={() => handleNavClick('solucoes')} className="nav-link">Soluções</button></li>
-                    <li><button onClick={() => handleNavClick('institucional')} className="nav-link">Institucional</button></li>
-                    <li><button onClick={() => handleNavClick('noticias')} className="nav-link">Notícias</button></li>
-                    <li><button onClick={() => handleNavClick('contact')} className="nav-link">Contato</button></li>
+                    {navItems.map(item => (
+                        <li key={item.to}>
+                            <NavLink
+                                to={item.to}
+                                end={item.end}
+                                onClick={closeMenu}
+                                className={({ isActive }) => `nav-link${isActive ? ' is-active' : ''}`}
+                            >
+                                {item.label}
+                            </NavLink>
+                        </li>
+                    ))}
                 </ul>
                 <div className="mobile-nav-cta">
                     <CtaButton />

@@ -1,13 +1,6 @@
-import React from 'react';
+import { Link } from 'react-router-dom';
 
-type Page = 'home' | 'solucoes' | 'institucional' | 'fornecedor' | 'cadastro' | 'contact' | 'noticias';
-
-interface FooterProps {
-    setCurrentPage: (page: Page) => void;
-}
-
-
-const Footer: React.FC<FooterProps> = ({ setCurrentPage }) => (
+const Footer = () => (
     <footer className="app-footer">
         <div className="container footer-container">
             <div className="footer-grid">
@@ -20,11 +13,11 @@ const Footer: React.FC<FooterProps> = ({ setCurrentPage }) => (
                 <div className="footer-column">
                     <h4>Navegação</h4>
                     <ul className="footer-links">
-                        <li><button className="footer-link" onClick={() => setCurrentPage('home')}>Início</button></li>
-                        <li><button className="footer-link" onClick={() => setCurrentPage('solucoes')}>Soluções</button></li>
-                        <li><button className="footer-link" onClick={() => setCurrentPage('institucional')}>Institucional</button></li>
-                        <li><button className="footer-link" onClick={() => setCurrentPage('noticias')}>Notícias</button></li>
-                        <li><button className="footer-link" onClick={() => setCurrentPage('contact')}>Contato</button></li>
+                        <li><Link to="/" className="footer-link">Início</Link></li>
+                        <li><Link to="/solucoes" className="footer-link">Soluções</Link></li>
+                        <li><Link to="/institucional" className="footer-link">Institucional</Link></li>
+                        <li><Link to="/noticias" className="footer-link">Notícias</Link></li>
+                        <li><Link to="/contato" className="footer-link">Contato</Link></li>
                     </ul>
                 </div>
                 <div className="footer-column">
@@ -32,7 +25,7 @@ const Footer: React.FC<FooterProps> = ({ setCurrentPage }) => (
                     <ul className="footer-links">
                         <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>FAQ</a></li>
                         <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Trabalhe Conosco</a></li>
-                        <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Crie sua conta grátis</a></li>
+                        <li><a href="https://app2.infocolicitacoes.com.br/cadastro/" target="_blank" rel="noopener noreferrer" className="footer-link">Crie sua conta grátis</a></li>
                         <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>LGPD</a></li>
                         <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Política de Qualidade</a></li>
                         <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Política de Privacidade</a></li>

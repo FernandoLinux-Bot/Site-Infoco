@@ -17,6 +17,7 @@ Este arquivo orienta o Claude Code ao trabalhar neste repositório.
 |---|---|
 | Framework | React 18 + TypeScript (strict) |
 | Bundler | Vite 4 (`@vitejs/plugin-react`) |
+| Roteamento | `react-router-dom` v6 (BrowserRouter) |
 | Animação | `framer-motion` |
 | Ícones | `react-icons` (FA + Material) |
 | IA | `@google/genai` (Gemini 2.5 Flash) — usado em Notícias |
@@ -62,14 +63,31 @@ Este arquivo orienta o Claude Code ao trabalhar neste repositório.
 
 ### Roteamento
 
-Não há `react-router`. A página atual é um `useState<Page>` em `App.tsx:44`. Para adicionar uma rota:
+Usa `react-router-dom` v6 (`BrowserRouter`). URLs em pt-BR. Rotas em [App.tsx](src/App.tsx):
+
+| URL | Componente |
+|---|---|
+| `/` | `Home` |
+| `/solucoes` | `Solucoes` |
+| `/institucional` | `Institucional` |
+| `/fornecedor` | `Fornecedor` |
+| `/cadastro` | `Cadastro` |
+| `/contato` | `Contact` |
+| `/noticias` | `Noticias` |
+| `*` | redireciona para `Home` |
+
+Para adicionar uma rota:
 
 1. Criar a página em `src/pages/`.
-2. Adicionar o slug ao tipo `Page` em `App.tsx:21` (e em `Header.tsx:5`, `Footer.tsx:3` — os tipos estão duplicados).
-3. Adicionar `case` em `renderPage()` (`App.tsx:46`).
-4. Adicionar `<button onClick={() => handleNavClick('...')}>` no Header e Footer.
+2. Adicionar `<Route path="/slug" element={<MinhaPagina />} />` em [App.tsx](src/App.tsx).
+3. Adicionar item ao array `navItems` em [Header.tsx](src/components/Header.tsx) (aparece desktop + mobile).
+4. (Opcional) Adicionar `<Link to="/slug">` no Footer.
 
-> `Sicc.tsx` e `AmxDigital.tsx` existem mas **não estão acessíveis** pelo roteamento atual.
+**Navegação programática:** use `useNavigate()` de `react-router-dom`. Para CTAs externos use `<a target="_blank">`.
+
+**SPA fallback Vercel:** [vercel.json](vercel.json) tem `rewrites` que mapeia `/(.*)` → `/index.html`. Sem isso, recarregar `/solucoes` no browser daria 404.
+
+> `Sicc.tsx` e `AmxDigital.tsx` existem mas **não estão registradas em `<Routes>`**. Ainda usam o padrão antigo `setCurrentPage` (não convertidas).
 
 ## Scripts
 
@@ -113,7 +131,6 @@ Almadina, Itamaraju, Nova Viçosa, Itororó, Anagé, Itabela, Prado (todos da Ba
 
 ## Pontos de atenção
 
-- **Tipo `Page` duplicado** em `App.tsx`, `Header.tsx`, `Footer.tsx`, `Fornecedor.tsx` e `Sicc.tsx`. Adicionar página exige editar em todos.
 - **`Cadastro.tsx` não envia formulário** — só faz `alert('Formulário enviado!')`. Provável TODO.
 - **`Sicc.tsx` e `AmxDigital.tsx` órfãos** no roteamento.
 - **Links placeholder do Footer** (FAQ, LGPD, Trabalhe Conosco, etc.) usam `href="#"` + `preventDefault` — não navegam para lugar nenhum. Substituir por páginas reais quando existirem.
@@ -124,6 +141,7 @@ Almadina, Itamaraju, Nova Viçosa, Itororó, Anagé, Itabela, Prado (todos da Ba
 ## Histórico de manutenção
 
 - **2026-05-16:** removido componente `Stats` (banner azul "150+ / 5.000+ / 10+") da Home — usuário considerou inadequado. Componente `src/components/Contact.tsx` (órfão, e-mail desatualizado) removido. Corrigidos 15 erros de TypeScript estrito. Corrigido número do WhatsApp em `WhatsAppButton.tsx` (faltava dígito 9 do celular). Em `Noticias.tsx`, leitura do API key feita via `import.meta.env.VITE_API_KEY` com fallback para `process.env.API_KEY`; `response.text` agora tem tratamento de `undefined`. Build limpo.
+- **2026-05-16:** migração para `react-router-dom` v6. SPA agora tem URLs reais (`/solucoes`, `/contato`, etc.) em vez de `useState<Page>`. `Header` usa `NavLink` com classe `.nav-link.is-active`. `Footer` usa `Link`. `Fornecedor` usa `useNavigate()`. `vercel.json` recebeu rewrite `/(.*)` → `/index.html` para SPA fallback. Tipos `Page` duplicados eliminados.
 
 ## Ao fazer alterações
 

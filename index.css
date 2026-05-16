@@ -142,6 +142,11 @@ body.mobile-nav-is-open {
   color: var(--accent-color);
 }
 
+.nav-link.is-active {
+  opacity: 1;
+  color: var(--accent-color);
+}
+
 .nav-link svg {
     width: 16px;
     height: 16px;
