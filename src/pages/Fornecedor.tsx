@@ -1,5 +1,6 @@
 import { motion, Variants } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { FaChartLine, FaBell, FaLaptopCode, FaHeadset, FaChartPie, FaTrophy } from 'react-icons/fa';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -12,12 +13,12 @@ const itemVariants: Variants = {
 };
 
 const benefits = [
-    { num: '01', title: 'Aumente suas Vendas', description: 'Acesse um mercado de bilhões com milhares de oportunidades de licitação em todo o país.' },
-    { num: '02', title: 'Alertas Inteligentes', description: 'Receba notificações personalizadas sobre as licitações que realmente interessam para o seu negócio.' },
-    { num: '03', title: 'Plataforma Simplificada', description: 'Gerencie propostas, documentos e participe de pregões em um ambiente intuitivo e fácil de usar.' },
-    { num: '04', title: 'Suporte Especializado', description: 'Conte com nossa equipe de especialistas para te auxiliar em todas as etapas do processo.' },
-    { num: '05', title: 'Análise de Mercado', description: 'Utilize nossos dados para entender concorrentes e tomar decisões mais estratégicas.' },
-    { num: '06', title: 'Mais Chances de Vencer', description: 'Nossas ferramentas e suporte aumentam significativamente suas chances de sucesso.' }
+    { icon: <FaChartLine />, title: 'Aumente suas Vendas', description: 'Acesse um mercado de bilhões com milhares de oportunidades de licitação em todo o país.' },
+    { icon: <FaBell />, title: 'Alertas Inteligentes', description: 'Receba notificações personalizadas sobre as licitações que realmente interessam para o seu negócio.' },
+    { icon: <FaLaptopCode />, title: 'Plataforma Simplificada', description: 'Gerencie propostas, documentos e participe de pregões em um ambiente intuitivo e fácil de usar.' },
+    { icon: <FaHeadset />, title: 'Suporte Especializado', description: 'Conte com nossa equipe de especialistas para te auxiliar em todas as etapas do processo.' },
+    { icon: <FaChartPie />, title: 'Análise de Mercado', description: 'Utilize nossos dados para entender concorrentes e tomar decisões mais estratégicas.' },
+    { icon: <FaTrophy />, title: 'Mais Chances de Vencer', description: 'Nossas ferramentas e suporte aumentam significativamente suas chances de sucesso.' }
 ];
 
 const Fornecedor = () => {
@@ -60,8 +61,8 @@ const Fornecedor = () => {
           </motion.div>
           <div className="benefits-grid">
             {benefits.map((b) => (
-              <motion.div key={b.num} className="benefit-card" variants={itemVariants}>
-                <span className="feature-card-num">{b.num} / 06</span>
+              <motion.div key={b.title} className="benefit-card" variants={itemVariants}>
+                <div className="icon">{b.icon}</div>
                 <h3>{b.title}</h3>
                 <p>{b.description}</p>
               </motion.div>

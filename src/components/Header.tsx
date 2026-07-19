@@ -18,7 +18,7 @@ const navItems = [
     { to: '/solucoes', label: 'Soluções' },
     { to: '/institucional', label: 'Institucional' },
     { to: '/noticias', label: 'Notícias' },
-    { to: '/contato', label: 'Contato' },
+    { to: '/trabalhe-conosco', label: 'Trabalhe Conosco' },
 ];
 
 const Header = () => {
