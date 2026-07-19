@@ -98,7 +98,8 @@ Este arquivo orienta o Claude Code ao trabalhar neste repositório.
         ├── Noticias.tsx      # Vitrine de posts do Instagram (@infocogestaopublica) — SEM IA
         ├── Contact.tsx       # cards de contato + formulário com reCAPTCHA
         ├── Cadastro.tsx      # form simples (alert no submit — não envia para lugar nenhum)
-        └── Fornecedor.tsx    # landing para fornecedores
+        ├── Fornecedor.tsx    # landing para fornecedores
+        └── TrabalheConosco.tsx # carreiras: form + upload de currículo → submit-form.com (e-mail INFOCO)
 ```
 
 > **Entry point real:** `index.html` → `/src/main.tsx` → `src/App.tsx`. O `index.tsx` da **raiz** (358 linhas) é o app antigo em arquivo único e **não é usado por nada** — candidato a remoção. O `src/main.tsx` importa o `index.css` da raiz (`import '../index.css'`).
@@ -116,6 +117,7 @@ Usa `react-router-dom` v6 (`BrowserRouter`). URLs em pt-BR. Rotas em [App.tsx](s
 | `/cadastro` | `Cadastro` |
 | `/contato` | `Contact` |
 | `/noticias` | `Noticias` |
+| `/trabalhe-conosco` | `TrabalheConosco` |
 | `*` | renderiza `Home` (catch-all) |
 
 Para adicionar uma rota:
@@ -176,13 +178,14 @@ Almadina, Itamaraju, Nova Viçosa, Itororó, Anagé, Itabela, Prado (todos da Ba
 - **`Cadastro.tsx` não envia formulário** — só faz `alert('Formulário enviado!')`. Provável TODO.
 - **Código morto na raiz:** `index.tsx` (app antigo monolítico) e `metadata.json` (scaffolding AI Studio) não são usados. Podem ser removidos.
 - **`@google/genai` é dependência não usada** (Notícias virou vitrine do Instagram). Remover dep + `define` do Vite quando confirmado.
-- **Links placeholder do Footer** (FAQ, LGPD, Trabalhe Conosco, etc.) usam `href="#"` + `preventDefault` — não navegam para lugar nenhum. Substituir por páginas reais quando existirem.
+- **Links placeholder do Footer** (FAQ, LGPD, Política de Privacidade) usam `href="#"` + `preventDefault` — não navegam para lugar nenhum. Substituir por páginas reais quando existirem. (Trabalhe Conosco já é página real: `/trabalhe-conosco`.)
 - **`index.css` é monolítico (~1852 linhas).** Cuidado ao renomear classes — pode quebrar coisas distantes.
 - **Bundle único grande** (~1.25 MB JS no build). Sem code-splitting. Melhoria futura: `manualChunks`/`import()` dinâmico.
 - **Sem testes, sem linter configurado.** A única verificação é `tsc` no build.
 
 ## Histórico de manutenção
 
+- **2026-07-19:** redesign visual **"Aurora Blue"** (evolução do Modern SaaS Blue). `index.css` reescrito preservando o contrato de classes: aurora/mesh de fundo, glass, profundidade em camadas, `<em>` com texto em gradiente, botões com sheen. Hero refeito com **foto do fundador recortada** (`patrao.png`, fundo transparente) + 2 cards de stat flutuantes com **parallax 3D** (`useMotionValue`) + **globo 3D em CSS** no headline. Novo `TiltCard.tsx` (tilt 3D + spotlight) e `ScrollProgress.tsx` (barra de progresso de scroll). Header glass scroll-aware. Features vira bento; HowItWorks com timeline; vídeo `mux-player` corrigido (16:9 responsivo, sem distorção). Footer: corrigido headline invisível (herdava `color:var(--ink)` no fundo escuro → `var(--white)`). **Nova página Trabalhe Conosco** (`/trabalhe-conosco`): form com upload de currículo enviado via `submit-form.com` (mesmo endpoint do contato, cai no e-mail da INFOCO) + reCAPTCHA; link ativado no Footer. Polimento das páginas internas: removidas eyebrows numeradas (`01 —`…) e travessões (—).
 - **2026-07-19:** repositório preparado para trabalho contínuo. `npm install` (deps ausentes) + `npm run build` verificado (tsc strict passa; bundle ~1.25 MB). **Sincronização da doc com o código real:** tipografia corrigida para **IBM Plex Sans** (Plus Jakarta Sans + Instrument Serif não são mais usados); Notícias documentada como **vitrine do Instagram** (não mais Gemini); `@google/genai` marcado como dependência morta; removidas referências a `Sicc.tsx`, `AmxDigital.tsx`, `AnimatedCard`, `Stats` (não existem mais); `index.tsx` da raiz e `metadata.json` sinalizados como código morto; `App.tsx` corrigido para react-router (não `useState<Page>`). Escrito `README.md` (estava vazio). `.gitignore` limpo (removido template Dynamics/AL). Adicionado `.env.example`. **Primeiro commit** do repositório e preparação para GitHub.
 - **2026-05-16:** removido componente `Stats` (banner azul "150+ / 5.000+ / 10+") da Home — usuário considerou inadequado. Componente `src/components/Contact.tsx` (órfão, e-mail desatualizado) removido. Corrigidos 15 erros de TypeScript estrito. Corrigido número do WhatsApp em `WhatsAppButton.tsx` (faltava dígito 9 do celular). Build limpo.
 - **2026-05-16:** migração para `react-router-dom` v6. SPA agora tem URLs reais (`/solucoes`, `/contato`, etc.) em vez de `useState<Page>`. `Header` usa `NavLink` com classe `.nav-link.is-active`. `Footer` usa `Link`. `Fornecedor` usa `useNavigate()`. `vercel.json` recebeu rewrite `/(.*)` → `/index.html` para SPA fallback. Tipos `Page` duplicados eliminados.

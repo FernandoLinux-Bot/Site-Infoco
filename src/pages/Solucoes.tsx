@@ -15,7 +15,7 @@ const solutionsData: Record<string, Solution[]> = {
         {
             id: 'pca',
             icon: <FaCalendarAlt />,
-            title: 'PCA — Plano de Contratações Anual',
+            title: 'PCA: Plano de Contratações Anual',
             description: 'Planeje de forma prática e inteligente, permitindo à administração pública antecipar necessidades e otimizar recursos.',
             details: () => (
                 <p>Com nosso sistema, o Plano de Contratação Anual é planejado de forma prática e inteligente, permitindo à administração pública antecipar necessidades, otimizar recursos, aumentar a transparência em cada etapa e garantir decisões mais eficientes e econômicas.</p>

@@ -52,7 +52,7 @@ const Institucional = () => {
             >
                 <div className="container">
                     <motion.div className="content-block" variants={itemVariants}>
-                        <span className="eyebrow">01 — Identidade</span>
+                        <span className="eyebrow">Identidade</span>
                         <h2 className="section-title" style={{ marginTop: '1.25rem' }}>Quem somos</h2>
                         <div className="institutional-grid">
                             <AnimatedIdentityCard />
@@ -61,13 +61,13 @@ const Institucional = () => {
                                 <p>Somos uma empresa especializada no desenvolvimento de soluções em software voltadas exclusivamente para a gestão pública, oferecendo ferramentas que simplificam processos, ampliam o controle administrativo e fortalecem a tomada de decisão.</p>
                                 <p>Com sede em Itabuna-BA, atuamos em parceria com prefeituras, câmaras municipais e demais órgãos públicos, levando inovação e suporte de excelência para diferentes regiões do país. Nosso compromisso é gerar valor real para a sociedade, ajudando gestores a otimizar recursos e entregar serviços públicos de maior qualidade.</p>
                                 <p>Na Infoco, unimos tecnologia, conhecimento jurídico-administrativo e experiência prática para entregar sistemas que vão além do digital: entregamos confiança, segurança e resultados.</p>
-                                <strong>Somos mais que uma empresa de software — somos parceiros da gestão pública.</strong>
+                                <strong>Somos mais que uma empresa de software: somos parceiros da gestão pública.</strong>
                             </div>
                         </div>
                     </motion.div>
 
                     <motion.div className="content-block" variants={itemVariants}>
-                        <span className="eyebrow">02 — Direção</span>
+                        <span className="eyebrow">Direção</span>
                         <h2 className="section-title" style={{ marginTop: '1.25rem' }}>Nossa <em>meta</em></h2>
                         <p className="section-subtitle" style={{ marginTop: '1rem' }}>
                             Ser referência nacional em tecnologia aplicada à gestão pública, oferecendo soluções que transformem a administração em um processo mais eficiente, transparente e humano.
@@ -85,7 +85,7 @@ const Institucional = () => {
                     </motion.div>
 
                     <motion.div className="content-block" variants={itemVariants}>
-                        <span className="eyebrow">03 — Princípios</span>
+                        <span className="eyebrow">Princípios</span>
                         <h2 className="section-title" style={{ marginTop: '1.25rem' }}>Nossos <em>valores</em></h2>
                         <motion.div className="values-grid" variants={containerVariants}>
                             {values.map((value, index) => (

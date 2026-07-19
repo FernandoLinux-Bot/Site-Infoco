@@ -53,7 +53,7 @@ const Fornecedor = () => {
       >
         <div className="container">
           <motion.div variants={itemVariants}>
-            <span className="eyebrow">Vantagens / 06 pilares</span>
+            <span className="eyebrow">Vantagens</span>
             <h2 className="section-title" style={{ marginTop: '1.5rem' }}>
               Por que ser um <em>fornecedor</em> INFOCO.
             </h2>

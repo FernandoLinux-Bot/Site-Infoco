@@ -24,7 +24,7 @@ const posts: PostPreview[] = [
     },
     {
         id: '2',
-        caption: 'Conheça o módulo de Banco de Preços da INFOCO — cotação em menos de 2 minutos.',
+        caption: 'Conheça o módulo de Banco de Preços da INFOCO: cotação em menos de 2 minutos.',
         type: 'video',
         likes: 287,
         comments: 32,
@@ -40,7 +40,7 @@ const posts: PostPreview[] = [
     },
     {
         id: '4',
-        caption: 'PCA — Plano de Contratações Anual: como planejar com inteligência.',
+        caption: 'PCA (Plano de Contratações Anual): como planejar com inteligência.',
         type: 'photo',
         likes: 154,
         comments: 21,

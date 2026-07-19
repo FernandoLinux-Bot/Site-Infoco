@@ -46,7 +46,7 @@ const Footer = () => (
                     <ul className="footer-links">
                         <li><a href="https://app2.infocolicitacoes.com.br/cadastro/" target="_blank" rel="noopener noreferrer" className="footer-link">Plataforma</a></li>
                         <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>FAQ</a></li>
-                        <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Trabalhe Conosco</a></li>
+                        <li><Link to="/trabalhe-conosco" className="footer-link">Trabalhe Conosco</Link></li>
                         <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>LGPD</a></li>
                         <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Política de Privacidade</a></li>
                     </ul>

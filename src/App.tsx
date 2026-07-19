@@ -16,6 +16,7 @@ import Fornecedor from './pages/Fornecedor';
 import Cadastro from './pages/Cadastro';
 import Contact from './pages/Contact';
 import Noticias from './pages/Noticias';
+import TrabalheConosco from './pages/TrabalheConosco';
 
 const pageVariants: Variants = {
   initial: { opacity: 0 },
@@ -49,6 +50,7 @@ const AnimatedRoutes = () => {
           <Route path="/cadastro" element={<Cadastro />} />
           <Route path="/contato" element={<Contact />} />
           <Route path="/noticias" element={<Noticias />} />
+          <Route path="/trabalhe-conosco" element={<TrabalheConosco />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </motion.div>
