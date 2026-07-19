@@ -18,7 +18,7 @@ const Footer = () => (
                 <div className="footer-column">
                     <h4>Sobre</h4>
                     <p>
-                        Empresa especializada no desenvolvimento de soluções em software voltadas exclusivamente para a gestão pública — ferramentas que simplificam processos, ampliam o controle administrativo e fortalecem a tomada de decisão.
+                        Empresa especializada no desenvolvimento de soluções em software voltadas exclusivamente para a gestão pública: ferramentas que simplificam processos, ampliam o controle administrativo e fortalecem a tomada de decisão.
                     </p>
                 </div>
                 <div className="footer-column">
@@ -50,8 +50,8 @@ const Footer = () => (
                     </ul>
                     <address className="footer-address">
                         <a href="mailto:contato@infocogestaopublica.com.br">contato@infocogestaopublica.com.br</a><br />
-                        Av. Princesa Isabel, 1206 — 2º andar<br />
-                        São Caetano, Itabuna/BA — 45607-127<br />
+                        Av. Princesa Isabel, 1206, 2º andar<br />
+                        São Caetano, Itabuna/BA, 45607-127<br />
                         CNPJ: 46.554.439/0001-67
                     </address>
                 </div>

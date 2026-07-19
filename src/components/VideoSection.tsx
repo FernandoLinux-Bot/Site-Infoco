@@ -15,7 +15,7 @@ const VideoSection = () => {
                         </h2>
                     </div>
                     <p className="section-subtitle">
-                        Em um minuto, veja como nossa plataforma transforma a gestão pública — da licitação à fiscalização.
+                        Em um minuto, veja como nossa plataforma transforma a gestão pública, da licitação à fiscalização.
                     </p>
                 </div>
                 <div className="video-player-frame animated-item" style={{ transitionDelay: '120ms' }}>
@@ -23,7 +23,7 @@ const VideoSection = () => {
                         playbackId={muxPlaybackId}
                         metadata={{ video_title: 'Apresentação INFOCO' }}
                         streamType="on-demand"
-                        accentColor="#FF4A1C"
+                        accentColor="#2253F0"
                     />
                 </div>
             </div>

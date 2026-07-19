@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { motion, Variants } from 'framer-motion';
+import { motion, Variants, useScroll, useMotionValueEvent } from 'framer-motion';
 
 const iconVariants: Variants = {
     rest: { x: 0, transition: { type: 'spring', stiffness: 300, damping: 20 } },
@@ -23,9 +23,15 @@ const navItems = [
 
 const Header = () => {
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [isScrolled, setScrolled] = useState(false);
 
     const closeMenu = () => setMobileMenuOpen(false);
     const toggleMenu = () => setMobileMenuOpen(isOpen => !isOpen);
+
+    const { scrollY } = useScroll();
+    useMotionValueEvent(scrollY, 'change', (latest) => {
+        setScrolled(latest > 12);
+    });
 
     useEffect(() => {
         if (isMobileMenuOpen) {
@@ -57,7 +63,7 @@ const Header = () => {
 
     return (
         <>
-            <header className={`app-header ${isMobileMenuOpen ? 'nav-open' : ''}`}>
+            <header className={`app-header ${isMobileMenuOpen ? 'nav-open' : ''} ${isScrolled ? 'is-scrolled' : ''}`}>
                  <div className="container header-container">
                     <div className="header-left">
                         <Link to="/" onClick={closeMenu} className="logo">

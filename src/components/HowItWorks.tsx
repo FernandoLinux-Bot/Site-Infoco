@@ -20,13 +20,13 @@ const HowItWorks = () => (
         <div className="container">
             <div className="features-head animated-item">
                 <div>
-                    <span className="eyebrow">04 — Processo</span>
+                    <span className="eyebrow">Processo</span>
                     <h2 className="section-title" style={{ marginTop: '1.5rem' }}>
                         Como <em>funciona</em>.
                     </h2>
                 </div>
                 <p className="section-subtitle">
-                    Três passos para transformar a forma como sua empresa participa de licitações públicas — sem burocracia, com tecnologia.
+                    Três passos para transformar a forma como sua empresa participa de licitações públicas, sem burocracia e com tecnologia.
                 </p>
             </div>
 
