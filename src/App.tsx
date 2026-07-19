@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence, Transition, Variants } from 'framer-motion';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import ScrollProgress from './components/ScrollProgress';
 import WhatsAppButton from './components/WhatsAppButton';
 import InstagramButton from './components/InstagramButton';
 import ScrollToTopButton from './components/ScrollToTopButton';
@@ -57,6 +58,7 @@ const AnimatedRoutes = () => {
 
 const App = () => (
   <BrowserRouter>
+    <ScrollProgress />
     <Header />
     <main>
       <AnimatedRoutes />
