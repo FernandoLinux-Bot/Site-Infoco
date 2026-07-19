@@ -1,5 +1,5 @@
 import { motion, Variants, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
-import { FaCheckCircle, FaFileContract, FaChartLine, FaBoxes, FaShieldAlt, FaBalanceScale, FaSearchDollar, FaLock } from "react-icons/fa";
+import { FaCheckCircle, FaChartLine, FaShieldAlt, FaBalanceScale, FaSearchDollar, FaLock } from "react-icons/fa";
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
@@ -11,13 +11,19 @@ const fadeUp: Variants = {
 };
 
 const cardFloat: Variants = {
-  hidden: { opacity: 0, y: 30, scale: 0.92 },
+  hidden: { opacity: 0, y: 30, z: 0, scale: 0.92 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
+    z: 60,
     scale: 1,
-    transition: { duration: 0.9, delay: 0.5 + i * 0.15, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.9, delay: 0.6 + i * 0.18, ease: [0.16, 1, 0.3, 1] },
   }),
+};
+
+const photoReveal: Variants = {
+  hidden: { opacity: 0, scale: 0.94, y: 20 },
+  visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 1, delay: 0.35, ease: [0.16, 1, 0.3, 1] } },
 };
 
 const ArrowIcon = () => (
@@ -36,11 +42,11 @@ const compliance = [
 const Hero = () => {
   const reduce = useReducedMotion();
 
-  // Parallax 3D: o palco de cards inclina seguindo o cursor.
+  // Parallax 3D: o palco (foto + cards) inclina seguindo o cursor.
   const px = useMotionValue(0.5);
   const py = useMotionValue(0.5);
-  const rotateX = useSpring(useTransform(py, [0, 1], [10, -10]), { stiffness: 120, damping: 18 });
-  const rotateY = useSpring(useTransform(px, [0, 1], [-12, 12]), { stiffness: 120, damping: 18 });
+  const rotateX = useSpring(useTransform(py, [0, 1], [8, -8]), { stiffness: 120, damping: 18 });
+  const rotateY = useSpring(useTransform(px, [0, 1], [-10, 10]), { stiffness: 120, damping: 18 });
 
   const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (reduce) return;
@@ -93,60 +99,40 @@ const Hero = () => {
             </motion.div>
           </div>
 
-          {/* VISUAL SIDE — palco 3D com parallax */}
-          <div className="hero-visual" aria-hidden="true" onMouseMove={handleMove} onMouseLeave={handleLeave}>
+          {/* VISUAL SIDE — foto do fundador + cards flutuantes, palco 3D com parallax */}
+          <div className="hero-visual" onMouseMove={handleMove} onMouseLeave={handleLeave}>
             <motion.div
-              style={reduce ? undefined : { rotateX, rotateY, transformStyle: "preserve-3d", width: "100%", height: "100%", position: "relative" }}
+              className="hero-stage"
+              style={reduce ? undefined : { rotateX, rotateY }}
             >
-              <div className="hero-confetti">
-                <span className="c1" /><span className="c2" /><span className="c3" /><span className="c4" />
-              </div>
+              <motion.div className="hero-portrait" variants={photoReveal} initial="hidden" animate="visible">
+                <img src="/patrao.png" alt="Fundador da INFOCO Gestão Pública" />
+                <span className="hero-portrait-badge">
+                  <FaCheckCircle /> INFOCO Gestão Pública
+                </span>
+              </motion.div>
 
-              <motion.div className="hero-card hero-card-1" variants={cardFloat} custom={0} initial="hidden" animate="visible">
+              <motion.div className="hero-card hero-card-a" variants={cardFloat} custom={0} initial="hidden" animate="visible" aria-hidden="true">
                 <motion.div animate={reduce ? undefined : { y: [0, -8, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
                   <span className="hero-card-label"><span className="pill" /> Licitação aprovada</span>
-                  <div className="hero-card-title" style={{ marginTop: "0.4rem" }}>Pregão Eletrônico Nº 042/2026</div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginTop: "0.5rem", color: "#16A34A", fontWeight: 600, fontSize: "0.85rem" }}>
+                  <div className="hero-card-title" style={{ marginTop: "0.35rem" }}>Pregão Nº 042/2026</div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.45rem", marginTop: "0.45rem", color: "#16A34A", fontWeight: 600, fontSize: "0.82rem" }}>
                     <FaCheckCircle /> Homologada
                   </div>
                 </motion.div>
               </motion.div>
 
-              <motion.div className="hero-card hero-card-2" variants={cardFloat} custom={1} initial="hidden" animate="visible">
-                <motion.div animate={reduce ? undefined : { y: [0, 10, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+              <motion.div className="hero-card hero-card-b" variants={cardFloat} custom={1} initial="hidden" animate="visible" aria-hidden="true">
+                <motion.div animate={reduce ? undefined : { y: [0, 9, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.7rem" }}>
                     <div className="hero-card-icon"><FaChartLine /></div>
                     <div>
                       <span className="hero-card-label">Economia anual</span>
-                      <div className="hero-card-value" style={{ marginTop: "0.15rem" }}>R$ 2,4M <small>+18%</small></div>
+                      <div className="hero-card-value" style={{ marginTop: "0.1rem" }}>R$ 2,4M <small>+18%</small></div>
                     </div>
                   </div>
-                  <div className="hero-card-bar" style={{ marginTop: "0.75rem" }}>
-                    <motion.i initial={{ scaleX: 0 }} animate={{ scaleX: 0.72 }} transition={{ duration: 1.4, delay: 1.4, ease: [0.16, 1, 0.3, 1] }} />
-                  </div>
-                </motion.div>
-              </motion.div>
-
-              <motion.div className="hero-card hero-card-3" variants={cardFloat} custom={2} initial="hidden" animate="visible">
-                <motion.div animate={reduce ? undefined : { y: [0, -12, 0] }} transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                    <div className="hero-card-icon"><FaFileContract /></div>
-                    <div>
-                      <span className="hero-card-label">Contratos</span>
-                      <div className="hero-card-value" style={{ marginTop: "0.15rem" }}>127 <small>ativos</small></div>
-                    </div>
-                  </div>
-                </motion.div>
-              </motion.div>
-
-              <motion.div className="hero-card hero-card-4" variants={cardFloat} custom={3} initial="hidden" animate="visible">
-                <motion.div animate={reduce ? undefined : { y: [0, 8, 0] }} transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.65rem" }}>
-                    <div className="hero-card-icon"><FaBoxes /></div>
-                    <div>
-                      <span className="hero-card-label">Patrimônio</span>
-                      <div className="hero-card-title" style={{ marginTop: "0.15rem", fontSize: "0.92rem" }}>Inventário 2026</div>
-                    </div>
+                  <div className="hero-card-bar" style={{ marginTop: "0.7rem" }}>
+                    <motion.i initial={{ scaleX: 0 }} animate={{ scaleX: 0.72 }} transition={{ duration: 1.4, delay: 1.5, ease: [0.16, 1, 0.3, 1] }} />
                   </div>
                 </motion.div>
               </motion.div>
