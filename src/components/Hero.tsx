@@ -68,7 +68,8 @@ const Hero = () => {
             </motion.span>
 
             <motion.h1 className="hero-headline" variants={fadeUp} initial="hidden" animate="visible" custom={1}>
-              Modernizando a <em>gestão pública</em>.
+              Modernizando a <em>gestão pública</em>
+              <span className="hero-globe" aria-hidden="true" />
             </motion.h1>
 
             <motion.p className="hero-lede" variants={fadeUp} initial="hidden" animate="visible" custom={2}>
@@ -107,9 +108,6 @@ const Hero = () => {
             >
               <motion.div className="hero-portrait" variants={photoReveal} initial="hidden" animate="visible">
                 <img src="/patrao.png" alt="Fundador da INFOCO Gestão Pública" />
-                <span className="hero-portrait-badge">
-                  <FaCheckCircle /> INFOCO Gestão Pública
-                </span>
               </motion.div>
 
               <motion.div className="hero-card hero-card-a" variants={cardFloat} custom={0} initial="hidden" animate="visible" aria-hidden="true">
