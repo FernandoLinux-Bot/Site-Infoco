@@ -97,7 +97,7 @@ Este arquivo orienta o Claude Code ao trabalhar neste repositório.
         ├── Institucional.tsx # Quem somos, Meta, Valores
         ├── Noticias.tsx      # Vitrine de posts do Instagram (@infocogestaopublica) — SEM IA
         ├── Contact.tsx       # cards de contato + formulário com reCAPTCHA
-        ├── Cadastro.tsx      # form simples (alert no submit — não envia para lugar nenhum)
+        ├── Cadastro.tsx      # solicitação de cadastro → submit-form.com (e-mail INFOCO) + reCAPTCHA
         ├── Fornecedor.tsx    # landing para fornecedores
         └── TrabalheConosco.tsx # carreiras: form + upload de currículo → submit-form.com (e-mail INFOCO)
 ```
@@ -175,7 +175,7 @@ Almadina, Itamaraju, Nova Viçosa, Itororó, Anagé, Itabela, Prado (todos da Ba
 
 ## Pontos de atenção
 
-- **`Cadastro.tsx` não envia formulário** — só faz `alert('Formulário enviado!')`. Provável TODO.
+- **`Cadastro.tsx`** envia uma **solicitação de cadastro** via `submit-form.com` (e-mail INFOCO) + reCAPTCHA. O campo de **senha foi removido** (nunca enviar senha por e-mail); a criação de acesso real é concluída pela INFOCO / plataforma externa.
 - **Código morto na raiz:** `index.tsx` (app antigo monolítico) e `metadata.json` (scaffolding AI Studio) não são usados. Podem ser removidos.
 - **`@google/genai` é dependência não usada** (Notícias virou vitrine do Instagram). Remover dep + `define` do Vite quando confirmado.
 - **Links placeholder do Footer** (FAQ, LGPD, Política de Privacidade) usam `href="#"` + `preventDefault` — não navegam para lugar nenhum. Substituir por páginas reais quando existirem. (Trabalhe Conosco já é página real: `/trabalhe-conosco`.)
