@@ -1041,9 +1041,12 @@ em { font-style: normal; color: var(--primary); }
   background: var(--surface-black);
   filter: drop-shadow(rgba(0, 0, 0, 0.22) 3px 5px 30px);
 }
-/* O master do vídeo é vertical. `cover` preenche o quadro widescreen — inclusive
-   o poster — em vez de deixar as duas tarjas pretas laterais. O recorte é
-   deslocado para cima porque o enquadramento do assunto fica no terço superior. */
+/* O master do vídeo é vertical (720x1280) e traz legendas queimadas na metade
+   de baixo. Um quadro 16:9 mostra só 32% da altura, então rosto e legenda não
+   cabem juntos: 28% preserva o rosto inteiro com folga acima e sacrifica a
+   legenda. Foi a melhor de quatro alternativas testadas (28% / 48% / 62% e
+   16:10). A correção de verdade é exportar um master widescreen — aí este
+   `cover` vira inócuo e nada é recortado. */
 .media-frame mux-player {
   position: absolute;
   inset: 0;

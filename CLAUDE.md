@@ -160,8 +160,7 @@ Almadina, Itamaraju, Nova Viçosa, Itororó, Anagé, Itabela e Prado (Bahia). Br
 
 ## Pontos de atenção
 
-- **`public/hero-background.png` e `public/Logo.png` são órfãos.** O primeiro é o logotipo em alta resolução com nome enganoso; o segundo foi substituído por `logo-infoco.png` (a arte do FAQ). Candidatos a remoção.
-- **O master do vídeo é vertical.** O `.media-frame` recorta para 16:9 via `--media-object-fit: cover`. Trocar por um master widescreen elimina o recorte.
+- **O master do vídeo é vertical (720×1280) e tem legendas queimadas.** O `.media-frame` recorta para 16:9 via `--media-object-fit: cover`, o que mostra só 32% da altura — rosto e legenda não cabem juntos. O `object-position: center 28%` preserva o rosto e perde a legenda; foi escolhido comparando 28%, 48%, 62% e 16:10. **A correção real é exportar um master widescreen.**
 - **`patrao.png` tem 640×640 e o assunto encosta na borda inferior.** Por isso o retrato do hero usa máscara em vez de sombra: a sombra desenharia o corte reto.
 - **CSS não entra no grafo do graphify** (`index.css` não é tipo detectado). Ao rodar `/graphify --update`, lembre que o design system fica de fora.
 - **O chunk do Mux tem ~887 KB**, mas é assíncrono: só baixa quando a seção de vídeo entra na viewport. O bundle inicial é ~373 KB (117 KB gzip).
