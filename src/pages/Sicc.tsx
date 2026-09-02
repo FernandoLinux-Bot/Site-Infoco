@@ -9,7 +9,7 @@ import {
     type MotionValue,
 } from 'framer-motion';
 import { CICLO_DEMANDA, PERGUNTAS } from '../data/sicc';
-import { EASE_EXPO, Reveal, Stagger, StaggerItem, WordReveal } from '../components/motion';
+import { EASE_EXPO, Reveal, Stagger, StaggerItem, VIEWPORT, WordReveal } from '../components/motion';
 import { CONHECER } from '../data/links';
 
 
@@ -74,7 +74,7 @@ const FlowStep = ({
             className="flow-step"
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
+            viewport={VIEWPORT}
             transition={{ duration: 0.7, ease: EASE_EXPO, delay: index * 0.06 }}
         >
             <motion.span className="flow-rule" style={{ scaleX, width: '100%' }} aria-hidden="true" />

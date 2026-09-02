@@ -312,6 +312,51 @@ test.describe('Acessibilidade e responsivo', () => {
         expect(semLabel).toBe(0);
     });
 
+    // Regressão: as primitivas usavam `viewport={{ amount: 0.2 }}`. Num bloco
+    // mais alto que a janela (o grid de módulos tem ~3700px num viewport de
+    // 664px) a fração exigida nunca era atingida, o whileInView não disparava e
+    // a seção inteira ficava em opacity 0 — em branco no celular. Um teste por
+    // rota: varrer as dez numa só estoura o tempo e esconde qual quebrou.
+    for (const rota of ROTAS) {
+        test(`${rota.path} não deixa bloco invisível ao rolar`, async ({ page }) => {
+            await page.goto(rota.path);
+            await page.waitForTimeout(250);
+
+            const altura = await page.evaluate(() => document.body.scrollHeight);
+            for (let y = 0; y < altura; y += 600) {
+                await page.evaluate(v => window.scrollTo(0, v), y);
+                await page.waitForTimeout(60);
+            }
+            await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+            await page.waitForTimeout(900);
+
+            const presos = await page.evaluate(() =>
+                [...document.querySelectorAll('.tile [style*="opacity"]')]
+                    .filter(el => {
+                        const r = el.getBoundingClientRect();
+                        return parseFloat(getComputedStyle(el).opacity) < 0.9 && r.height > 40;
+                    })
+                    .map(el => `${el.className || el.tagName} (${Math.round(el.getBoundingClientRect().height)}px)`)
+            );
+            expect(presos, `blocos presos em opacity 0 em ${rota.path}`).toEqual([]);
+        });
+    }
+
+    test('nenhum limiar de viewport é fração da altura', async () => {
+        // A fração só falha em telas pequenas, e só quando o bloco cresce — o tipo
+        // de bug que volta sem ninguém notar. O guarda é no código, não na tela.
+        const fs = await import('node:fs/promises');
+        const alvos = ['src/components/motion/index.tsx', 'src/pages/Sicc.tsx'];
+        for (const arq of alvos) {
+            const fonte = await fs.readFile(arq, 'utf-8');
+            const linhas = fonte.split('\n');
+            const suspeitas = linhas
+                .map((l, i) => ({ l, n: i + 1 }))
+                .filter(({ l }) => /amount:\s*0\.\d/.test(l) && !l.trim().startsWith('*'));
+            expect(suspeitas.map(x => `${arq}:${x.n}`), 'use amount "some"').toEqual([]);
+        }
+    });
+
     test('não há rolagem horizontal', async ({ page }) => {
         for (const rota of ROTAS) {
             await page.goto(rota.path);

@@ -1,6 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = 4173;
+// Configurável para que duas execuções (ex.: uma auditoria em paralelo) não
+// disputem a mesma porta e derrubem o preview uma da outra.
+const PORT = Number(process.env.PREVIEW_PORT ?? 4173);
 
 export default defineConfig({
   testDir: './tests',

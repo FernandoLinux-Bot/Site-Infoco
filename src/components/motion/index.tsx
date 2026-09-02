@@ -20,6 +20,19 @@ import {
 
 export const EASE_EXPO = [0.16, 1, 0.3, 1] as const;
 
+/**
+ * Regra de viewport de toda revelação do site.
+ *
+ * `amount` NÃO pode ser fração. Ele é a parcela do elemento que precisa estar
+ * visível, e num bloco mais alto que a janela essa parcela é impossível: o grid
+ * de módulos da Home tem 3721px num viewport de 664px, então `amount: 0.2`
+ * exigiria 744px visíveis. O limiar nunca era atingido, `whileInView` nunca
+ * disparava e a seção inteira ficava presa em `opacity: 0` — em branco no
+ * celular. `'some'` dispara com qualquer parte visível, e a margem negativa
+ * segura a entrada até o bloco estar de fato dentro da tela.
+ */
+export const VIEWPORT = { once: true, amount: 'some', margin: '0px 0px -12% 0px' } as const;
+
 export const ENTER: Transition = { duration: 0.8, ease: EASE_EXPO };
 
 export const stagger = (delayChildren = 0.05, staggerChildren = 0.07): Variants => ({
@@ -53,7 +66,7 @@ export function Reveal({
             className={className}
             initial={reduce ? { opacity: 0 } : { opacity: 0, y }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.25 }}
+            viewport={VIEWPORT}
             transition={{ ...ENTER, delay }}
         >
             {children}
@@ -67,20 +80,18 @@ export function Stagger({
     className,
     delayChildren = 0.05,
     staggerChildren = 0.07,
-    amount = 0.2,
 }: {
     children: ReactNode;
     className?: string;
     delayChildren?: number;
     staggerChildren?: number;
-    amount?: number;
 }) {
     return (
         <motion.div
             className={className}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount }}
+            viewport={VIEWPORT}
             variants={stagger(delayChildren, staggerChildren)}
         >
             {children}
@@ -126,7 +137,7 @@ export function WordReveal({
             className={className}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.5 }}
+            viewport={VIEWPORT}
             variants={{ visible: { transition: { delayChildren: delay, staggerChildren: 0.045 } } }}
         >
             {words.map((w, i) => (
@@ -153,7 +164,8 @@ export function WordReveal({
 /** Contador que anima até o valor quando entra na tela. */
 export function CountUp({ to, duration = 1.4, decimals = 0 }: { to: number; duration?: number; decimals?: number }) {
     const ref = useRef<HTMLSpanElement>(null);
-    const inView = useInView(ref, { once: true, amount: 0.6 });
+    // 'some' pela mesma razão do VIEWPORT: nenhuma fração de altura no código.
+    const inView = useInView(ref, { once: true, amount: 'some' });
     const reduce = useReducedMotion();
     const [value, setValue] = useState(reduce ? to : 0);
 
