@@ -14,15 +14,19 @@
   --primary-focus: #0071e3;
   --primary-on-dark: #2997ff;
 
-  /* Superfícies */
+  /* Superfícies
+     O near-black neutro do spec Apple foi trocado por uma família navy, para
+     o site e o FAQ (faq.infocogestaopublica.com.br) lerem como um sistema só.
+     Os micro-degraus entre tile-1/2/3 seguem a mesma lógica do spec: separar
+     dois tiles escuros vizinhos sem borda nem sombra. */
   --canvas: #ffffff;
-  --canvas-parchment: #f5f5f7;
-  --surface-pearl: #fafafc;
-  --surface-tile-1: #272729;
-  --surface-tile-2: #2a2a2c;
-  --surface-tile-3: #252527;
-  --surface-black: #000000;
-  --surface-chip-translucent: rgba(210, 210, 215, 0.64);
+  --canvas-parchment: #f4f6f9;
+  --surface-pearl: #fafbfd;
+  --surface-tile-1: #1e2a3b;
+  --surface-tile-2: #223040;
+  --surface-tile-3: #1a2534;
+  --surface-black: #0d141d;
+  --surface-chip-translucent: rgba(210, 215, 225, 0.64);
 
   /* Texto */
   --ink: #1d1d1f;
@@ -353,12 +357,21 @@ em { font-style: normal; color: var(--primary); }
   letter-spacing: -0.224px;
 }
 .global-nav-brand:hover { text-decoration: none; }
-.global-nav-brand .mark {
-  width: 18px; height: 18px; border-radius: 50%;
-  background: var(--primary-on-dark);
-  display: grid; place-items: center;
-  font-size: 10px; font-weight: 700; color: var(--surface-black);
-  font-family: var(--font-display);
+/* A mesma logo do FAQ. A barra tem 44px: o wordmark "INFOCO" cabe e lê bem,
+   mas a linha "GESTÃO PÚBLICA" viraria um borrão — então a janela recorta só
+   o terço superior da arte. O logotipo completo aparece no rodapé. */
+.global-nav-brand .logo-window {
+  display: block;
+  height: 15px;
+  overflow: hidden;
+}
+.global-nav-brand .logo-window img {
+  display: block;
+  height: 23px;
+  width: auto;
+  object-fit: cover;
+  object-position: top center;
+  filter: brightness(0) invert(1);
 }
 .global-nav-links { display: flex; align-items: center; gap: 2px; }
 .global-nav-links a {
@@ -382,7 +395,7 @@ em { font-style: normal; color: var(--primary); }
   inset: var(--nav-h) 0 auto 0;
   z-index: 890;
   height: var(--subnav-h);
-  background: rgba(245, 245, 247, 0.8);
+  background: rgba(244, 246, 249, 0.82);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   border-bottom: 1px solid var(--hairline-soft);
@@ -443,7 +456,7 @@ em { font-style: normal; color: var(--primary); }
   position: fixed;
   inset: calc(var(--nav-h) + var(--subnav-h)) 0 0 0;
   z-index: 880;
-  background: rgba(245, 245, 247, 0.94);
+  background: rgba(244, 246, 249, 0.95);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   padding: var(--s-xl) var(--s-lg) var(--s-xxl);
@@ -492,6 +505,47 @@ em { font-style: normal; color: var(--primary); }
   color: var(--ink-muted-80);
 }
 .hero .cta-row { justify-content: center; margin-top: var(--s-xl); }
+
+/* Variante do hero da Home: texto de um lado, retrato do outro. */
+.hero--split { text-align: left; }
+.hero-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 64px;
+  align-items: center;
+}
+.hero--split h1 { max-width: 14ch; margin-inline: 0; }
+.hero--split .hero-sub { max-width: 40ch; margin-inline: 0; }
+.hero--split .cta-row { justify-content: flex-start; }
+
+.hero-portrait {
+  position: relative;
+  justify-self: center;
+  width: min(460px, 100%);
+}
+/* Sem sombra: o recorte é uma foto, e a sombra do sistema é de imagem de
+   produto apoiada numa superfície. O assunto encosta na borda inferior do
+   PNG, então a máscara dissolve esse corte em vez de deixá-lo reto. */
+.hero-portrait img {
+  width: 100%;
+  height: auto;
+  -webkit-mask-image: linear-gradient(to bottom, #000 82%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 82%, transparent 100%);
+}
+/* Disco de superfície atrás do retrato: dá o chão para a sombra do sistema
+   sem introduzir sombra em chrome nem gradiente decorativo. */
+.hero-portrait::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 6%;
+  width: 86%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: var(--canvas-parchment);
+  z-index: -1;
+}
 
 /* A única sombra do sistema: peso visual da imagem de produto */
 .product-shadow { filter: drop-shadow(rgba(0, 0, 0, 0.22) 3px 5px 30px); }
@@ -924,7 +978,7 @@ em { font-style: normal; color: var(--primary); }
 .footer-col a { transition: color 0.2s var(--ease-apple); }
 .footer-col a:hover { color: var(--primary); text-decoration: none; }
 .footer-brand p { line-height: 1.47; font-size: 14px; letter-spacing: -0.224px; color: var(--ink-muted-48); max-width: 34ch; }
-.footer-brand img { width: 132px; margin-bottom: var(--s-sm); }
+.footer-brand img { width: 148px; height: auto; margin-bottom: var(--s-sm); }
 .footer-legal {
   margin-top: var(--s-xxl);
   padding-top: var(--s-lg);
@@ -980,12 +1034,26 @@ em { font-style: normal; color: var(--primary); }
 .sticky-stage { position: sticky; top: calc(var(--nav-h) + var(--subnav-h) + var(--s-xl)); }
 
 .media-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
   border-radius: var(--r-lg);
   overflow: hidden;
   background: var(--surface-black);
   filter: drop-shadow(rgba(0, 0, 0, 0.22) 3px 5px 30px);
 }
-.media-frame mux-player { display: block; width: 100%; aspect-ratio: 16 / 9; }
+/* O master do vídeo é vertical. `cover` preenche o quadro widescreen — inclusive
+   o poster — em vez de deixar as duas tarjas pretas laterais. O recorte é
+   deslocado para cima porque o enquadramento do assunto fica no terço superior. */
+.media-frame mux-player {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  --media-object-fit: cover;
+  --media-object-position: center 28%;
+  --controls-backdrop-color: rgba(13, 20, 29, 0.4);
+}
 
 .split {
   display: grid;
@@ -1008,6 +1076,11 @@ em { font-style: normal; color: var(--primary); }
 }
 
 @media (max-width: 833px) {
+  .hero-split { grid-template-columns: 1fr; gap: var(--s-xl); }
+  .hero--split { text-align: center; }
+  .hero--split h1, .hero--split .hero-sub { margin-inline: auto; }
+  .hero--split .cta-row { justify-content: center; }
+  .hero-portrait { width: min(340px, 78%); order: -1; }
   .global-nav-links { display: none; }
   .sub-nav-links { display: none; }
   .hamburger { display: block; }

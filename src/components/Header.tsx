@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { EASE_EXPO } from './motion';
+import { SISTEMA } from '../data/links';
 
-const PLATAFORMA = 'https://app2.infocolicitacoes.com.br/cadastro/';
 
 /** Linha 1 — institucional, discreta, como a barra preta da Apple. */
 const globalNav = [
@@ -43,8 +43,9 @@ const Header = () => {
             <header className="global-nav">
                 <div className="global-nav-inner">
                     <Link to="/" className="global-nav-brand" aria-label="INFOCO Gestão Pública, início">
-                        <span className="mark" aria-hidden="true">i</span>
-                        INFOCO
+                        <span className="logo-window">
+                            <img src="/logo-infoco.png" alt="INFOCO Gestão Pública" width={72} height={23} />
+                        </span>
                     </Link>
 
                     <nav className="global-nav-links" aria-label="Navegação principal">
@@ -87,7 +88,7 @@ const Header = () => {
                     <div className="sub-nav-right">
                         <a
                             className="btn btn-primary"
-                            href={PLATAFORMA}
+                            href={SISTEMA}
                             target="_blank"
                             rel="noopener noreferrer"
                         >
@@ -133,7 +134,7 @@ const Header = () => {
                             <NavLink to="/contato">Contato</NavLink>
                         </motion.div>
                         <div className="mobile-cta">
-                            <a className="btn btn-primary" href={PLATAFORMA} target="_blank" rel="noopener noreferrer">
+                            <a className="btn btn-primary" href={SISTEMA} target="_blank" rel="noopener noreferrer">
                                 Acessar o sistema
                             </a>
                         </div>

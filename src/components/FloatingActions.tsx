@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FaWhatsapp, FaInstagram, FaArrowUp } from 'react-icons/fa';
 import { EASE_EXPO } from './motion';
+import { INSTAGRAM, WHATSAPP_SUPORTE } from '../data/links';
 
-const WHATSAPP = 'https://wa.me/5573981019313';
-const INSTAGRAM = 'https://www.instagram.com/infocogestaopublica/';
 
 const FloatingActions = () => {
     const [showTop, setShowTop] = useState(false);
@@ -46,7 +45,7 @@ const FloatingActions = () => {
             </a>
             <a
                 className="float-btn"
-                href={WHATSAPP}
+                href={WHATSAPP_SUPORTE}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Falar com o suporte no WhatsApp"

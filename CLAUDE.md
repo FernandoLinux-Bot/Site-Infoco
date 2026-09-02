@@ -10,7 +10,7 @@ O produto que o site apresenta é o **SICC — Sistema Integrado de Compras e Co
 
 - **Idioma:** Português Brasileiro (pt-BR). Todo texto visível e toda URL de rota em português.
 - **Empresa:** Infoco Gestão Pública Ltda. — CNPJ 46.554.439/0001-67.
-- **Plataforma externa (CTA):** `https://app2.infocolicitacoes.com.br/cadastro/` — aplicação separada; este repo é só o site.
+- **Porta de entrada do sistema (CTA):** `https://faq.infocogestaopublica.com.br` — o FAQ autentica contra o SICC do município e leva ao sistema. Todo link externo vive em [src/data/links.ts](src/data/links.ts); não repita URL em página.
 - **Deploy:** Vercel (`vercel.json` → `vite build` → `dist/`).
 
 ## Stack
@@ -41,7 +41,11 @@ O sistema visual segue o `DESIGN-apple.md` na raiz. **Ele é a fonte da verdade*
 
 **Tipografia:** SF Pro Display / SF Pro Text via `system-ui, -apple-system, BlinkMacSystemFont`. Em plataformas não-Apple cai para **Inter** (Google Fonts), a substituta recomendada pelo próprio spec.
 
-**Superfícies:** `--canvas` #ffffff · `--canvas-parchment` #f5f5f7 · `--surface-tile-1/2/3` #272729/#2a2a2c/#252527 · `--surface-black` #000000.
+**Superfícies:** `--canvas` #ffffff · `--canvas-parchment` #f4f6f9 · `--surface-tile-1/2/3` #1e2a3b/#223040/#1a2534 · `--surface-black` #0d141d.
+
+> **Desvio deliberado do spec.** O `DESIGN-apple.md` define as superfícies escuras como near-black neutro (#272729/#2a2a2c/#252527) e a nav como preto puro. Aqui elas são uma família **navy**, por decisão do cliente, para o site e o FAQ (`faq.infocogestaopublica.com.br`) lerem como um produto só. Tudo o mais do spec continua valendo — inclusive o micro-degrau entre tiles vizinhos, que é o que substitui borda e sombra. Um teste trava os quatro valores e exige que o canal azul supere o vermelho em cada um.
+
+**Ecossistema:** o FAQ usa a mesma paleta (`_deploy/site/{index,login,comunidade}.html`, cada um com seu `:root` — ao mexer numa cor, mexa nos três). A logo é a mesma arte (`public/logo-infoco.png`, vinda de `_deploy/site/assets/logo.png` do FAQ).
 
 **Chrome de navegação:** duas barras fixas — `.global-nav` preta de 44px (links de 12px) e `.sub-nav` vitrificada de 52px (`backdrop-filter: saturate(180%) blur(20px)`) com o CTA persistente. O conteúdo começa em `.app-main { padding-top: 96px }`.
 
@@ -156,7 +160,9 @@ Almadina, Itamaraju, Nova Viçosa, Itororó, Anagé, Itabela e Prado (Bahia). Br
 
 ## Pontos de atenção
 
-- **`public/hero-background.png` é órfão.** O nome promete um plano de fundo, mas o arquivo é o logotipo em alta resolução, e nada o referencia. Candidato a remoção.
+- **`public/hero-background.png` e `public/Logo.png` são órfãos.** O primeiro é o logotipo em alta resolução com nome enganoso; o segundo foi substituído por `logo-infoco.png` (a arte do FAQ). Candidatos a remoção.
+- **O master do vídeo é vertical.** O `.media-frame` recorta para 16:9 via `--media-object-fit: cover`. Trocar por um master widescreen elimina o recorte.
+- **`patrao.png` tem 640×640 e o assunto encosta na borda inferior.** Por isso o retrato do hero usa máscara em vez de sombra: a sombra desenharia o corte reto.
 - **CSS não entra no grafo do graphify** (`index.css` não é tipo detectado). Ao rodar `/graphify --update`, lembre que o design system fica de fora.
 - **O chunk do Mux tem ~887 KB**, mas é assíncrono: só baixa quando a seção de vídeo entra na viewport. O bundle inicial é ~373 KB (117 KB gzip).
 - **Links placeholder do Footer foram removidos.** Não reintroduzir `href="#"` — se a página não existe, o link não deve existir.

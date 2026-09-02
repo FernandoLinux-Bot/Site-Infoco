@@ -10,8 +10,8 @@ import {
 } from 'framer-motion';
 import { CICLO_DEMANDA, PERGUNTAS } from '../data/sicc';
 import { EASE_EXPO, Reveal, Stagger, StaggerItem, WordReveal } from '../components/motion';
+import { SISTEMA } from '../data/links';
 
-const PLATAFORMA = 'https://app2.infocolicitacoes.com.br/cadastro/';
 
 /* ---------------------------------------------------------------- Hero --- */
 const SiccHero = () => (
@@ -45,7 +45,7 @@ const SiccHero = () => (
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: EASE_EXPO, delay: 0.52 }}
             >
-                <a className="btn btn-store" href={PLATAFORMA} target="_blank" rel="noopener noreferrer">
+                <a className="btn btn-store" href={SISTEMA} target="_blank" rel="noopener noreferrer">
                     Acessar o sistema
                 </a>
                 <Link to="/solucoes" className="btn btn-secondary">Ver os módulos</Link>

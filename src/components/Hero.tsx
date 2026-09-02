@@ -1,8 +1,8 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { EASE_EXPO, WordReveal, useParallax } from './motion';
+import { SISTEMA } from '../data/links';
 
-const PLATAFORMA = 'https://app2.infocolicitacoes.com.br/cadastro/';
 
 /**
  * O painel é uma representação desenhada do kanban de Demandas do SICC
@@ -49,8 +49,10 @@ const Hero = () => {
     const { ref, y } = useParallax(28);
 
     return (
-        <section className="tile tile--light hero">
-            <div className="container">
+        <section className="tile tile--light hero hero--split">
+            <div className="container container-mid">
+                <div className="hero-split">
+                <div>
                 <motion.span
                     className="eyebrow"
                     initial={{ opacity: 0, y: 10 }}
@@ -82,10 +84,30 @@ const Hero = () => {
                     transition={{ duration: 0.8, ease: EASE_EXPO, delay: 0.58 }}
                 >
                     <Link to="/sicc" className="btn btn-primary">Conhecer o SICC</Link>
-                    <a className="btn btn-secondary" href={PLATAFORMA} target="_blank" rel="noopener noreferrer">
+                    <a className="btn btn-secondary" href={SISTEMA} target="_blank" rel="noopener noreferrer">
                         Acessar o sistema
                     </a>
                 </motion.div>
+
+                </div>
+
+                <motion.figure
+                    className="hero-portrait"
+                    style={{ margin: 0 }}
+                    initial={reduce ? { opacity: 0 } : { opacity: 0, x: 48, scale: 0.94 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    transition={{ duration: 1.1, ease: EASE_EXPO, delay: 0.35 }}
+                >
+                    <motion.img
+                        src="/patrao.png"
+                        alt="Fundador da INFOCO Gestão Pública"
+                        width={460}
+                        height={460}
+                        animate={reduce ? undefined : { y: [0, -14, 0] }}
+                        transition={{ duration: 7, ease: 'easeInOut', repeat: Infinity }}
+                    />
+                </motion.figure>
+                </div>
 
                 <div className="hero-stage" ref={ref}>
                     <motion.div

@@ -5,8 +5,8 @@ import VideoSection from '../components/VideoSection';
 import Clients from '../components/Clients';
 import { CountUp, Reveal, Stagger, StaggerItem, useParallax } from '../components/motion';
 import { MODULOS, NUMEROS, PERFIS } from '../data/sicc';
+import { SISTEMA } from '../data/links';
 
-const PLATAFORMA = 'https://app2.infocolicitacoes.com.br/cadastro/';
 
 const Numeros = () => (
     <section className="tile tile--parchment">
@@ -153,7 +153,7 @@ const CtaFinal = () => (
                 </p>
                 <div className="cta-row cta-row--center">
                     <Link to="/contato" className="btn btn-store">Falar com a INFOCO</Link>
-                    <a className="btn btn-secondary" href={PLATAFORMA} target="_blank" rel="noopener noreferrer">
+                    <a className="btn btn-secondary" href={SISTEMA} target="_blank" rel="noopener noreferrer">
                         Acessar o sistema
                     </a>
                 </div>

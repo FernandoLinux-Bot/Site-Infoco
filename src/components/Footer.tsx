@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
+import { SISTEMA } from '../data/links';
 
-const PLATAFORMA = 'https://app2.infocolicitacoes.com.br/cadastro/';
 const ANO = new Date().getFullYear();
 
 const Footer = () => (
@@ -8,7 +8,7 @@ const Footer = () => (
         <div className="container">
             <div className="footer-grid">
                 <div className="footer-col footer-brand">
-                    <img src="/Logo.png" alt="INFOCO Gestão Pública" width={132} height={54} loading="lazy" />
+                    <img src="/logo-infoco.png" alt="INFOCO Gestão Pública" width={148} height={47} loading="lazy" />
                     <p>
                         Software de gestão pública para prefeituras, câmaras e consórcios.
                         O SICC cobre o ciclo inteiro da contratação sob a Lei 14.133/2021.
@@ -21,7 +21,7 @@ const Footer = () => (
                     <Link to="/solucoes">Módulos</Link>
                     <Link to="/sicc#fluxo">Fluxo da contratação</Link>
                     <Link to="/sicc#perguntas">Perguntas frequentes</Link>
-                    <a href={PLATAFORMA} target="_blank" rel="noopener noreferrer">Acessar o sistema</a>
+                    <a href={SISTEMA} target="_blank" rel="noopener noreferrer">Acessar o sistema</a>
                 </div>
 
                 <div className="footer-col">

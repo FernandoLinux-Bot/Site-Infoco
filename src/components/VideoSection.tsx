@@ -39,7 +39,7 @@ const VideoSection = () => {
                     </div>
                 </Reveal>
                 <Reveal delay={0.1}>
-                    <div className="media-frame" ref={ref} style={{ aspectRatio: '16 / 9' }}>
+                    <div className="media-frame" ref={ref}>
                         {visible && (
                             <Suspense fallback={null}>
                                 <MuxPlayer
@@ -47,7 +47,9 @@ const VideoSection = () => {
                                     playbackId={PLAYBACK_ID}
                                     metadata={{ video_title: 'INFOCO — SICC' }}
                                     accentColor="#0071e3"
-                                    style={{ width: '100%', height: '100%' }}
+                                    // O poster nasce do próprio master (vertical); o recorte
+                                    // para 16:9 acontece no CSS, então preview e vídeo batem.
+                                    poster={`https://image.mux.com/${PLAYBACK_ID}/thumbnail.webp?width=1600&fit_mode=smartcrop&time=2`}
                                 />
                             </Suspense>
                         )}

@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { EASE_EXPO, Reveal, WordReveal } from '../components/motion';
 import { useFormSubmit, useRecaptcha } from '../hooks/useContactForm';
+import { SISTEMA } from '../data/links';
 
 const TIPOS = [
     'Prefeitura Municipal',
@@ -151,7 +152,7 @@ const Cadastro = () => (
                 <Reveal delay={0.08}>
                     <p className="t-caption" style={{ marginTop: 'var(--s-lg)', textAlign: 'center', color: 'var(--ink-muted-48)' }}>
                         Já tem conta?{' '}
-                        <a href="https://app2.infocolicitacoes.com.br/cadastro/" target="_blank" rel="noopener noreferrer">
+                        <a href={SISTEMA} target="_blank" rel="noopener noreferrer">
                             Acesse o sistema
                         </a>{' '}
                         · Dúvidas? <Link to="/contato">Fale com a INFOCO</Link>

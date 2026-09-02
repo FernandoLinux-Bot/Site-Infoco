@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { EASE_EXPO, Reveal, Stagger, StaggerItem, WordReveal } from '../components/motion';
+import { SISTEMA } from '../data/links';
 
-const PLATAFORMA = 'https://app2.infocolicitacoes.com.br/cadastro/';
 
 const BENEFICIOS = [
     { t: 'Oportunidades reunidas', d: 'Acompanhe as licitações dos municípios que operam no SICC em um lugar só, sem caçar edital em diário oficial.' },
@@ -50,7 +50,7 @@ const Fornecedor = () => {
                         <button className="btn btn-store" onClick={() => navigate('/cadastro')}>
                             Solicitar cadastro
                         </button>
-                        <a className="btn btn-secondary" href={PLATAFORMA} target="_blank" rel="noopener noreferrer">
+                        <a className="btn btn-secondary" href={SISTEMA} target="_blank" rel="noopener noreferrer">
                             Já tenho conta
                         </a>
                     </motion.div>

@@ -54,7 +54,7 @@ test.describe('Navegação', () => {
     test('CTA persistente aponta para a plataforma externa', async ({ page }) => {
         await page.goto('/');
         const cta = page.locator('.sub-nav-right a.btn-primary');
-        await expect(cta).toHaveAttribute('href', 'https://app2.infocolicitacoes.com.br/cadastro/');
+        await expect(cta).toHaveAttribute('href', 'https://faq.infocogestaopublica.com.br');
         await expect(cta).toHaveAttribute('target', '_blank');
         await expect(cta).toHaveAttribute('rel', /noopener/);
     });
@@ -187,8 +187,24 @@ test.describe('Design system', () => {
             focus: '#0071e3',
             onDark: '#2997ff',
             ink: '#1d1d1f',
-            parchment: '#f5f5f7',
+            parchment: '#f4f6f9',
         });
+    });
+
+    test('as superfícies escuras são navy, não cinza neutro', async ({ page }) => {
+        await page.goto('/');
+        const tiles = await page.evaluate(() => {
+            const s = getComputedStyle(document.documentElement);
+            return ['--surface-tile-1', '--surface-tile-2', '--surface-tile-3', '--surface-black']
+                .map(n => s.getPropertyValue(n).trim());
+        });
+        expect(tiles).toEqual(['#1e2a3b', '#223040', '#1a2534', '#0d141d']);
+        // Navy de verdade: o canal azul precisa superar o vermelho em cada tile.
+        for (const hex of tiles) {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            expect(b, `${hex} deveria puxar para o azul`).toBeGreaterThan(r);
+        }
     });
 
     test('corpo do texto roda em 17px, não 16px', async ({ page }) => {
