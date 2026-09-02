@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { SISTEMA } from '../data/links';
+import { CONHECER, SISTEMA } from '../data/links';
 
 const ANO = new Date().getFullYear();
 
@@ -21,7 +21,8 @@ const Footer = () => (
                     <Link to="/solucoes">Módulos</Link>
                     <Link to="/sicc#fluxo">Fluxo da contratação</Link>
                     <Link to="/sicc#perguntas">Perguntas frequentes</Link>
-                    <a href={SISTEMA} target="_blank" rel="noopener noreferrer">Acessar o sistema</a>
+                    <a href={CONHECER} target="_blank" rel="noopener noreferrer">Conhecer o sistema</a>
+                    <a href={SISTEMA} target="_blank" rel="noopener noreferrer">Central de Ajuda</a>
                 </div>
 
                 <div className="footer-col">

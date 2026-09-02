@@ -47,7 +47,7 @@ O sistema visual segue o `DESIGN-apple.md` na raiz. **Ele é a fonte da verdade*
 
 **Ecossistema:** o FAQ usa a mesma paleta (`_deploy/site/{index,login,comunidade}.html`, cada um com seu `:root` — ao mexer numa cor, mexa nos três). A logo é a mesma arte (`public/logo-infoco.png`, vinda de `_deploy/site/assets/logo.png` do FAQ).
 
-**Chrome de navegação:** duas barras fixas — `.global-nav` preta de 44px (links de 12px) e `.sub-nav` vitrificada de 52px (`backdrop-filter: saturate(180%) blur(20px)`) com o CTA persistente. O conteúdo começa em `.app-main { padding-top: 96px }`.
+**Chrome de navegação:** duas barras fixas — `.global-nav` escura de 44px (só links, incluindo Contato) e `.sub-nav` vitrificada de 52px com a logo estruturada, os links do produto e o CTA persistente. As duas usam a mesma grade `1fr auto 1fr`, e é isso que faz a fileira de cima cair exatamente sobre a de baixo. **Abaixo de 833px a barra escura some** e `--nav-h` vira `0px`: os links passam para a gaveta e a sub-nav vira o header inteiro.
 
 ## Estrutura do projeto
 
@@ -160,7 +160,7 @@ Almadina, Itamaraju, Nova Viçosa, Itororó, Anagé, Itabela e Prado (Bahia). Br
 
 ## Pontos de atenção
 
-- **O master do vídeo é vertical (720×1280) e tem legendas queimadas.** O `.media-frame` recorta para 16:9 via `--media-object-fit: cover`, o que mostra só 32% da altura — rosto e legenda não cabem juntos. O `object-position: center 28%` preserva o rosto e perde a legenda; foi escolhido comparando 28%, 48%, 62% e 16:10. **A correção real é exportar um master widescreen.**
+- **Os vídeos são verticais (9:16) e têm legendas queimadas.** O carrossel respeita a proporção nativa (`.video-frame` em 9/16, `object-fit: contain`): forçar 16:9 obrigava a recortar, e o recorte distorcia o rosto e comia as legendas. Os vídeos vivem em [src/data/videos.ts](src/data/videos.ts) e o campo `id` é o **Playback ID**, não o Asset ID — o Asset ID responde HTTP 400 em `image.mux.com` e `stream.mux.com`. O Playback ID fica na aba "Playback and Thumbnails" do painel do asset. Vídeo com `id` vazio simplesmente não entra no carrossel.
 - **`patrao.png` tem 640×640 e o assunto encosta na borda inferior.** Por isso o retrato do hero usa máscara em vez de sombra: a sombra desenharia o corte reto.
 - **CSS não entra no grafo do graphify** (`index.css` não é tipo detectado). Ao rodar `/graphify --update`, lembre que o design system fica de fora.
 - **O chunk do Mux tem ~887 KB**, mas é assíncrono: só baixa quando a seção de vídeo entra na viewport. O bundle inicial é ~373 KB (117 KB gzip).

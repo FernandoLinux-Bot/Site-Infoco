@@ -30,13 +30,16 @@ function watchErrors(page: Page) {
 
 test.describe('Rotas', () => {
     for (const rota of ROTAS) {
-        test(`${rota.path} renderiza sem erro de JS`, async ({ page }) => {
+        test(`${rota.path} renderiza sem erro de JS`, async ({ page, isMobile }) => {
             const errors = watchErrors(page);
             const resp = await page.goto(rota.path);
             expect(resp?.status(), `status de ${rota.path}`).toBeLessThan(400);
 
             await expect(page.locator('h1')).toContainText(rota.titulo);
-            await expect(page.locator('header.global-nav')).toBeVisible();
+            // A sub-nav é o header em todo tamanho de tela; a barra escura só
+            // existe no desktop (no celular seus links vivem na gaveta).
+            await expect(page.locator('.sub-nav')).toBeVisible();
+            if (!isMobile) await expect(page.locator('header.global-nav')).toBeVisible();
             await expect(page.locator('footer.site-footer')).toBeVisible();
 
             expect(errors, `erros de console em ${rota.path}`).toEqual([]);
@@ -54,7 +57,7 @@ test.describe('Navegação', () => {
     test('CTA persistente aponta para a plataforma externa', async ({ page }) => {
         await page.goto('/');
         const cta = page.locator('.sub-nav-right a.btn-primary');
-        await expect(cta).toHaveAttribute('href', 'https://faq.infocogestaopublica.com.br');
+        await expect(cta).toHaveAttribute('href', 'https://faq.infocogestaopublica.com.br/conhecer');
         await expect(cta).toHaveAttribute('target', '_blank');
         await expect(cta).toHaveAttribute('rel', /noopener/);
     });
@@ -312,15 +315,41 @@ test.describe('Acessibilidade e responsivo', () => {
         expect(pequenos).toBe(0);
     });
 
-    test('no mobile o botão de contato fica à direita, não encostado à esquerda', async ({ page, isMobile }) => {
-        test.skip(!isMobile, 'só importa quando os links da nav somem');
+    test('no mobile a barra escura some e a sub-nav vira o header', async ({ page, isMobile }) => {
+        test.skip(!isMobile, 'a barra escura só some abaixo de 833px');
         await page.goto('/');
-        const { botao, barra } = await page.evaluate(() => {
-            const b = document.querySelector('.global-nav-actions .btn')!.getBoundingClientRect();
-            const n = document.querySelector('.global-nav-inner')!.getBoundingClientRect();
-            return { botao: b.right, barra: n.right };
+        await expect(page.locator('.global-nav')).toBeHidden();
+        // Sem a barra escura, a sub-nav precisa encostar no topo da janela.
+        const topo = await page.locator('.sub-nav').evaluate(el => el.getBoundingClientRect().top);
+        expect(topo).toBeLessThanOrEqual(1);
+        // E o conteúdo não pode ficar por baixo dela. O padding do .app-main vive
+        // dentro da caixa, então quem responde é o primeiro filho, não o topo do
+        // elemento — e --nav-h precisa ter zerado para a conta fechar.
+        const { conteudoTop, navBottom, navH } = await page.evaluate(() => ({
+            conteudoTop: document.querySelector('.app-main')!.firstElementChild!.getBoundingClientRect().top,
+            navBottom: document.querySelector('.sub-nav')!.getBoundingClientRect().bottom,
+            navH: getComputedStyle(document.documentElement).getPropertyValue('--nav-h').trim(),
+        }));
+        expect(navH).toBe('0px');
+        expect(conteudoTop).toBeGreaterThanOrEqual(navBottom - 1);
+    });
+
+    test('as duas fileiras de links ficam uma sob a outra', async ({ page, isMobile }) => {
+        test.skip(isMobile, 'no celular só existe uma barra');
+        await page.goto('/sicc');
+        const { cimaC, baixoC } = await page.evaluate(() => {
+            const c = document.querySelector('.global-nav-links')!.getBoundingClientRect();
+            const b = document.querySelector('.sub-nav-links')!.getBoundingClientRect();
+            return { cimaC: c.left + c.width / 2, baixoC: b.left + b.width / 2 };
         });
-        expect(barra - botao, 'o botão deve encostar na margem direita').toBeLessThan(40);
+        expect(Math.abs(cimaC - baixoC), 'os dois grupos partilham o mesmo eixo').toBeLessThan(2);
+    });
+
+    test('o contato entrou na fileira de links, sem grupo solto', async ({ page, isMobile }) => {
+        test.skip(isMobile, 'a barra escura não existe no celular');
+        await page.goto('/');
+        await expect(page.locator('.global-nav-links a[href="/contato"]')).toHaveCount(1);
+        await expect(page.locator('.global-nav-actions')).toHaveCount(0);
     });
 
     test('menu mobile abre, trava a rolagem e fecha', async ({ page, isMobile }) => {
@@ -371,6 +400,22 @@ test.describe('Conteúdo do SICC', () => {
     test('a Lei 14.133/2021 é citada nos módulos com fundamento legal', async ({ page }) => {
         await page.goto('/solucoes');
         await expect(page.getByText(/Lei 14\.133\/2021/).first()).toBeVisible();
+    });
+
+    test('os vídeos ficam na proporção nativa, sem recorte', async ({ page }) => {
+        await page.goto('/');
+        const quadro = page.locator('.video-frame').first();
+        await quadro.scrollIntoViewIfNeeded();
+        const razao = await quadro.evaluate(el => {
+            const r = el.getBoundingClientRect();
+            return r.width / r.height;
+        });
+        // 9:16 = 0.5625. Uma tolerância pequena cobre o arredondamento do layout.
+        expect(Math.abs(razao - 9 / 16), 'o quadro deve ser 9:16').toBeLessThan(0.02);
+        // A capa e o player usam `contain`: nada é esticado nem cortado.
+        const ajuste = await quadro.locator('img, mux-player').first()
+            .evaluate(el => getComputedStyle(el).objectFit);
+        expect(ajuste).toBe('contain');
     });
 
     test('a carteira completa de clientes não é exposta', async ({ page }) => {

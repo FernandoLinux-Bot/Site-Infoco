@@ -7,16 +7,23 @@ import { INSTAGRAM, WHATSAPP_SUPORTE } from '../data/links';
 
 const FloatingActions = () => {
     const [showTop, setShowTop] = useState(false);
+    const [rolou, setRolou] = useState(false);
 
     useEffect(() => {
-        const onScroll = () => setShowTop(window.scrollY > 600);
+        const onScroll = () => {
+            const y = window.scrollY;
+            setShowTop(y > 600);
+            // No celular a pilha só entra depois que a pessoa sai do hero: parada
+            // ali, ela cobria justamente o parágrafo de abertura.
+            setRolou(y > 320);
+        };
         onScroll();
         window.addEventListener('scroll', onScroll, { passive: true });
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
 
     return (
-        <div className="float-stack">
+        <div className={`float-stack${rolou ? ' is-rolado' : ''}`}>
             <AnimatePresence>
                 {showTop && (
                     <motion.button

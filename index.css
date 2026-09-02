@@ -336,19 +336,24 @@ em { font-style: normal; color: var(--primary); }
   background: var(--surface-black);
   color: var(--on-dark);
 }
+/* As duas barras usam a mesma grade de 3 colunas com o miolo automático:
+   é isso que faz a fileira de links de cima cair exatamente sobre a de baixo,
+   independentemente da largura da logo e do botão. */
 .global-nav-inner {
   height: 100%;
   max-width: 1440px;
   margin: 0 auto;
   padding-inline: var(--s-lg);
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   gap: var(--s-md);
 }
 /* A logo estruturada vive na sub-nav clara, onde cabe inteira e nas cores
    originais. A barra escura fica só com a navegação. */
 .sub-nav-brand {
+  grid-column: 1;
+  justify-self: start;
   display: inline-flex;
   align-items: center;
   flex: none;
@@ -359,9 +364,7 @@ em { font-style: normal; color: var(--primary); }
   height: 34px;
   width: auto;
 }
-/* Recuo negativo de 10px: anula o padding do primeiro link para que a
-   primeira letra caia na mesma vertical da logo da sub-nav. */
-.global-nav-links { display: flex; align-items: center; gap: 2px; margin-left: -10px; }
+.global-nav-links { grid-column: 2; display: flex; align-items: center; gap: 2px; }
 .global-nav-links a {
   color: rgba(255, 255, 255, 0.82);
   font-family: var(--font-text);
@@ -375,9 +378,7 @@ em { font-style: normal; color: var(--primary); }
 }
 .global-nav-links a:hover { color: #fff; text-decoration: none; }
 .global-nav-links a.is-active { color: #fff; }
-/* `margin-left: auto` e não `space-between`: abaixo de 833px os links somem e
-   o space-between deixaria o único filho restante encostado à esquerda. */
-.global-nav-actions { display: flex; align-items: center; gap: var(--s-xs); margin-left: auto; }
+
 
 /* Sub-nav vitrificada, presa abaixo da nav global */
 .sub-nav {
@@ -396,12 +397,12 @@ em { font-style: normal; color: var(--primary); }
   max-width: 1440px;
   margin: 0 auto;
   padding-inline: var(--s-lg);
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   gap: var(--s-md);
 }
-.sub-nav-links { display: flex; align-items: center; gap: var(--s-md); }
+.sub-nav-links { grid-column: 2; display: flex; align-items: center; gap: var(--s-md); }
 .sub-nav-links a {
   color: var(--ink-muted-80);
   font-family: var(--font-text);
@@ -411,7 +412,7 @@ em { font-style: normal; color: var(--primary); }
 }
 .sub-nav-links a:hover { color: var(--ink); text-decoration: none; }
 .sub-nav-links a.is-active { color: var(--primary); }
-.sub-nav-right { display: flex; align-items: center; gap: var(--s-sm); }
+.sub-nav-right { grid-column: 3; display: flex; align-items: center; justify-content: flex-end; gap: var(--s-sm); }
 
 .hamburger {
   display: none;
@@ -1014,6 +1015,112 @@ em { font-style: normal; color: var(--primary); }
 .will-reveal { will-change: transform, opacity; }
 .sticky-stage { position: sticky; top: calc(var(--nav-h) + var(--subnav-h) + var(--s-xl)); }
 
+/* --- Carrossel de vídeos ------------------------------------------------
+   Os masters são verticais (9:16). O quadro respeita essa proporção: forçar
+   16:9 obrigava a recortar, e era o recorte que distorcia o rosto e comia as
+   legendas queimadas. Dois cartões lado a lado no desktop; abaixo de 833px o
+   trilho vira carrossel com scroll-snap, arrastável com o dedo. */
+.video-carrossel { position: relative; }
+
+.video-trilho {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: var(--s-xl);
+  justify-content: center;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 4px;
+}
+.video-trilho::-webkit-scrollbar { display: none; }
+.video-trilho:focus-visible { outline: 2px solid var(--primary-focus); outline-offset: 6px; border-radius: var(--r-lg); }
+
+.video-card {
+  scroll-snap-align: center;
+  width: min(340px, 100%);
+  margin-inline: auto;
+}
+
+.video-frame {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--surface-tile-3);
+  filter: drop-shadow(rgba(0, 0, 0, 0.22) 3px 5px 30px);
+}
+/* `contain` e não `cover`: o quadro já tem a proporção do master, então nada é
+   cortado nem esticado — e a capa do Mux vem em 810x1440, densidade suficiente
+   para retina. */
+.video-frame mux-player,
+.video-frame img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  --media-object-fit: contain;
+  object-fit: contain;
+  --controls-backdrop-color: rgba(13, 20, 29, 0.4);
+}
+
+.video-legenda { margin-top: var(--s-md); text-align: center; }
+.video-legenda h3 {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: 0.231px;
+  color: var(--on-dark);
+}
+.video-legenda p {
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 1.43;
+  letter-spacing: -0.224px;
+  color: var(--body-muted);
+}
+
+.video-seta {
+  position: absolute;
+  top: calc(50% - 44px);
+  width: 44px; height: 44px;
+  display: none;
+  place-items: center;
+  border: 0;
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  background: var(--surface-chip-translucent);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  color: var(--ink);
+  font-size: 22px;
+  line-height: 1;
+  transition: transform 0.25s var(--ease-apple), opacity 0.25s var(--ease-apple);
+}
+.video-seta:active { transform: scale(0.95); }
+.video-seta:disabled { opacity: 0.35; cursor: default; }
+.video-seta--ant { left: 0; }
+.video-seta--prox { right: 0; }
+
+.video-pontos {
+  display: none;
+  justify-content: center;
+  gap: var(--s-xs);
+  margin-top: var(--s-lg);
+}
+.video-ponto {
+  width: 8px; height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.3);
+  transition: background-color 0.3s var(--ease-apple), transform 0.3s var(--ease-apple);
+}
+.video-ponto.is-active { background: var(--primary-on-dark); transform: scale(1.25); }
+
 .media-frame {
   position: relative;
   aspect-ratio: 16 / 9;
@@ -1021,22 +1128,6 @@ em { font-style: normal; color: var(--primary); }
   overflow: hidden;
   background: var(--surface-black);
   filter: drop-shadow(rgba(0, 0, 0, 0.22) 3px 5px 30px);
-}
-/* O master do vídeo é vertical (720x1280) e traz legendas queimadas na metade
-   de baixo. Um quadro 16:9 mostra só 32% da altura, então rosto e legenda não
-   cabem juntos: 28% preserva o rosto inteiro com folga acima e sacrifica a
-   legenda. Foi a melhor de quatro alternativas testadas (28% / 48% / 62% e
-   16:10). A correção de verdade é exportar um master widescreen — aí este
-   `cover` vira inócuo e nada é recortado. */
-.media-frame mux-player {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  --media-object-fit: cover;
-  --media-object-position: center 28%;
-  --controls-backdrop-color: rgba(13, 20, 29, 0.4);
 }
 
 .split {
@@ -1060,6 +1151,20 @@ em { font-style: normal; color: var(--primary); }
 }
 
 @media (max-width: 833px) {
+  /* A barra escura só carrega links, e no celular eles vivem na gaveta.
+     Mantê-la vazia gastaria 44px do topo e deixaria o botão de contato
+     boiando sozinho num canto. `--nav-h: 0` reposiciona a sub-nav, a gaveta
+     e o padding do main de uma vez. */
+  :root { --nav-h: 0px; }
+  .global-nav { display: none; }
+  /* A pilha flutuante fica fora do caminho enquanto o hero está na tela. */
+  .float-stack { opacity: 0; pointer-events: none; transition: opacity .35s var(--ease-apple); }
+  .float-stack.is-rolado { opacity: 1; pointer-events: auto; }
+  .video-trilho { grid-auto-columns: 100%; gap: 0; }
+  .video-card { width: min(320px, 82vw); }
+  .video-seta { display: grid; }
+  .video-pontos { display: flex; }
+  .sub-nav-inner { grid-template-columns: auto 1fr auto; }
   .hero-split { grid-template-columns: 1fr; gap: var(--s-xl); }
   .hero--split { text-align: center; }
   .hero--split h1, .hero--split .hero-sub { margin-inline: auto; }

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { EASE_EXPO } from './motion';
-import { SISTEMA } from '../data/links';
+import { CONHECER } from '../data/links';
 
 
 /** Linha 1 — institucional, discreta, como a barra preta da Apple. */
@@ -14,6 +14,7 @@ const globalNav = [
     { to: '/noticias', label: 'Notícias' },
     { to: '/fornecedor', label: 'Fornecedores' },
     { to: '/trabalhe-conosco', label: 'Carreiras' },
+    { to: '/contato', label: 'Contato' },
 ];
 
 /** Linha 2 — contexto do produto e o CTA persistente. */
@@ -55,9 +56,6 @@ const Header = () => {
                         ))}
                     </nav>
 
-                    <div className="global-nav-actions">
-                        <Link to="/contato" className="btn btn-dark">Contato</Link>
-                    </div>
                 </div>
             </header>
 
@@ -84,7 +82,7 @@ const Header = () => {
                     <div className="sub-nav-right">
                         <a
                             className="btn btn-primary"
-                            href={SISTEMA}
+                            href={CONHECER}
                             target="_blank"
                             rel="noopener noreferrer"
                         >
@@ -122,15 +120,8 @@ const Header = () => {
                                 <NavLink to={item.to} end={item.end}>{item.label}</NavLink>
                             </motion.div>
                         ))}
-                        <motion.div
-                            initial={{ opacity: 0, y: 16 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, ease: EASE_EXPO, delay: 0.05 + globalNav.length * 0.04 }}
-                        >
-                            <NavLink to="/contato">Contato</NavLink>
-                        </motion.div>
                         <div className="mobile-cta">
-                            <a className="btn btn-primary" href={SISTEMA} target="_blank" rel="noopener noreferrer">
+                            <a className="btn btn-primary" href={CONHECER} target="_blank" rel="noopener noreferrer">
                                 Acessar o sistema
                             </a>
                         </div>
