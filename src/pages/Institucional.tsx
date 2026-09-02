@@ -1,106 +1,140 @@
-import { motion, Variants } from 'framer-motion';
-import InfoCard from '../components/InfoCard.tsx';
-import {
-    FaBullseye, FaHeart, FaLightbulb,
-    FaBalanceScale, FaHandshake, FaTrophy, FaUsers, FaGlobeAmericas
-} from 'react-icons/fa';
-import AnimatedIdentityCard from '../components/AnimatedIdentityCard.tsx';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { EASE_EXPO, Reveal, Stagger, StaggerItem, WordReveal, useParallax } from '../components/motion';
 
-const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.12, delayChildren: 0.1 } }
-};
-
-const itemVariants: Variants = {
-    hidden: { y: 22, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
-};
-
-const values = [
-    { icon: <FaBalanceScale />, title: 'Ética e Transparência', description: 'Agimos com responsabilidade e clareza em todas as relações, fortalecendo a confiança entre gestão pública e sociedade.' },
-    { icon: <FaLightbulb />, title: 'Inovação com Propósito', description: 'Desenvolvemos soluções tecnológicas que simplificam processos e geram impacto social positivo.' },
-    { icon: <FaHandshake />, title: 'Compromisso com o Cliente', description: 'Somos parceiros estratégicos dos gestores públicos, oferecendo suporte próximo, personalizado e contínuo.' },
-    { icon: <FaTrophy />, title: 'Excelência e Qualidade', description: 'Buscamos constantemente superar expectativas, garantindo softwares seguros, modernos e eficientes.' },
-    { icon: <FaUsers />, title: 'Valorização das Pessoas', description: 'Respeitamos e reconhecemos nossos colaboradores, clientes e cidadãos como protagonistas da transformação pública.' },
-    { icon: <FaGlobeAmericas />, title: 'Responsabilidade Social', description: 'Acreditamos que cada melhoria na gestão pública reflete diretamente na qualidade de vida da população.' }
-];
-
-const metaData = [
-    { icon: <FaLightbulb />, title: 'Eficiência', description: 'Empoderar gestores com ferramentas modernas, simples e seguras, capazes de otimizar recursos e processos.' },
-    { icon: <FaBullseye />, title: 'Transparência', description: 'Fortalecer a confiança entre governo e sociedade, tornando cada processo administrativo mais claro e acessível.' },
-    { icon: <FaHeart />, title: 'Humanização', description: 'Construir pontes entre tecnologia e cidadania, tornando cada serviço público mais próximo do cidadão.' }
+const VALORES = [
+    { t: 'Ética e transparência', d: 'Responsabilidade e clareza em todas as relações, fortalecendo a confiança entre a gestão pública e a sociedade.' },
+    { t: 'Inovação com propósito', d: 'Tecnologia que simplifica processos e gera impacto social — não tecnologia pela tecnologia.' },
+    { t: 'Compromisso com o cliente', d: 'Parceria estratégica com o gestor público, com suporte próximo, personalizado e contínuo.' },
+    { t: 'Excelência e qualidade', d: 'Software seguro, moderno e eficiente, mantido no ritmo em que a legislação muda.' },
+    { t: 'Valorização das pessoas', d: 'Colaboradores, clientes e cidadãos como protagonistas da transformação pública.' },
+    { t: 'Responsabilidade social', d: 'Cada melhoria na gestão pública se reflete diretamente na qualidade de vida da população.' },
 ];
 
 const Institucional = () => {
+    const { ref, y } = useParallax(30);
+
     return (
         <>
-            <section className="institucional-hero">
-                <div className="container">
-                    <span className="eyebrow">Institucional / Quem somos</span>
-                    <h1 className="section-title" style={{ marginTop: '1.5rem', maxWidth: '20ch' }}>
-                        Mais que software. <em>Parceiros da gestão pública.</em>
+            <section className="tile tile--light hero">
+                <div className="container container-narrow">
+                    <motion.span
+                        className="eyebrow"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, ease: EASE_EXPO }}
+                    >
+                        Institucional
+                    </motion.span>
+                    <h1 className="t-hero">
+                        <WordReveal text="Software para quem responde" />{' '}
+                        <em><WordReveal text="pelo dinheiro público." delay={0.15} /></em>
                     </h1>
+                    <motion.p
+                        className="t-lead hero-sub"
+                        style={{ maxWidth: '44ch' }}
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, ease: EASE_EXPO, delay: 0.4 }}
+                    >
+                        A INFOCO Gestão Pública é uma empresa de Itabuna, na Bahia, que desenvolve
+                        sistemas para prefeituras, câmaras e consórcios.
+                    </motion.p>
                 </div>
             </section>
 
-            <motion.section
-                className="institucional-content"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.1 }}
-                variants={containerVariants}
-            >
-                <div className="container">
-                    <motion.div className="content-block" variants={itemVariants}>
-                        <span className="eyebrow">Identidade</span>
-                        <h2 className="section-title" style={{ marginTop: '1.25rem' }}>Quem somos</h2>
-                        <div className="institutional-grid">
-                            <AnimatedIdentityCard />
-                            <div className="content-text">
-                                <p>Na Infoco Gestão Pública, acreditamos que a tecnologia é uma aliada estratégica para transformar a administração pública em um espaço mais eficiente, transparente e próximo do cidadão.</p>
-                                <p>Somos uma empresa especializada no desenvolvimento de soluções em software voltadas exclusivamente para a gestão pública, oferecendo ferramentas que simplificam processos, ampliam o controle administrativo e fortalecem a tomada de decisão.</p>
-                                <p>Com sede em Itabuna-BA, atuamos em parceria com prefeituras, câmaras municipais e demais órgãos públicos, levando inovação e suporte de excelência para diferentes regiões do país. Nosso compromisso é gerar valor real para a sociedade, ajudando gestores a otimizar recursos e entregar serviços públicos de maior qualidade.</p>
-                                <p>Na Infoco, unimos tecnologia, conhecimento jurídico-administrativo e experiência prática para entregar sistemas que vão além do digital: entregamos confiança, segurança e resultados.</p>
-                                <strong>Somos mais que uma empresa de software: somos parceiros da gestão pública.</strong>
+            <section className="tile tile--parchment" ref={ref}>
+                <div className="container container-mid">
+                    <div className="split split--wide">
+                        <Reveal>
+                            <div>
+                                <span className="eyebrow">Quem somos</span>
+                                <h2 className="t-display">Perto de quem executa.</h2>
+                                <p className="t-body" style={{ marginTop: 'var(--s-md)', color: 'var(--ink-muted-80)' }}>
+                                    A INFOCO nasceu no interior da Bahia atendendo municípios que precisavam
+                                    cumprir a lei com equipes pequenas e prazos curtos. Essa origem definiu o
+                                    produto: um sistema que não pressupõe um departamento de licitações
+                                    grande, e um suporte que conhece o nome de quem liga.
+                                </p>
+                                <p className="t-body" style={{ marginTop: 'var(--s-md)', color: 'var(--ink-muted-80)' }}>
+                                    Quando a Lei 14.133/2021 entrou em vigor, o SICC foi reescrito em torno
+                                    dela — PCA, DFD, ETP, mapa de riscos e a tramitação por fases não são
+                                    módulos adicionados depois, são o desenho do sistema.
+                                </p>
+                                <div className="cta-row">
+                                    <Link to="/sicc" className="link-action">
+                                        Conhecer o SICC <span className="chev">›</span>
+                                    </Link>
+                                </div>
                             </div>
-                        </div>
-                    </motion.div>
+                        </Reveal>
 
-                    <motion.div className="content-block" variants={itemVariants}>
-                        <span className="eyebrow">Direção</span>
-                        <h2 className="section-title" style={{ marginTop: '1.25rem' }}>Nossa <em>meta</em></h2>
-                        <p className="section-subtitle" style={{ marginTop: '1rem' }}>
-                            Ser referência nacional em tecnologia aplicada à gestão pública, oferecendo soluções que transformem a administração em um processo mais eficiente, transparente e humano.
-                        </p>
-                        <div className="meta-grid">
-                            {metaData.map((item, index) => (
-                                <InfoCard
-                                    key={index}
-                                    icon={item.icon}
-                                    title={item.title}
-                                    description={item.description}
+                        <motion.div style={{ y }}>
+                            <Reveal delay={0.1}>
+                                <img
+                                    src="/patrao.png"
+                                    alt="Fundador da INFOCO Gestão Pública"
+                                    className="product-shadow"
+                                    style={{ width: '100%', maxWidth: 420, marginInline: 'auto' }}
+                                    loading="lazy"
                                 />
-                            ))}
-                        </div>
-                    </motion.div>
-
-                    <motion.div className="content-block" variants={itemVariants}>
-                        <span className="eyebrow">Princípios</span>
-                        <h2 className="section-title" style={{ marginTop: '1.25rem' }}>Nossos <em>valores</em></h2>
-                        <motion.div className="values-grid" variants={containerVariants}>
-                            {values.map((value, index) => (
-                                <motion.div key={index} className="value-card" variants={itemVariants}>
-                                    <div className="value-card-icon">{value.icon}</div>
-                                    <div className="value-card-content">
-                                        <h3>{value.title}</h3>
-                                        <p>{value.description}</p>
-                                    </div>
-                                </motion.div>
-                            ))}
+                            </Reveal>
                         </motion.div>
-                    </motion.div>
+                    </div>
                 </div>
-            </motion.section>
+            </section>
+
+            <section className="tile tile--dark on-dark">
+                <div className="container container-narrow" style={{ textAlign: 'center' }}>
+                    <Reveal>
+                        <span className="eyebrow">Nossa meta</span>
+                        <h2 className="t-display">
+                            Que a conformidade deixe de ser um esforço e passe a ser
+                            <em> o caminho natural do processo</em>.
+                        </h2>
+                        <p className="t-lead-airy" style={{ marginTop: 'var(--s-lg)', color: 'var(--body-muted)' }}>
+                            Um servidor não deveria precisar decorar a lei para cumpri-la. O sistema é
+                            que deveria conduzir o processo pelo caminho certo — e recusar o atalho errado.
+                        </p>
+                    </Reveal>
+                </div>
+            </section>
+
+            <section className="tile tile--light">
+                <div className="container container-mid">
+                    <Reveal>
+                        <div className="tile-head">
+                            <span className="eyebrow">Valores</span>
+                            <h2 className="t-display">O que orienta a decisão quando ninguém está olhando.</h2>
+                        </div>
+                    </Reveal>
+                    <Stagger className="grid grid-3" staggerChildren={0.06}>
+                        {VALORES.map(v => (
+                            <StaggerItem key={v.t}>
+                                <div className="util-card" style={{ height: '100%' }}>
+                                    <h3>{v.t}</h3>
+                                    <p>{v.d}</p>
+                                </div>
+                            </StaggerItem>
+                        ))}
+                    </Stagger>
+                </div>
+            </section>
+
+            <section className="tile tile--parchment">
+                <div className="container container-narrow" style={{ textAlign: 'center' }}>
+                    <Reveal>
+                        <h2 className="t-display">Fale com quem desenvolve.</h2>
+                        <p className="t-lead" style={{ marginTop: 'var(--s-md)', color: 'var(--ink-muted-80)' }}>
+                            Itabuna, Bahia. Atendimento a municípios de todo o estado.
+                        </p>
+                        <div className="cta-row cta-row--center">
+                            <Link to="/contato" className="btn btn-store">Entrar em contato</Link>
+                            <Link to="/trabalhe-conosco" className="btn btn-secondary">Trabalhe conosco</Link>
+                        </div>
+                    </Reveal>
+                </div>
+            </section>
         </>
     );
 };

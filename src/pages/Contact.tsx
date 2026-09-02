@@ -1,187 +1,179 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion, Variants } from 'framer-motion';
-import { FaPhone, FaUserTie, FaHeadset, FaWhatsapp } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+import { EASE_EXPO, Reveal, Stagger, StaggerItem, WordReveal } from '../components/motion';
+import { useFormSubmit, useRecaptcha } from '../hooks/useContactForm';
 
-type SubmitStatus = 'idle' | 'submitting' | 'success' | 'error';
-
-declare global {
-    interface Window {
-        grecaptcha: any;
-    }
-}
-
-const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.15 } }
-};
-
-const itemVariants: Variants = {
-    hidden: { y: 22, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } }
-};
-
-const contactInfo = [
-    { icon: <FaPhone />, title: 'Telefone', value: '(73) 3301-2710', href: 'tel:+557333012710' },
-    { icon: <FaUserTie />, title: 'Administrativo', value: '(73) 98118-5210', href: 'https://wa.me/5573981185210' },
-    { icon: <FaWhatsapp />, title: 'Comercial', value: '(71) 98205-3822', href: 'https://wa.me/5571982053822' },
-    { icon: <FaHeadset />, title: 'Suporte Técnico', value: '(73) 98101-9313', href: 'https://wa.me/5573981019313' }
+const CANAIS = [
+    { t: 'Telefone fixo', v: '(73) 3301-2710', href: 'tel:+557333012710' },
+    { t: 'Administrativo', v: '(73) 98118-5210', href: 'https://wa.me/5573981185210' },
+    { t: 'Comercial', v: '(71) 98205-3822', href: 'https://wa.me/5571982053822' },
+    { t: 'Suporte técnico', v: '(73) 98101-9313', href: 'https://wa.me/5573981019313' },
 ];
 
 const ContactForm = () => {
-    const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle');
-    const [isRecaptchaVerified, setRecaptchaVerified] = useState(false);
-    const recaptchaContainer = useRef<HTMLDivElement>(null);
-    const recaptchaWidgetId = useRef<number | null>(null);
+    const recaptcha = useRecaptcha();
+    const { status, submit } = useFormSubmit(recaptcha.reset);
 
-    useEffect(() => {
-        const renderRecaptcha = () => {
-            if (recaptchaContainer.current && window.grecaptcha?.render && recaptchaWidgetId.current === null) {
-                recaptchaWidgetId.current = window.grecaptcha.render(recaptchaContainer.current, {
-                    'sitekey': '6Lewq7krAAAAAG6X-fKiZIAvAo53IKSNWAlMpyNn',
-                    'callback': () => setRecaptchaVerified(true),
-                    'expired-callback': () => setRecaptchaVerified(false),
-                });
-            }
-        };
-
-        const intervalId = setInterval(() => {
-            if (window.grecaptcha && window.grecaptcha.render) {
-                renderRecaptcha();
-                clearInterval(intervalId);
-            }
-        }, 100);
-
-        return () => clearInterval(intervalId);
-    }, []);
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setSubmitStatus('submitting');
-        const formData = new FormData(e.currentTarget);
-
-        try {
-            const response = await fetch('https://submit-form.com/Z4G5K3MOm', {
-                method: 'POST',
-                body: formData,
-                headers: { 'Accept': 'application/json' },
-            });
-
-            if (response.ok) {
-                setSubmitStatus('success');
-            } else {
-                throw new Error('Form submission failed');
-            }
-        } catch (error) {
-            console.error('Erro ao enviar formulário:', error);
-            setSubmitStatus('error');
-            if (window.grecaptcha && recaptchaWidgetId.current !== null) {
-                window.grecaptcha.reset(recaptchaWidgetId.current);
-            }
-            setRecaptchaVerified(false);
-        }
-    };
-
-    if (submitStatus === 'success') {
+    if (status === 'success') {
         return (
-            <div className="submit-success">
-                <h3>Obrigado.</h3>
-                <p style={{ marginTop: '0.5rem', color: 'var(--ink-soft)' }}>Sua mensagem foi enviada com sucesso. Retornaremos em breve.</p>
-            </div>
+            <motion.div
+                className="form-success"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: EASE_EXPO }}
+            >
+                <h3>Mensagem enviada.</h3>
+                <p>Obrigado pelo contato. A equipe da INFOCO responde em breve.</p>
+            </motion.div>
         );
     }
 
     return (
-        <div className="contact-container">
-            <form className="contact-form" onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="nome">Nome Completo</label>
-                    <input type="text" id="nome" name="nome" className="form-input" required />
+        <form className="form" onSubmit={submit}>
+            <input type="hidden" name="_origem" value="Site INFOCO — Contato" />
+            <div className="form-row">
+                <div className="field">
+                    <label htmlFor="nome">Nome completo</label>
+                    <input className="input" type="text" id="nome" name="nome" required autoComplete="name" />
                 </div>
-                <div className="form-group">
+                <div className="field">
+                    <label htmlFor="orgao">Órgão ou empresa</label>
+                    <input className="input" type="text" id="orgao" name="orgao" autoComplete="organization" />
+                </div>
+            </div>
+            <div className="form-row">
+                <div className="field">
                     <label htmlFor="email">E-mail</label>
-                    <input type="email" id="email" name="email" className="form-input" required />
+                    <input className="input" type="email" id="email" name="email" required autoComplete="email" />
                 </div>
-                <div className="form-group">
-                    <label htmlFor="telefone">Telefone / WhatsApp</label>
-                    <input type="tel" id="telefone" name="telefone" className="form-input" />
+                <div className="field">
+                    <label htmlFor="telefone">Telefone ou WhatsApp</label>
+                    <input className="input" type="tel" id="telefone" name="telefone" autoComplete="tel" />
                 </div>
-                <div className="form-group">
-                    <label htmlFor="mensagem">Mensagem</label>
-                    <textarea id="mensagem" name="mensagem" className="form-input" rows={5} required></textarea>
-                </div>
-                <div className="form-group recaptcha-container">
-                    <div ref={recaptchaContainer}></div>
-                </div>
-                <button
-                    type="submit"
-                    className="cta-button"
-                    style={{ width: '100%', justifyContent: 'center', marginTop: '1rem' }}
-                    disabled={submitStatus === 'submitting' || !isRecaptchaVerified}
-                >
-                    {submitStatus === 'submitting' ? 'Enviando…' : 'Enviar mensagem'}
-                </button>
-                {submitStatus === 'error' && (
-                    <p className="submit-error">
-                        Ocorreu um erro ao enviar a mensagem. Tente novamente mais tarde.
-                    </p>
-                )}
-            </form>
-        </div>
+            </div>
+            <div className="field">
+                <label htmlFor="assunto">Assunto</label>
+                <select className="select" id="assunto" name="assunto" defaultValue="Conhecer o SICC">
+                    <option>Conhecer o SICC</option>
+                    <option>Implantação em um município</option>
+                    <option>Suporte técnico</option>
+                    <option>Sou fornecedor</option>
+                    <option>Outro assunto</option>
+                </select>
+            </div>
+            <div className="field">
+                <label htmlFor="mensagem">Mensagem</label>
+                <textarea className="textarea" id="mensagem" name="mensagem" rows={6} required />
+            </div>
+
+            <div className="recaptcha-slot">
+                <div ref={recaptcha.container} />
+            </div>
+            {!recaptcha.available && (
+                <p className="form-error">
+                    Não foi possível carregar a verificação de segurança. Recarregue a página ou fale
+                    conosco pelo WhatsApp.
+                </p>
+            )}
+
+            <button
+                type="submit"
+                className="btn btn-primary"
+                style={{ width: '100%' }}
+                disabled={status === 'submitting' || !recaptcha.verified}
+            >
+                {status === 'submitting' ? 'Enviando…' : 'Enviar mensagem'}
+            </button>
+
+            {status === 'error' && (
+                <p className="form-error">
+                    Não conseguimos enviar sua mensagem. Tente novamente ou use um dos canais ao lado.
+                </p>
+            )}
+            <p className="form-note">
+                Os dados enviados são usados apenas para responder ao seu contato.
+            </p>
+        </form>
     );
 };
 
-const Contact = () => {
-    return (
-        <motion.section
-            className="contact-page"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-        >
-            <div className="container contact-page-grid">
-                <motion.div
-                    className="contact-info"
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.2 }}
-                    variants={containerVariants}
+const Contact = () => (
+    <>
+        <section className="tile tile--light hero" style={{ paddingBottom: 'var(--s-xl)' }}>
+            <div className="container container-narrow">
+                <motion.span
+                    className="eyebrow"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: EASE_EXPO }}
                 >
-                    <motion.span className="eyebrow" variants={itemVariants}>Contato / Estamos prontos</motion.span>
-                    <motion.h1 variants={itemVariants}>Entre em <em>contato</em>.</motion.h1>
-                    <motion.p className="section-subtitle" variants={itemVariants}>
-                        Escolha o melhor canal de comunicação ou envie uma mensagem pelo formulário ao lado.
-                    </motion.p>
-                    <div className="contact-cards-container">
-                        {contactInfo.map((item, index) => (
-                            <motion.a
-                                key={index}
-                                href={item.href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="contact-card"
-                                variants={itemVariants}
-                            >
-                                <div className="contact-card-icon">{item.icon}</div>
-                                <div className="contact-card-content">
-                                    <h3>{item.title}</h3>
-                                    <span>{item.value}</span>
-                                </div>
-                            </motion.a>
-                        ))}
-                    </div>
-                </motion.div>
-                <motion.div
-                    className="contact-form-wrapper"
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, amount: 0.2 }}
-                    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                    Contato
+                </motion.span>
+                <h1 className="t-hero">
+                    <WordReveal text="Fale com a" /> <em><WordReveal text="INFOCO." delay={0.12} /></em>
+                </h1>
+                <motion.p
+                    className="t-lead hero-sub"
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, ease: EASE_EXPO, delay: 0.35 }}
                 >
-                    <ContactForm />
-                </motion.div>
+                    Escolha um canal direto ou envie uma mensagem pelo formulário.
+                </motion.p>
             </div>
-        </motion.section>
-    );
-};
+        </section>
+
+        <section className="tile tile--parchment" style={{ paddingTop: 'var(--s-xl)' }}>
+            <div className="container container-mid">
+                <div className="split split--wide" style={{ alignItems: 'start' }}>
+                    <div>
+                        <Reveal>
+                            <h2 className="t-display-md">Canais diretos</h2>
+                        </Reveal>
+                        <Stagger className="grid" staggerChildren={0.06}>
+                            {CANAIS.map(c => (
+                                <StaggerItem key={c.t}>
+                                    <a
+                                        className="util-card"
+                                        href={c.href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        style={{ textDecoration: 'none', color: 'inherit' }}
+                                    >
+                                        <span className="card-index">{c.t}</span>
+                                        <h3>{c.v}</h3>
+                                    </a>
+                                </StaggerItem>
+                            ))}
+                        </Stagger>
+
+                        <Reveal delay={0.1}>
+                            <div className="util-card" style={{ marginTop: 'var(--s-lg)' }}>
+                                <span className="card-index">Endereço</span>
+                                <p>
+                                    Av. Princesa Isabel, 1206 — 2º andar, salas 201/202<br />
+                                    São Caetano, Itabuna/BA — 45607-127
+                                </p>
+                                <p>
+                                    <a href="mailto:contato@infocogestaopublica.com.br">
+                                        contato@infocogestaopublica.com.br
+                                    </a>
+                                </p>
+                            </div>
+                        </Reveal>
+                    </div>
+
+                    <Reveal delay={0.08}>
+                        <div className="util-card" style={{ padding: 'var(--s-xl)' }}>
+                            <h2 className="t-display-md" style={{ marginBottom: 'var(--s-md)' }}>
+                                Enviar mensagem
+                            </h2>
+                            <ContactForm />
+                        </div>
+                    </Reveal>
+                </div>
+            </div>
+        </section>
+    </>
+);
 
 export default Contact;

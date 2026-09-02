@@ -1,166 +1,130 @@
-import { motion, Variants, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
-import { FaCheckCircle, FaChartLine, FaShieldAlt, FaBalanceScale, FaSearchDollar, FaLock } from "react-icons/fa";
+import { motion, useReducedMotion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { EASE_EXPO, WordReveal, useParallax } from './motion';
 
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: (i: number = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.85, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] },
-  }),
-};
+const PLATAFORMA = 'https://app2.infocolicitacoes.com.br/cadastro/';
 
-const cardFloat: Variants = {
-  hidden: { opacity: 0, y: 30, z: 0, scale: 0.92 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    z: 60,
-    scale: 1,
-    transition: { duration: 0.9, delay: 0.6 + i * 0.18, ease: [0.16, 1, 0.3, 1] },
-  }),
-};
-
-const photoReveal: Variants = {
-  hidden: { opacity: 0, scale: 0.94, y: 20 },
-  visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 1, delay: 0.35, ease: [0.16, 1, 0.3, 1] } },
-};
-
-const ArrowIcon = () => (
-  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8">
-    <path d="M2 8h12M9 3l5 5-5 5" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
-
-const compliance = [
-  { icon: <FaBalanceScale />, label: "Lei 14.133/2021", description: "Nova Lei de Licitações e Contratos" },
-  { icon: <FaSearchDollar />, label: "IN 65/2021", description: "Pesquisa de preços conforme SEGES/ME" },
-  { icon: <FaShieldAlt />, label: "LGPD", description: "Lei Geral de Proteção de Dados" },
-  { icon: <FaLock />, label: "Dados em nuvem", description: "Infraestrutura segura e auditável" },
+/**
+ * O painel é uma representação desenhada do kanban de Demandas do SICC
+ * (colunas "Em Elaboração" e "Em Contratação", cartões com P.ADM, selos e
+ * status). Nenhuma captura de tela do sistema é usada.
+ */
+const emElaboracao = [
+    { num: '081403/2026', obj: 'Notebooks para as secretarias escolares', selos: ['SRP', 'DFD 12'], status: 'Em Cotação de Preços', unidade: 'SECE', itens: '14 itens' },
+    { num: '081418/2026', obj: 'Medicamentos da atenção básica', selos: ['PCA 2026'], status: 'Em Análise Jurídica', unidade: 'SS', itens: '86 itens' },
+    { num: '081422/2026', obj: 'Manutenção predial das unidades', selos: ['DFD 31'], status: 'Em Elaboração do ETP', unidade: 'STOSP', itens: '9 itens' },
 ];
 
-const Hero = () => {
-  const reduce = useReducedMotion();
+const emContratacao = [
+    { num: '081377/2026', obj: 'Gêneros alimentícios — merenda escolar', selos: ['SRP', 'PCA 2026'], status: 'Enviado para Licitação', unidade: 'SECE', itens: '52 itens' },
+    { num: '081390/2026', obj: 'Locação de veículos leves', selos: ['DFD 08'], status: 'Aguardando Autuação', unidade: 'SAP', itens: '6 itens' },
+];
 
-  // Parallax 3D: o palco (foto + cards) inclina seguindo o cursor.
-  const px = useMotionValue(0.5);
-  const py = useMotionValue(0.5);
-  const rotateX = useSpring(useTransform(py, [0, 1], [8, -8]), { stiffness: 120, damping: 18 });
-  const rotateY = useSpring(useTransform(px, [0, 1], [-10, 10]), { stiffness: 120, damping: 18 });
-
-  const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (reduce) return;
-    const r = e.currentTarget.getBoundingClientRect();
-    px.set((e.clientX - r.left) / r.width);
-    py.set((e.clientY - r.top) / r.height);
-  };
-  const handleLeave = () => { px.set(0.5); py.set(0.5); };
-
-  return (
-    <section className="hero">
-      <div className="hero-mesh" aria-hidden="true" />
-      <div className="container">
-        <div className="hero-grid">
-          {/* TEXT SIDE */}
-          <div className="hero-text">
-            <motion.span className="eyebrow" variants={fadeUp} initial="hidden" animate="visible" custom={0}>
-              Software de Gestão Pública
-            </motion.span>
-
-            <motion.h1 className="hero-headline" variants={fadeUp} initial="hidden" animate="visible" custom={1}>
-              Modernizando a <em>gestão pública</em>
-              <span className="hero-globe" aria-hidden="true" />
-            </motion.h1>
-
-            <motion.p className="hero-lede" variants={fadeUp} initial="hidden" animate="visible" custom={2}>
-              Sistemas integrados de licitação, contratos, patrimônio e protocolo
-              para prefeituras e câmaras, em total conformidade com a Lei 14.133/2021.
-            </motion.p>
-
-            <motion.div className="hero-actions" variants={fadeUp} initial="hidden" animate="visible" custom={3}>
-              <a href="https://app2.infocolicitacoes.com.br/cadastro/" target="_blank" rel="noopener noreferrer" className="cta-button">
-                Acessar plataforma
-                <span className="cta-icon-wrapper"><ArrowIcon /></span>
-              </a>
-              <a href="#solucoes" className="cta-button cta-button-outline">
-                Ver soluções
-              </a>
-            </motion.div>
-
-            <motion.div className="hero-trustline" variants={fadeUp} initial="hidden" animate="visible" custom={4}>
-              <span className="hero-trustline-avatars">
-                <span>AL</span>
-                <span>IT</span>
-                <span>NV</span>
-                <span>+4</span>
-              </span>
-              <span className="hero-trustline-text">
-                <strong>Mais de 70 prefeituras</strong> já confiam na INFOCO.
-              </span>
-            </motion.div>
-          </div>
-
-          {/* VISUAL SIDE — foto do fundador + cards flutuantes, palco 3D com parallax */}
-          <div className="hero-visual" onMouseMove={handleMove} onMouseLeave={handleLeave}>
-            <motion.div
-              className="hero-stage"
-              style={reduce ? undefined : { rotateX, rotateY }}
-            >
-              <motion.div className="hero-portrait" variants={photoReveal} initial="hidden" animate="visible">
-                <img src="/patrao.png" alt="Fundador da INFOCO Gestão Pública" />
-              </motion.div>
-
-              <motion.div className="hero-card hero-card-a" variants={cardFloat} custom={0} initial="hidden" animate="visible" aria-hidden="true">
-                <motion.div animate={reduce ? undefined : { y: [0, -8, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
-                  <span className="hero-card-label"><span className="pill" /> Licitação aprovada</span>
-                  <div className="hero-card-title" style={{ marginTop: "0.35rem" }}>Pregão Nº 042/2026</div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.45rem", marginTop: "0.45rem", color: "#16A34A", fontWeight: 600, fontSize: "0.82rem" }}>
-                    <FaCheckCircle /> Homologada
-                  </div>
-                </motion.div>
-              </motion.div>
-
-              <motion.div className="hero-card hero-card-b" variants={cardFloat} custom={1} initial="hidden" animate="visible" aria-hidden="true">
-                <motion.div animate={reduce ? undefined : { y: [0, 9, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.7rem" }}>
-                    <div className="hero-card-icon"><FaChartLine /></div>
-                    <div>
-                      <span className="hero-card-label">Economia anual</span>
-                      <div className="hero-card-value" style={{ marginTop: "0.1rem" }}>R$ 2,4M <small>+18%</small></div>
-                    </div>
-                  </div>
-                  <div className="hero-card-bar" style={{ marginTop: "0.7rem" }}>
-                    <motion.i initial={{ scaleX: 0 }} animate={{ scaleX: 0.72 }} transition={{ duration: 1.4, delay: 1.5, ease: [0.16, 1, 0.3, 1] }} />
-                  </div>
-                </motion.div>
-              </motion.div>
-            </motion.div>
-          </div>
+const Card = ({ d, delay }: { d: typeof emElaboracao[number]; delay: number }) => (
+    <motion.div
+        className="sicc-card"
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: EASE_EXPO, delay }}
+    >
+        <div className="sicc-card-top">
+            <span className="sicc-num">P.ADM {d.num}</span>
+            <span style={{ display: 'flex', gap: 4 }}>
+                {d.selos.map(s => <span className="chip chip--muted" key={s}>{s}</span>)}
+            </span>
         </div>
+        <p className="sicc-obj">{d.obj}</p>
+        <div className="sicc-meta">
+            <span>{d.unidade}</span>
+            <span>{d.itens}</span>
+        </div>
+        <div style={{ marginTop: 10 }}>
+            <span className="chip chip--action">{d.status}</span>
+        </div>
+    </motion.div>
+);
 
-        {/* COMPLIANCE BAR */}
-        <motion.div
-          className="hero-compliance"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <div className="hero-compliance-label">Em conformidade com</div>
-          <div className="hero-compliance-grid">
-            {compliance.map((c) => (
-              <div className="hero-compliance-item" key={c.label}>
-                <div className="hero-compliance-icon">{c.icon}</div>
-                <div className="hero-compliance-text">
-                  <strong>{c.label}</strong>
-                  <span>{c.description}</span>
+const Hero = () => {
+    const reduce = useReducedMotion();
+    const { ref, y } = useParallax(28);
+
+    return (
+        <section className="tile tile--light hero">
+            <div className="container">
+                <motion.span
+                    className="eyebrow"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: EASE_EXPO }}
+                >
+                    SICC · Sistema Integrado de Compras e Contratações
+                </motion.span>
+
+                <h1 className="t-hero">
+                    <WordReveal text="Do plano anual ao contrato assinado." />{' '}
+                    <em><WordReveal text="Em um cadastro só." delay={0.18} /></em>
+                </h1>
+
+                <motion.p
+                    className="t-lead hero-sub"
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, ease: EASE_EXPO, delay: 0.45 }}
+                >
+                    PCA, ETP, mapa de riscos, cotação, licitação, contrato e prestação de contas.
+                    O ciclo inteiro da Lei 14.133/2021 sem redigitar nada.
+                </motion.p>
+
+                <motion.div
+                    className="cta-row"
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, ease: EASE_EXPO, delay: 0.58 }}
+                >
+                    <Link to="/sicc" className="btn btn-primary">Conhecer o SICC</Link>
+                    <a className="btn btn-secondary" href={PLATAFORMA} target="_blank" rel="noopener noreferrer">
+                        Acessar o sistema
+                    </a>
+                </motion.div>
+
+                <div className="hero-stage" ref={ref}>
+                    <motion.div
+                        style={reduce ? undefined : { y }}
+                        initial={{ opacity: 0, y: 48, rotateX: reduce ? 0 : 7 }}
+                        animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                        transition={{ duration: 1.1, ease: EASE_EXPO, delay: 0.5 }}
+                    >
+                        <div className="sicc-panel">
+                            <div className="sicc-panel-bar">
+                                <span className="dot" /><span className="dot" /><span className="dot" />
+                                <span className="label">SICC · Planejamento → Demandas</span>
+                            </div>
+                            <div className="sicc-panel-body">
+                                <div className="sicc-col">
+                                    <div className="sicc-col-head">
+                                        <span>Em Elaboração</span>
+                                        <span>{emElaboracao.length}</span>
+                                    </div>
+                                    {emElaboracao.map((d, i) => (
+                                        <Card key={d.num} d={d} delay={0.9 + i * 0.12} />
+                                    ))}
+                                </div>
+                                <div className="sicc-col">
+                                    <div className="sicc-col-head">
+                                        <span>Em Contratação</span>
+                                        <span>{emContratacao.length}</span>
+                                    </div>
+                                    {emContratacao.map((d, i) => (
+                                        <Card key={d.num} d={d} delay={1.05 + i * 0.12} />
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
+            </div>
+        </section>
+    );
 };
 
 export default Hero;

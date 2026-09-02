@@ -1,223 +1,182 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion, Variants } from 'framer-motion';
-import { FaRocket, FaLightbulb, FaUsers, FaHandHoldingHeart } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+import { EASE_EXPO, Reveal, Stagger, StaggerItem, WordReveal } from '../components/motion';
+import { useFormSubmit, useRecaptcha } from '../hooks/useContactForm';
 
-type SubmitStatus = 'idle' | 'submitting' | 'success' | 'error';
-
-declare global {
-    interface Window {
-        grecaptcha: any;
-    }
-}
-
-const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.15 } }
-};
-
-const itemVariants: Variants = {
-    hidden: { y: 22, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } }
-};
-
-const perks = [
-    { icon: <FaHandHoldingHeart />, title: 'Propósito real', description: 'Seu trabalho melhora a gestão pública de municípios inteiros.' },
-    { icon: <FaLightbulb />, title: 'Inovação constante', description: 'Tecnologia de ponta aplicada a licitações, contratos e patrimônio.' },
-    { icon: <FaUsers />, title: 'Time que colabora', description: 'Ambiente próximo, com troca entre tecnologia, jurídico e negócios.' },
-    { icon: <FaRocket />, title: 'Crescimento', description: 'Espaço para aprender, assumir responsabilidades e evoluir na carreira.' },
+const AREAS = [
+    'Desenvolvimento de software',
+    'Suporte e atendimento',
+    'Implantação e treinamento',
+    'Comercial',
+    'Administrativo / Financeiro',
+    'Estágio',
 ];
 
-const areas = [
-    'Desenvolvimento de Software',
-    'Suporte Técnico',
-    'Comercial / Vendas',
-    'Administrativo / Financeiro',
-    'Jurídico / Licitações',
-    'Marketing / Design',
-    'Outra área',
+const PERKS = [
+    { t: 'Produto com impacto real', d: 'O que você constrói é usado por servidores que executam o orçamento de municípios inteiros.' },
+    { t: 'Time pequeno, decisão curta', d: 'Menos camada entre a ideia e a produção. Quem escreve o código acompanha o resultado na ponta.' },
+    { t: 'Domínio que se aprende', d: 'Licitação, contrato e prestação de contas — um conhecimento que fica com você.' },
+    { t: 'Base em Itabuna', d: 'Escritório no sul da Bahia, atendendo municípios de todo o estado.' },
 ];
 
 const CareersForm = () => {
-    const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle');
-    const [fileName, setFileName] = useState<string>('');
-    const [isRecaptchaVerified, setRecaptchaVerified] = useState(false);
-    const recaptchaContainer = useRef<HTMLDivElement>(null);
-    const recaptchaWidgetId = useRef<number | null>(null);
+    const recaptcha = useRecaptcha();
+    const { status, submit } = useFormSubmit(recaptcha.reset);
 
-    useEffect(() => {
-        const renderRecaptcha = () => {
-            if (recaptchaContainer.current && window.grecaptcha?.render && recaptchaWidgetId.current === null) {
-                recaptchaWidgetId.current = window.grecaptcha.render(recaptchaContainer.current, {
-                    'sitekey': '6Lewq7krAAAAAG6X-fKiZIAvAo53IKSNWAlMpyNn',
-                    'callback': () => setRecaptchaVerified(true),
-                    'expired-callback': () => setRecaptchaVerified(false),
-                });
-            }
-        };
-
-        const intervalId = setInterval(() => {
-            if (window.grecaptcha && window.grecaptcha.render) {
-                renderRecaptcha();
-                clearInterval(intervalId);
-            }
-        }, 100);
-
-        return () => clearInterval(intervalId);
-    }, []);
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setSubmitStatus('submitting');
-        const formData = new FormData(e.currentTarget);
-
-        try {
-            const response = await fetch('https://submit-form.com/Z4G5K3MOm', {
-                method: 'POST',
-                body: formData,
-                headers: { 'Accept': 'application/json' },
-            });
-
-            if (response.ok) {
-                setSubmitStatus('success');
-            } else {
-                throw new Error('Form submission failed');
-            }
-        } catch (error) {
-            console.error('Erro ao enviar candidatura:', error);
-            setSubmitStatus('error');
-            if (window.grecaptcha && recaptchaWidgetId.current !== null) {
-                window.grecaptcha.reset(recaptchaWidgetId.current);
-            }
-            setRecaptchaVerified(false);
-        }
-    };
-
-    if (submitStatus === 'success') {
+    if (status === 'success') {
         return (
-            <div className="submit-success">
-                <h3>Candidatura recebida!</h3>
-                <p style={{ marginTop: '0.5rem', color: 'var(--ink-soft)' }}>
-                    Recebemos seu currículo. Nossa equipe vai analisar e, havendo oportunidade compatível, entraremos em contato. Obrigado pelo interesse na INFOCO.
-                </p>
-            </div>
+            <motion.div
+                className="form-success"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: EASE_EXPO }}
+            >
+                <h3>Currículo recebido.</h3>
+                <p>Obrigado pelo interesse. A equipe da INFOCO entra em contato caso haja uma vaga aderente ao seu perfil.</p>
+            </motion.div>
         );
     }
 
     return (
-        <div className="contact-container">
-            <form className="contact-form" onSubmit={handleSubmit}>
-                {/* identifica a origem no e-mail que chega à INFOCO */}
-                <input type="hidden" name="assunto" value="Trabalhe Conosco: nova candidatura" />
-
-                <div className="form-group">
+        <form className="form" onSubmit={submit} encType="multipart/form-data">
+            <input type="hidden" name="_origem" value="Site INFOCO — Trabalhe Conosco" />
+            <div className="form-row">
+                <div className="field">
                     <label htmlFor="nome">Nome completo</label>
-                    <input type="text" id="nome" name="nome" className="form-input" required />
+                    <input className="input" type="text" id="nome" name="nome" required autoComplete="name" />
                 </div>
-                <div className="form-group">
-                    <label htmlFor="email">E-mail</label>
-                    <input type="email" id="email" name="email" className="form-input" required />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="telefone">Telefone / WhatsApp</label>
-                    <input type="tel" id="telefone" name="telefone" className="form-input" required />
-                </div>
-                <div className="form-group">
+                <div className="field">
                     <label htmlFor="area">Área de interesse</label>
-                    <select id="area" name="area" className="form-input" required defaultValue="">
-                        <option value="" disabled>Selecione uma área</option>
-                        {areas.map((a) => <option key={a} value={a}>{a}</option>)}
+                    <select className="select" id="area" name="area" defaultValue={AREAS[0]}>
+                        {AREAS.map(a => <option key={a}>{a}</option>)}
                     </select>
                 </div>
-                <div className="form-group">
-                    <label htmlFor="linkedin">LinkedIn ou portfólio (opcional)</label>
-                    <input type="url" id="linkedin" name="linkedin" className="form-input" placeholder="https://" />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="curriculo">Currículo (PDF ou DOC)</label>
-                    <label className="form-file">
-                        <input
-                            type="file"
-                            id="curriculo"
-                            name="curriculo"
-                            accept=".pdf,.doc,.docx"
-                            required
-                            onChange={(e) => setFileName(e.target.files?.[0]?.name ?? '')}
-                        />
-                        <span className="form-file-button">Escolher arquivo</span>
-                        <span className="form-file-name">{fileName || 'Nenhum arquivo selecionado'}</span>
-                    </label>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="mensagem">Mensagem (opcional)</label>
-                    <textarea id="mensagem" name="mensagem" className="form-input" rows={4} placeholder="Conte um pouco sobre você e por que quer fazer parte da INFOCO."></textarea>
-                </div>
-                <div className="form-group recaptcha-container">
-                    <div ref={recaptchaContainer}></div>
-                </div>
-                <button
-                    type="submit"
-                    className="cta-button"
-                    style={{ width: '100%', justifyContent: 'center', marginTop: '1rem' }}
-                    disabled={submitStatus === 'submitting' || !isRecaptchaVerified}
-                >
-                    {submitStatus === 'submitting' ? 'Enviando…' : 'Enviar candidatura'}
-                </button>
-                {submitStatus === 'error' && (
-                    <p className="submit-error">
-                        Ocorreu um erro ao enviar. Verifique o tamanho do arquivo e tente novamente, ou envie seu currículo para contato@infocogestaopublica.com.br.
-                    </p>
-                )}
-            </form>
-        </div>
-    );
-};
-
-const TrabalheConosco = () => {
-    return (
-        <motion.section
-            className="contact-page"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-        >
-            <div className="container contact-page-grid">
-                <motion.div
-                    className="contact-info"
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.2 }}
-                    variants={containerVariants}
-                >
-                    <motion.span className="eyebrow" variants={itemVariants}>Carreiras</motion.span>
-                    <motion.h1 variants={itemVariants}>Trabalhe <em>conosco</em>.</motion.h1>
-                    <motion.p className="section-subtitle" variants={itemVariants}>
-                        Faça parte de um time que transforma a gestão pública com tecnologia. Envie seu currículo e entre para o nosso banco de talentos.
-                    </motion.p>
-                    <div className="careers-perks">
-                        {perks.map((perk) => (
-                            <motion.div key={perk.title} className="careers-perk" variants={itemVariants}>
-                                <div className="careers-perk-icon">{perk.icon}</div>
-                                <div>
-                                    <h3>{perk.title}</h3>
-                                    <p>{perk.description}</p>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
-                </motion.div>
-
-                <motion.div
-                    className="contact-form-wrapper"
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, amount: 0.2 }}
-                    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                >
-                    <CareersForm />
-                </motion.div>
             </div>
-        </motion.section>
+            <div className="form-row">
+                <div className="field">
+                    <label htmlFor="email">E-mail</label>
+                    <input className="input" type="email" id="email" name="email" required autoComplete="email" />
+                </div>
+                <div className="field">
+                    <label htmlFor="telefone">Telefone ou WhatsApp</label>
+                    <input className="input" type="tel" id="telefone" name="telefone" required autoComplete="tel" />
+                </div>
+            </div>
+            <div className="field">
+                <label htmlFor="linkedin">LinkedIn, GitHub ou portfólio</label>
+                <input className="input" type="url" id="linkedin" name="linkedin" placeholder="https://" />
+            </div>
+            <div className="field">
+                <label htmlFor="curriculo">Currículo (PDF, DOC ou DOCX)</label>
+                <div className="file-drop">
+                    Anexe o arquivo do seu currículo
+                    <input
+                        type="file"
+                        id="curriculo"
+                        name="curriculo"
+                        accept=".pdf,.doc,.docx,application/pdf"
+                        required
+                    />
+                </div>
+            </div>
+            <div className="field">
+                <label htmlFor="mensagem">Conte um pouco sobre você</label>
+                <textarea className="textarea" id="mensagem" name="mensagem" rows={5} />
+            </div>
+
+            <div className="recaptcha-slot">
+                <div ref={recaptcha.container} />
+            </div>
+            {!recaptcha.available && (
+                <p className="form-error">
+                    Não foi possível carregar a verificação de segurança. Recarregue a página ou
+                    envie seu currículo por e-mail.
+                </p>
+            )}
+
+            <button
+                type="submit"
+                className="btn btn-primary"
+                style={{ width: '100%' }}
+                disabled={status === 'submitting' || !recaptcha.verified}
+            >
+                {status === 'submitting' ? 'Enviando…' : 'Enviar candidatura'}
+            </button>
+
+            {status === 'error' && (
+                <p className="form-error">
+                    Não conseguimos enviar sua candidatura. Tente novamente ou escreva para
+                    contato@infocogestaopublica.com.br.
+                </p>
+            )}
+        </form>
     );
 };
+
+const TrabalheConosco = () => (
+    <>
+        <section className="tile tile--light hero" style={{ paddingBottom: 'var(--s-xl)' }}>
+            <div className="container container-narrow">
+                <motion.span
+                    className="eyebrow"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: EASE_EXPO }}
+                >
+                    Carreiras
+                </motion.span>
+                <h1 className="t-hero">
+                    <WordReveal text="Construa o sistema que" />{' '}
+                    <em><WordReveal text="move o município." delay={0.15} /></em>
+                </h1>
+                <motion.p
+                    className="t-lead hero-sub"
+                    style={{ maxWidth: '42ch' }}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, ease: EASE_EXPO, delay: 0.35 }}
+                >
+                    Envie seu currículo. Guardamos seu perfil e chamamos quando abrir uma vaga aderente.
+                </motion.p>
+            </div>
+        </section>
+
+        <section className="tile tile--dark on-dark">
+            <div className="container container-mid">
+                <Reveal>
+                    <div className="tile-head">
+                        <span className="eyebrow">Por que aqui</span>
+                        <h2 className="t-display">Um produto com endereço e consequência.</h2>
+                    </div>
+                </Reveal>
+                <Stagger className="grid grid-4" staggerChildren={0.07}>
+                    {PERKS.map(p => (
+                        <StaggerItem key={p.t}>
+                            <div className="util-card util-card--dark" style={{ height: '100%' }}>
+                                <h3>{p.t}</h3>
+                                <p>{p.d}</p>
+                            </div>
+                        </StaggerItem>
+                    ))}
+                </Stagger>
+            </div>
+        </section>
+
+        <section className="tile tile--parchment">
+            <div className="container container-narrow">
+                <Reveal>
+                    <div className="tile-head">
+                        <span className="eyebrow">Candidatura</span>
+                        <h2 className="t-display">Envie seu currículo.</h2>
+                    </div>
+                </Reveal>
+                <Reveal delay={0.08}>
+                    <div className="util-card" style={{ padding: 'var(--s-xl)' }}>
+                        <CareersForm />
+                    </div>
+                </Reveal>
+            </div>
+        </section>
+    </>
+);
 
 export default TrabalheConosco;

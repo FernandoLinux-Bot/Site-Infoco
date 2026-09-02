@@ -1,250 +1,165 @@
 import { useState } from 'react';
-import { motion, AnimatePresence, Variants } from 'framer-motion';
-import { FaCalendarAlt, FaBullhorn, FaShoppingCart, FaClipboardList, FaDatabase, FaFolderOpen, FaBuilding, FaBoxes, FaArrowRight, FaTimes } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import { MODULOS, type Modulo } from '../data/sicc';
+import { EASE_EXPO, Reveal, Stagger, StaggerItem, WordReveal } from '../components/motion';
 
-interface Solution {
-    id: string;
-    icon: React.ReactNode;
-    title: string;
-    description: string;
-    details?: () => React.ReactNode;
-}
+const GRUPOS = [
+    { id: 'todos', label: 'Todos' },
+    { id: 'planejamento', label: 'Planejamento' },
+    { id: 'solicitacoes', label: 'Solicitações' },
+    { id: 'execucao', label: 'Execução' },
+    { id: 'transparencia', label: 'Transparência' },
+] as const;
 
-const solutionsData: Record<string, Solution[]> = {
-    "Gestão Estratégica": [
-        {
-            id: 'pca',
-            icon: <FaCalendarAlt />,
-            title: 'PCA: Plano de Contratações Anual',
-            description: 'Planeje de forma prática e inteligente, permitindo à administração pública antecipar necessidades e otimizar recursos.',
-            details: () => (
-                <p>Com nosso sistema, o Plano de Contratação Anual é planejado de forma prática e inteligente, permitindo à administração pública antecipar necessidades, otimizar recursos, aumentar a transparência em cada etapa e garantir decisões mais eficientes e econômicas.</p>
-            )
-        }
-    ],
-    "Licitações e Compras Públicas": [
-        {
-            id: 'plataforma',
-            icon: <FaBullhorn />,
-            title: 'Plataforma de Licitações',
-            description: 'Conecte entes públicos, fornecedores e cidadãos de forma inteligente, garantindo processos transparentes e organizados.',
-            details: () => (
-                <>
-                    <p>Com a INFOCO Licitações, Entes públicos, fornecedores e cidadãos se conectam de forma inteligente, garantindo processos mais transparentes, organizados e participativos.</p>
-                    <p>O resultado é uma gestão pública fortalecida, um mercado fornecedor mais competitivo e uma gestão mais simples e eficiente.</p>
-                </>
-            )
-        },
-        {
-            id: 'compras',
-            icon: <FaShoppingCart />,
-            title: 'Gestão de Compras Públicas',
-            description: 'Solução completa para otimização e controle das aquisições de materiais e serviços com agilidade e precisão.',
-            details: () => (
-                <p>Solução completa para otimização e controle das aquisições de materiais e serviços. As solicitações são feitas diretamente pelo sistema, analisadas pelo setor de compras e, após aprovação, a autorização de fornecimento é possível ser enviada ao fornecedor com um único clique, contendo todas as informações detalhadas da demanda. Isso garante agilidade, precisão e eficiência total em cada etapa do processo de compras.</p>
-            )
-        },
-        {
-            id: 'planejamento',
-            icon: <FaClipboardList />,
-            title: 'Planejamento e Licitações',
-            description: 'Ambiente digital completo para gestão de processos licitatórios, da criação do PA à geração de documentos com auxílio de IA.',
-            details: () => (
-                <p>Ambiente digital completo para planejamento e gestão de processos licitatórios, integrando desde a criação do Processo Administrativo (PA) até a geração inteligente de DFDs, ETP, Mapa de Riscos e Termos de Referência com auxílio da IA, até a inserção na plataforma, garantindo eficiência, transparência e controle total.</p>
-            )
-        },
-        {
-            id: 'banco-precos',
-            icon: <FaDatabase />,
-            title: 'Banco de Preços (Cotações)',
-            description: 'Realize cotações de até 50 itens em menos de 2 minutos, garantindo conformidade e máxima economia.',
-            details: () => (
-                <p>Sistema inteligente para consulta e registro de preços de mercado, garantindo total conformidade com a Lei 14.133/2021. Em poucos cliques, realize cotações de até 50 itens em menos de 2 minutos, otimizando recursos, acelerando decisões e promovendo máxima transparência e economia nas compras públicas.</p>
-            )
-        }
-    ],
-    "Gestão Administrativa": [
-        {
-            id: 'protocolo',
-            icon: <FaFolderOpen />,
-            title: 'Sistema de Protocolo Web',
-            description: 'Controle eficiente de documentos e processos administrativos, organizando, rastreando e automatizando todo o fluxo.',
-            details: () => (
-                <>
-                    <p><strong>Visão Geral:</strong> O Sistema de Protocolo Web é uma solução abrangente para a gestão de processos e documentos, garantindo organização, transparência e eficiência na administração pública.</p>
-                    <p><strong>Funcionalidades Obrigatórias:</strong></p>
-                    <ul>
-                        <li>Controle detalhado de todo o ciclo de vida de um processo.</li>
-                        <li>Cadastro de assuntos, vinculando cada um à secretaria e ao setor de destino, com prazos de conclusão.</li>
-                        <li>Registro de trâmites, controle de documentos entregues e pendentes.</li>
-                        <li>Anexo de arquivos digitalizados, textos e imagens.</li>
-                        <li>Histórico completo de movimentações, registrando quem e quando uma operação foi realizada.</li>
-                    </ul>
-                    <p><strong>Outras Funcionalidades:</strong></p>
-                    <ul>
-                        <li><strong>Cadastro de Procedências:</strong> Permite definir a origem do processo (interno, externo, outros).</li>
-                        <li><strong>Gestão de Contribuintes:</strong> Cadastro completo de documentos, endereços, telefones e e-mails.</li>
-                        <li><strong>Relatórios:</strong> Geração de relatórios customizáveis por data, assunto, secretaria, setor e requerente.</li>
-                        <li><strong>Livro de Protocolo:</strong> Geração de um livro para listar processos de um determinado período.</li>
-                        <li><strong>Controle da numeração:</strong> Permite personalizar o tipo de numeração do protocolo.</li>
-                    </ul>
-                </>
-            )
-        },
-        {
-            id: 'patrimonio',
-            icon: <FaBuilding />,
-            title: 'Gestão de Patrimônio',
-            description: 'Controle integrado e automatizado de bens móveis, imóveis e intangíveis, do inventário à baixa.',
-            details: () => (
-                <>
-                    <p><strong>Visão Geral:</strong> A ferramenta oferece um conjunto de funcionalidades essenciais para órgãos públicos que buscam eficiência, transparência e controle total sobre seus bens.</p>
-                    <p><strong>Controle Patrimonial Integrado e Automatizado:</strong></p>
-                    <ul>
-                        <li>Controle completo de bens móveis, imóveis e intangíveis.</li>
-                        <li>Automatiza processos de inventário, depreciação e contabilização, com histórico detalhado.</li>
-                        <li>Gerencia informações cruciais como garantia, seguro e responsabilidade.</li>
-                    </ul>
-                    <p><strong>Funcionalidades que Simplificam o Dia a Dia:</strong></p>
-                    <ul>
-                        <li><strong>Gestão de Lotes:</strong> Realize rotinas em lote para tarefas como baixa, reavaliação e movimentação.</li>
-                        <li><strong>Inventário Completo:</strong> Crie inventários de diferentes tipos (anual, eventual, por transferência).</li>
-                        <li><strong>Incorporação de Bens:</strong> Registre novos bens por compra, doação ou transferência.</li>
-                        <li><strong>Anexos e Imagens:</strong> Anexe documentos fiscais, termos e imagens aos cadastros.</li>
-                        <li><strong>Relatórios e Exportação:</strong> Gere relatórios gerenciais e demonstrativos, e exporte dados para o sistema SIGA.</li>
-                    </ul>
-                </>
-            )
-        },
-        {
-            id: 'almoxarifado',
-            icon: <FaBoxes />,
-            title: 'Sistema de Almoxarifado Web',
-            description: 'Ferramenta completa para gestão de estoque, projetada para otimizar processos e garantir a precisão dos dados.',
-            details: () => (
-                <>
-                    <p><strong>Controle de Estoque:</strong></p>
-                    <ul>
-                        <li>Gerencia o fluxo de materiais: entradas, saídas, devoluções e transferências.</li>
-                        <li>Efetua a baixa automática no estoque quando um material é fornecido.</li>
-                        <li>Controla o estoque mínimo, máximo e o ponto de reposição dos materiais.</li>
-                    </ul>
-                    <p><strong>Gestão e Integrações:</strong></p>
-                    <ul>
-                        <li>Cadastro detalhado de materiais, incluindo classificação, grupo, tipo de medida e código de barras.</li>
-                        <li>Integração com os sistemas de compras, licitação e contratos, gerando entrada automática no estoque.</li>
-                        <li>Integração com o sistema patrimonial.</li>
-                    </ul>
-                    <p><strong>Funcionalidades de Segurança e Controle:</strong></p>
-                    <ul>
-                        <li><strong>Controle de requisições:</strong> Mantenha um controle efetivo sobre as requisições de materiais.</li>
-                        <li><strong>Inventário:</strong> Permite registrar a abertura e o fechamento de inventários, bloqueando movimentações durante sua realização.</li>
-                        <li><strong>Controle de Acesso:</strong> Restrinja o acesso dos usuários a almoxarifados específicos.</li>
-                        <li><strong>Controle de Vencimento:</strong> Controle as datas de vencimento de materiais perecíveis.</li>
-                    </ul>
-                </>
-            )
-        }
-    ]
-};
+type GrupoId = typeof GRUPOS[number]['id'];
 
-const TABS = Object.keys(solutionsData);
-
-const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.08 } }
-};
-
-const itemVariants: Variants = {
-    hidden: { y: 18, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } }
-};
-
-const modalVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.96, y: 10 },
-    visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } },
-    exit: { opacity: 0, scale: 0.96, y: 10 }
-};
-
-const SolutionModal: React.FC<{ solution: Solution; onClose: () => void }> = ({ solution, onClose }) => (
-    <motion.div className="solution-modal-backdrop" onClick={onClose} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-        <motion.div className="solution-modal-content" onClick={e => e.stopPropagation()} variants={modalVariants} initial="hidden" animate="visible" exit="exit">
-            <button className="solution-modal-close" onClick={onClose} aria-label="Fechar modal"><FaTimes /></button>
-            <h2>{solution.title}</h2>
-            {solution.details && solution.details()}
-        </motion.div>
-    </motion.div>
+const ModuloCard = ({ m }: { m: Modulo }) => (
+    <article className="util-card" id={m.id} style={{ height: '100%', scrollMarginTop: 140 }}>
+        <span className="card-index">{m.resumo}</span>
+        <h3 className="t-tagline" style={{ fontFamily: 'var(--font-display)' }}>{m.nome}</h3>
+        <p>{m.descricao}</p>
+        <ul className="feature-list">
+            {m.destaques.map(d => <li key={d}>{d}</li>)}
+        </ul>
+        {m.fundamento && (
+            <div className="util-card-foot">
+                <span className="chip chip--action">{m.fundamento}</span>
+            </div>
+        )}
+    </article>
 );
 
 const Solucoes = () => {
-    const [activeTab, setActiveTab] = useState(TABS[0]);
-    const [selectedSolution, setSelectedSolution] = useState<Solution | null>(null);
+    const [grupo, setGrupo] = useState<GrupoId>('todos');
+    const lista = grupo === 'todos' ? MODULOS : MODULOS.filter(m => m.grupo === grupo);
 
     return (
         <>
-            <section className="solucoes-hero">
-                <div className="container">
-                    <span className="eyebrow">Soluções / Portfólio Completo</span>
-                    <h1 className="section-title" style={{ marginTop: '1.5rem', maxWidth: '18ch' }}>
-                        Ferramentas para uma <em>gestão pública moderna</em>.
+            <section className="tile tile--light hero">
+                <div className="container container-narrow">
+                    <motion.span
+                        className="eyebrow"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, ease: EASE_EXPO }}
+                    >
+                        Módulos do SICC
+                    </motion.span>
+                    <h1 className="t-hero">
+                        <WordReveal text={`${MODULOS.length} módulos.`} />{' '}
+                        <em><WordReveal text="Um cadastro." delay={0.15} /></em>
                     </h1>
-                    <p className="section-subtitle" style={{ marginTop: '1.5rem' }}>
-                        Três grandes áreas, soluções pensadas para cada etapa do ciclo administrativo público. Da estratégia ao operacional.
-                    </p>
+                    <motion.p
+                        className="t-lead hero-sub"
+                        style={{ maxWidth: '44ch' }}
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, ease: EASE_EXPO, delay: 0.4 }}
+                    >
+                        O objeto cadastrado no plano anual é o mesmo do estudo, da cotação,
+                        do edital e do contrato. Nada é redigitado no caminho.
+                    </motion.p>
+                </div>
+            </section>
 
-                    <div className="solucoes-tabs">
-                        {TABS.map((tab) => (
+            <section className="tile tile--parchment" style={{ paddingBlock: 'var(--s-xl)' }}>
+                <div className="container container-mid" style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div className="tabs" role="tablist" aria-label="Filtrar módulos por grupo">
+                        {GRUPOS.map(g => (
                             <button
-                                key={tab}
-                                onClick={() => setActiveTab(tab)}
-                                className={`solucoes-tab${activeTab === tab ? ' is-active' : ''}`}
+                                key={g.id}
+                                role="tab"
+                                aria-selected={grupo === g.id}
+                                className={`tab${grupo === g.id ? ' is-active' : ''}`}
+                                onClick={() => setGrupo(g.id)}
                             >
-                                {tab}
+                                {grupo === g.id && (
+                                    <motion.span
+                                        layoutId="tab-pill"
+                                        className="tab-pill"
+                                        transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                                    />
+                                )}
+                                {g.label}
                             </button>
                         ))}
                     </div>
                 </div>
             </section>
 
-            <section className="solutions-page">
-                <div className="container">
-                    <AnimatePresence mode="wait">
-                        <motion.div
-                            key={activeTab}
-                            className="solutions-grid"
-                            variants={containerVariants}
-                            initial="hidden"
-                            animate="visible"
-                            exit={{ opacity: 0, y: 10 }}
-                            transition={{ duration: 0.3 }}
-                        >
-                            {solutionsData[activeTab].map(solution => (
+            <section className="tile tile--light" style={{ paddingTop: 'var(--s-xl)' }}>
+                <div className="container container-mid">
+                    <motion.div layout className="grid grid-3">
+                        <AnimatePresence mode="popLayout">
+                            {lista.map(m => (
                                 <motion.div
-                                    key={solution.id}
-                                    className="solution-card"
-                                    variants={itemVariants}
-                                    onClick={() => solution.details && setSelectedSolution(solution)}
+                                    key={m.id}
+                                    layout
+                                    initial={{ opacity: 0, y: 18, scale: 0.98 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: -10, scale: 0.98 }}
+                                    transition={{ duration: 0.45, ease: EASE_EXPO }}
                                 >
-                                    <div className="solution-card-icon">{solution.icon}</div>
-                                    <h3>{solution.title}</h3>
-                                    <p>{solution.description}</p>
-                                    {solution.details && (
-                                        <div className="solution-card-button">
-                                            Saiba mais <FaArrowRight />
-                                        </div>
-                                    )}
+                                    <ModuloCard m={m} />
                                 </motion.div>
                             ))}
-                        </motion.div>
-                    </AnimatePresence>
+                        </AnimatePresence>
+                    </motion.div>
                 </div>
             </section>
 
-            <AnimatePresence>
-                {selectedSolution && (
-                    <SolutionModal solution={selectedSolution} onClose={() => setSelectedSolution(null)} />
-                )}
-            </AnimatePresence>
+            <section className="tile tile--dark on-dark">
+                <div className="container container-mid">
+                    <Reveal>
+                        <div className="tile-head">
+                            <span className="eyebrow">Integração</span>
+                            <h2 className="t-display">O que sai do SICC já sai publicado.</h2>
+                            <p className="t-body">
+                                Publicação no Portal Nacional de Contratações Públicas e envio ao SIGA do
+                                Tribunal de Contas dos Municípios da Bahia a partir dos mesmos dados.
+                            </p>
+                        </div>
+                    </Reveal>
+                    <Stagger className="grid grid-2" staggerChildren={0.08}>
+                        <StaggerItem>
+                            <div className="util-card util-card--dark" style={{ height: '100%' }}>
+                                <span className="card-index" style={{ color: 'var(--primary-on-dark)' }}>Federal</span>
+                                <h3>PNCP</h3>
+                                <p>
+                                    Sincronização do plano anual e das unidades, com indicador de publicação
+                                    visível no próprio cartão do PCA e selo no contrato.
+                                </p>
+                            </div>
+                        </StaggerItem>
+                        <StaggerItem>
+                            <div className="util-card util-card--dark" style={{ height: '100%' }}>
+                                <span className="card-index" style={{ color: 'var(--primary-on-dark)' }}>Estadual</span>
+                                <h3>SIGA / TCM-BA</h3>
+                                <p>
+                                    Envio ao Tribunal de Contas dos Municípios da Bahia sem redigitação,
+                                    a partir do contrato já cadastrado no sistema.
+                                </p>
+                            </div>
+                        </StaggerItem>
+                    </Stagger>
+                </div>
+            </section>
+
+            <section className="tile tile--light">
+                <div className="container container-narrow" style={{ textAlign: 'center' }}>
+                    <Reveal>
+                        <h2 className="t-display">Cada módulo tem uma tela e um responsável.</h2>
+                        <p className="t-lead" style={{ marginTop: 'var(--s-md)', color: 'var(--ink-muted-80)' }}>
+                            Veja o ciclo completo de uma demanda, da abertura ao contrato.
+                        </p>
+                        <div className="cta-row cta-row--center">
+                            <Link to="/sicc" className="btn btn-store">Ver o fluxo do SICC</Link>
+                            <Link to="/contato" className="btn btn-secondary">Falar com a INFOCO</Link>
+                        </div>
+                    </Reveal>
+                </div>
+            </section>
         </>
     );
 };

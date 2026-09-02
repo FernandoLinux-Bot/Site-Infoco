@@ -1,77 +1,100 @@
-import { motion, Variants } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { FaChartLine, FaBell, FaLaptopCode, FaHeadset, FaChartPie, FaTrophy } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+import { EASE_EXPO, Reveal, Stagger, StaggerItem, WordReveal } from '../components/motion';
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.15 } },
-};
+const PLATAFORMA = 'https://app2.infocolicitacoes.com.br/cadastro/';
 
-const itemVariants: Variants = {
-  hidden: { y: 22, opacity: 0 },
-  visible: { y: 0, opacity: 1, transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] } },
-};
-
-const benefits = [
-    { icon: <FaChartLine />, title: 'Aumente suas Vendas', description: 'Acesse um mercado de bilhões com milhares de oportunidades de licitação em todo o país.' },
-    { icon: <FaBell />, title: 'Alertas Inteligentes', description: 'Receba notificações personalizadas sobre as licitações que realmente interessam para o seu negócio.' },
-    { icon: <FaLaptopCode />, title: 'Plataforma Simplificada', description: 'Gerencie propostas, documentos e participe de pregões em um ambiente intuitivo e fácil de usar.' },
-    { icon: <FaHeadset />, title: 'Suporte Especializado', description: 'Conte com nossa equipe de especialistas para te auxiliar em todas as etapas do processo.' },
-    { icon: <FaChartPie />, title: 'Análise de Mercado', description: 'Utilize nossos dados para entender concorrentes e tomar decisões mais estratégicas.' },
-    { icon: <FaTrophy />, title: 'Mais Chances de Vencer', description: 'Nossas ferramentas e suporte aumentam significativamente suas chances de sucesso.' }
+const BENEFICIOS = [
+    { t: 'Oportunidades reunidas', d: 'Acompanhe as licitações dos municípios que operam no SICC em um lugar só, sem caçar edital em diário oficial.' },
+    { t: 'Cadastro único', d: 'Um cadastro de fornecedor vale para todos os órgãos atendidos — razão social, CNPJ, porte e representantes.' },
+    { t: 'Disputa eletrônica', d: 'Participe das sessões pela plataforma, com o histórico de lances e a ata registrados.' },
+    { t: 'Contratos e saldos', d: 'Acompanhe os contratos firmados, o valor utilizado e o saldo remanescente de cada item.' },
+    { t: 'Cotações', d: 'Responda às pesquisas de preços que alimentam o planejamento dos municípios.' },
+    { t: 'Publicidade oficial', d: 'O que é contratado é publicado no PNCP e enviado ao TCM-BA a partir do mesmo processo.' },
 ];
 
 const Fornecedor = () => {
-  const navigate = useNavigate();
-  return (
-    <>
-      <motion.section
-        className="fornecedor-hero"
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="container">
-          <span className="eyebrow">Fornecedor / Venda para o governo</span>
-          <h1 style={{ marginTop: '1.5rem' }}>
-            Venda para o governo com a <em>melhor plataforma</em>.
-          </h1>
-          <p>
-            Simplificamos o processo de licitação para que você foque no que realmente importa: fechar grandes negócios.
-          </p>
-          <button onClick={() => navigate('/cadastro')} className="cta-button">
-            Comece a vender agora
-          </button>
-        </div>
-      </motion.section>
+    const navigate = useNavigate();
 
-      <motion.section
-        className="benefits"
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.15 }}
-      >
-        <div className="container">
-          <motion.div variants={itemVariants}>
-            <span className="eyebrow">Vantagens</span>
-            <h2 className="section-title" style={{ marginTop: '1.5rem' }}>
-              Por que ser um <em>fornecedor</em> INFOCO.
-            </h2>
-          </motion.div>
-          <div className="benefits-grid">
-            {benefits.map((b) => (
-              <motion.div key={b.title} className="benefit-card" variants={itemVariants}>
-                <div className="icon">{b.icon}</div>
-                <h3>{b.title}</h3>
-                <p>{b.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.section>
-    </>
-  );
+    return (
+        <>
+            <section className="tile tile--light hero">
+                <div className="container container-narrow">
+                    <motion.span
+                        className="eyebrow"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, ease: EASE_EXPO }}
+                    >
+                        Fornecedores
+                    </motion.span>
+                    <h1 className="t-hero">
+                        <WordReveal text="Venda para o poder público" />{' '}
+                        <em><WordReveal text="sem procurar edital." delay={0.15} /></em>
+                    </h1>
+                    <motion.p
+                        className="t-lead hero-sub"
+                        style={{ maxWidth: '42ch' }}
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, ease: EASE_EXPO, delay: 0.4 }}
+                    >
+                        Um cadastro que vale para todos os municípios atendidos pela INFOCO.
+                    </motion.p>
+                    <motion.div
+                        className="cta-row cta-row--center"
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, ease: EASE_EXPO, delay: 0.52 }}
+                    >
+                        <button className="btn btn-store" onClick={() => navigate('/cadastro')}>
+                            Solicitar cadastro
+                        </button>
+                        <a className="btn btn-secondary" href={PLATAFORMA} target="_blank" rel="noopener noreferrer">
+                            Já tenho conta
+                        </a>
+                    </motion.div>
+                </div>
+            </section>
+
+            <section className="tile tile--dark on-dark">
+                <div className="container container-mid">
+                    <Reveal>
+                        <div className="tile-head">
+                            <span className="eyebrow">O que você ganha</span>
+                            <h2 className="t-display">Do edital ao saldo do contrato.</h2>
+                        </div>
+                    </Reveal>
+                    <Stagger className="grid grid-3" staggerChildren={0.06}>
+                        {BENEFICIOS.map(b => (
+                            <StaggerItem key={b.t}>
+                                <div className="util-card util-card--dark" style={{ height: '100%' }}>
+                                    <h3>{b.t}</h3>
+                                    <p>{b.d}</p>
+                                </div>
+                            </StaggerItem>
+                        ))}
+                    </Stagger>
+                </div>
+            </section>
+
+            <section className="tile tile--parchment">
+                <div className="container container-narrow" style={{ textAlign: 'center' }}>
+                    <Reveal>
+                        <h2 className="t-display">Comece pelo cadastro.</h2>
+                        <p className="t-lead" style={{ marginTop: 'var(--s-md)', color: 'var(--ink-muted-80)' }}>
+                            Envie a solicitação e a INFOCO conclui a habilitação do seu acesso.
+                        </p>
+                        <div className="cta-row cta-row--center">
+                            <button className="btn btn-store" onClick={() => navigate('/cadastro')}>
+                                Solicitar cadastro
+                            </button>
+                        </div>
+                    </Reveal>
+                </div>
+            </section>
+        </>
+    );
 };
 
 export default Fornecedor;

@@ -4,11 +4,13 @@ Este arquivo orienta o Claude Code ao trabalhar neste repositório.
 
 ## Visão Geral
 
-**Site institucional/marketing da INFOCO Gestão Pública** — empresa de software para gestão pública (licitações, contratos, patrimônio, almoxarifado, protocolo). Sediada em Itabuna-BA, atende prefeituras e câmaras municipais, com foco inicial em municípios da Bahia.
+**Site institucional da INFOCO Gestão Pública** — empresa de software para gestão pública sediada em Itabuna-BA, que atende prefeituras, câmaras municipais e consórcios.
 
-- **Idioma do produto:** Português Brasileiro (pt-BR) — todo texto visível ao usuário é em português.
+O produto que o site apresenta é o **SICC — Sistema Integrado de Compras e Contratações**: PCA, ETP, mapa de riscos, cotação, demandas, processo eletrônico, solicitações, contratos, assinaturas, relatórios e integrações (PNCP, SIGA/TCM-BA), sob a **Lei 14.133/2021**.
+
+- **Idioma:** Português Brasileiro (pt-BR). Todo texto visível e toda URL de rota em português.
 - **Empresa:** Infoco Gestão Pública Ltda. — CNPJ 46.554.439/0001-67.
-- **Plataforma externa (CTA):** `https://app2.infocolicitacoes.com.br/cadastro/` (aplicação separada — este repo é só o site).
+- **Plataforma externa (CTA):** `https://app2.infocolicitacoes.com.br/cadastro/` — aplicação separada; este repo é só o site.
 - **Deploy:** Vercel (`vercel.json` → `vite build` → `dist/`).
 
 ## Stack
@@ -16,185 +18,161 @@ Este arquivo orienta o Claude Code ao trabalhar neste repositório.
 | Camada | Tecnologia |
 |---|---|
 | Framework | React 18 + TypeScript (strict) |
-| Bundler | Vite 4 (`@vitejs/plugin-react`) |
+| Bundler | Vite 4 (`@vitejs/plugin-react`), com `manualChunks` |
 | Roteamento | `react-router-dom` v6 (BrowserRouter) |
-| Animação | `framer-motion` + CSS transitions |
-| Ícones | `react-icons` (FA + Material) + SVGs inline |
-| Vídeo | `@mux/mux-player-react` |
+| Animação | `framer-motion` 11 |
+| Ícones | `react-icons` (FA) |
+| Vídeo | `@mux/mux-player-react` (carregado por `lazy` + IntersectionObserver) |
 | Analytics | `@vercel/analytics` + `@vercel/speed-insights` |
-| Hospedagem | Vercel |
-| Formulário | submit-form.com (endpoint `Z4G5K3MOm`) + Google reCAPTCHA v2 |
+| Formulários | submit-form.com (endpoint `Z4G5K3MOm`) + Google reCAPTCHA v2 |
+| Testes | Playwright (Chromium desktop + WebKit/iPhone 13) |
 
-> **Dependência legada:** `@google/genai` (Gemini) ainda está no `package.json`, mas **nenhum arquivo em `src/` usa mais** — a página de Notícias deixou de consumir a IA e virou uma vitrine do Instagram. Pode ser removida (junto com o `define` de `process.env.API_KEY` em `vite.config.ts`) quando confirmado que não voltará.
+## Design System — Apple (`DESIGN-apple.md`)
 
-## Design System — "Modern SaaS Blue"
+O sistema visual segue o `DESIGN-apple.md` na raiz. **Ele é a fonte da verdade**; `index.css` é a implementação. As invariantes que não podem ser quebradas:
 
-**Tipografia (Google Fonts)**
-- **Body + Display:** `IBM Plex Sans` (300–700, com itálicos) — usada tanto no corpo quanto nos headlines. Carregada em `index.html`. Vars: `--font-body` e `--font-display` (ambas IBM Plex Sans).
-- **Ênfase:** `<em>` dentro de headlines fica em **itálico** IBM Plex Sans (cor azul). Não há mais fonte serifada de acento (o antigo `Instrument Serif` foi removido).
+1. **Um único acento interativo:** `--primary: #0066cc` (Action Blue). `--primary-focus: #0071e3` só para o anel de foco; `--primary-on-dark: #2997ff` só sobre tile escuro. Não existe segunda cor de marca.
+2. **Uma única sombra:** `drop-shadow(rgba(0,0,0,.22) 3px 5px 30px)`, aplicada só a imagem de produto (`.product-shadow`, `.sicc-panel`, `.media-frame`). **Nunca** `box-shadow` em card, botão ou nav — a elevação vem da troca de superfície.
+3. **Zero gradiente decorativo.** Profundidade vem da alternância de tiles e do `backdrop-filter` das barras fixas.
+4. **Corpo em 17px / peso 400 / line-height 1.47 / tracking −0.374px.** Não 16px.
+5. **Escada de pesos 300 / 400 / 600 / 700.** Peso 500 não existe no sistema.
+6. **Tiles full-bleed sem raio.** A troca de cor é o divisor. Raio só em card (`--r-lg` 18px), utilitário (`--r-sm` 8px), pearl (`--r-md` 11px) e pílula (`--r-pill`).
+7. **`transform: scale(0.95)` no estado ativo** de todo botão — é a micro-interação do sistema.
 
-**Paleta (CSS vars em `:root`)**
-```
---white       #FFFFFF                  fundo predominante
---paper       #F6F8FE                  fundo alt (azul tint sutil)
---paper-deep  #EDF2FE                  fundo de seções secundárias
---blue        #2253F0                  brand vivido
---blue-600    #1B43C9                  hover
---blue-700    #0F2FA0                  deep (gradiente)
---blue-300    #6F8DFF                  light variant
---blue-100    #DDE6FF                  backgrounds suaves
---blue-50     #EDF2FE                  eyebrows/icons
---ink         #0E1A3D                  texto/dark surfaces
---ink-soft    rgba(ink, .66)           texto secundário
---ink-faint   rgba(ink, .35)           texto terciário/hints
---accent      #FFD338                  yellow para destaques (mín. uso)
---accent-deep #F0B800                  yellow escuro (hover/borda)
---rule        rgba(ink, .08)           bordas leves
-```
+**Tipografia:** SF Pro Display / SF Pro Text via `system-ui, -apple-system, BlinkMacSystemFont`. Em plataformas não-Apple cai para **Inter** (Google Fonts), a substituta recomendada pelo próprio spec.
 
-**Radii / Sombras**
-- `--radius-sm/md/lg/xl/full` — 10/16/24/32/999px.
-- `--shadow-sm/md/lg`, `--shadow-blue` (sombra azul colorida para CTAs), `--shadow-card` (sombra de card SaaS).
+**Superfícies:** `--canvas` #ffffff · `--canvas-parchment` #f5f5f7 · `--surface-tile-1/2/3` #272729/#2a2a2c/#252527 · `--surface-black` #000000.
 
-**Padrões visuais**
-- Hero "toggl-inspired": grid 2 colunas (texto esq. + visual dir.), 4 cards UI flutuantes animados (motion floating loops), mesh gradient blur de fundo (`.hero-mesh`), trustline com avatares overlapping.
-- Cards arredondados com hover lift (translateY(-4px) + shadow-md).
-- CTAs: pílulas azuis com `box-shadow: var(--shadow-blue)` que aumenta no hover.
-- Eyebrows pílulas com fundo `--blue-50` e dot azul.
-- `<em>` global mapeia para itálico azul (ou amarelo dentro do banner editorial gradient).
-- Editorial banner com gradient azul + accent yellow glow.
-- Floating buttons (`.float-stack`): círculos com hover colorido por marca (verde WhatsApp, gradient Instagram, azul scroll-top).
-- Sem grids hairline — substituído por cards independentes com gap.
-
-> Nota: `index.html` tem um `importmap` apontando para React 19 / framer-motion 12 do `aistudiocdn.com` (sobra do AI Studio). Em build/dev pelo Vite, as versões reais vêm de `node_modules` conforme `package.json` (React 18 / framer-motion 11). Não confundir as duas fontes.
+**Chrome de navegação:** duas barras fixas — `.global-nav` preta de 44px (links de 12px) e `.sub-nav` vitrificada de 52px (`backdrop-filter: saturate(180%) blur(20px)`) com o CTA persistente. O conteúdo começa em `.app-main { padding-top: 96px }`.
 
 ## Estrutura do projeto
 
 ```
 .
-├── index.html                # entry HTML (lang="pt-BR", IBM Plex Sans, reCAPTCHA, importmap órfão)
-├── index.css                 # CSS global único (~1852 linhas — todo o estilo do site mora aqui)
-├── vite.config.ts            # define process.env.API_KEY a partir do .env (atualmente sem uso — ver nota IA)
-├── vercel.json               # buildCommand + outputDirectory + rewrites (SPA fallback)
-├── tsconfig.json             # strict, noUnusedLocals, noUnusedParameters
-├── index.tsx                 # ⚠️ CÓDIGO MORTO — app monolítico antigo do AI Studio, não referenciado
-├── metadata.json             # ⚠️ scaffolding do AI Studio, não usado pelo Vite
-├── public/
-│   ├── Logo.png, favicon.png, hero-background.png, patrao.png
-│   ├── animated-banner.gif
-│   └── clients/              # brasões dos municípios atendidos
+├── index.html                # entry (lang=pt-BR, Inter, reCAPTCHA, OG tags)
+├── index.css                 # design system completo (~1064 linhas, 20 seções numeradas)
+├── DESIGN-apple.md           # o spec visual — fonte da verdade
+├── vite.config.ts            # manualChunks (react, motion)
+├── vercel.json               # build + SPA fallback
+├── playwright.config.ts      # desktop (Chromium 1440) + mobile (WebKit/iPhone 13)
+├── tests/site.spec.ts        # 37 testes × 2 projetos
+├── .claude/agents/
+│   └── testador-site.md      # subagente que roda e interpreta a suíte
+├── public/                   # Logo.png, favicon.png, patrao.png, clients/*.png
 └── src/
-    ├── main.tsx              # bootstrap React real (import '../index.css' + <App/>)
-    ├── App.tsx               # BrowserRouter + Routes + AnimatePresence (react-router-dom v6)
-    ├── hooks/
-    │   └── useIntersectionObserver.ts
-    ├── components/           # Header, Footer, Hero, Features, HowItWorks, VideoSection,
-    │                         # AnimatedSection, AnimatedIdentityCard, InfoCard, NotFoundAnimation,
-    │                         # WhatsAppButton, InstagramButton, ScrollToTopButton
-    └── pages/
-        ├── Home.tsx          # Hero + Video + Features + tecnologia + HowItWorks + clientes
-        ├── Solucoes.tsx      # Tabs (Estratégica / Licitações / Administrativa) + modal por solução
-        ├── Institucional.tsx # Quem somos, Meta, Valores
-        ├── Noticias.tsx      # Vitrine de posts do Instagram (@infocogestaopublica) — SEM IA
-        ├── Contact.tsx       # cards de contato + formulário com reCAPTCHA
-        ├── Cadastro.tsx      # solicitação de cadastro → submit-form.com (e-mail INFOCO) + reCAPTCHA
-        ├── Fornecedor.tsx    # landing para fornecedores
-        └── TrabalheConosco.tsx # carreiras: form + upload de currículo → submit-form.com (e-mail INFOCO)
+    ├── main.tsx              # bootstrap (importa ../index.css)
+    ├── App.tsx               # rotas + ScrollManager + AnimatePresence
+    ├── data/sicc.ts          # TODO o conteúdo do SICC (fonte única)
+    ├── hooks/useContactForm.ts  # useRecaptcha + useFormSubmit
+    ├── components/
+    │   ├── motion/index.tsx  # primitivas: Reveal, Stagger, WordReveal, CountUp,
+    │   │                     # useParallax, ScrollProgress, EASE_EXPO
+    │   ├── Header.tsx        # global-nav + sub-nav + sheet mobile
+    │   ├── Footer.tsx        # rodapé parchment com colunas densas
+    │   ├── Hero.tsx          # painel do SICC desenhado em CSS
+    │   ├── VideoSection.tsx  # Mux com lazy + IntersectionObserver
+    │   ├── Clients.tsx       # brasões dos municípios
+    │   └── FloatingActions.tsx
+    └── pages/                # Home · Sicc · Solucoes · Institucional · Fornecedor
+                              # Cadastro · Contact · Noticias · TrabalheConosco · NotFound
 ```
 
-> **Entry point real:** `index.html` → `/src/main.tsx` → `src/App.tsx`. O `index.tsx` da **raiz** (358 linhas) é o app antigo em arquivo único e **não é usado por nada** — candidato a remoção. O `src/main.tsx` importa o `index.css` da raiz (`import '../index.css'`).
+### `src/data/sicc.ts` — a fonte única de conteúdo
+
+Todo o conteúdo funcional do SICC vem daqui: `MODULOS` (14), `CICLO_DEMANDA` (6 fases), `NUMEROS`, `PERGUNTAS` (8 Q&A), `PERFIS` (4).
+
+**Números na copy são derivados, nunca digitados.** `MODULOS.length` alimenta a manchete de `/solucoes`, o texto da Home e o card de `NUMEROS`. Um teste garante que a manchete e a contagem de cartões não divergem. Se adicionar um módulo, a copy se ajusta sozinha.
+
+Origem do conteúdo: repositório **`nandovitor/faq-sicc`** (`sintese/*.md` e `_deploy/ia/kb.md`) — o mapeamento real das telas do sistema. **Nenhuma captura de tela do FAQ é usada**: as telas mostradas no site são representações desenhadas em CSS (`.sicc-panel` no Hero).
+
+**Restrição herdada do FAQ:** a carteira completa de clientes (44 organizações em `organizacoes.json`) é informação comercial restrita e **não deve ser publicada**. O site exibe apenas os 7 brasões já públicos.
 
 ### Roteamento
-
-Usa `react-router-dom` v6 (`BrowserRouter`). URLs em pt-BR. Rotas em [App.tsx](src/App.tsx):
 
 | URL | Componente |
 |---|---|
 | `/` | `Home` |
-| `/solucoes` | `Solucoes` |
+| `/sicc` | `Sicc` — a página de produto (fluxo, tramitação, SICC iA, documentos, FAQ, glossário) |
+| `/solucoes` | `Solucoes` — catálogo dos 14 módulos com filtro por grupo |
 | `/institucional` | `Institucional` |
 | `/fornecedor` | `Fornecedor` |
 | `/cadastro` | `Cadastro` |
 | `/contato` | `Contact` |
 | `/noticias` | `Noticias` |
 | `/trabalhe-conosco` | `TrabalheConosco` |
-| `*` | renderiza `Home` (catch-all) |
+| `*` | `NotFound` — **404 de verdade**, não mais a Home |
 
-Para adicionar uma rota:
+Para adicionar rota: criar a página, adicionar `<Route>` em [App.tsx](src/App.tsx), incluir em `globalNav` de [Header.tsx](src/components/Header.tsx) **e** adicionar ao array `ROTAS` de [tests/site.spec.ts](tests/site.spec.ts) — a suíte falha se a rota não for alcançável por link visível.
 
-1. Criar a página em `src/pages/`.
-2. Adicionar `<Route path="/slug" element={<MinhaPagina />} />` em [App.tsx](src/App.tsx).
-3. Adicionar item ao array `navItems` em [Header.tsx](src/components/Header.tsx) (aparece desktop + mobile).
-4. (Opcional) Adicionar `<Link to="/slug">` no Footer.
+**Âncoras:** o `ScrollManager` do App trata `/sicc#fluxo` e `/sicc#perguntas`.
 
-**Navegação programática:** use `useNavigate()` de `react-router-dom`. Para CTAs externos use `<a target="_blank">`.
+## Movimento
 
-**SPA fallback Vercel:** [vercel.json](vercel.json) tem `rewrites` que mapeia `/(.*)` → `/index.html`. Sem isso, recarregar `/solucoes` no browser daria 404.
+Todas as animações passam pelas primitivas de [src/components/motion/index.tsx](src/components/motion/index.tsx):
+
+- `EASE_EXPO` = `[0.16, 1, 0.3, 1]` — a curva única do site.
+- `<Reveal>` sobe e revela ao entrar na viewport; `<Stagger>` + `<StaggerItem>` escalonam filhos.
+- `<WordReveal>` revela palavra a palavra com máscara `overflow: hidden`. **O espaço entre as máscaras é um nó de texto real** — se ele virar nbsp ou for para dentro da máscara, a manchete deixa de quebrar linha.
+- `useParallax(distance)` devolve `{ref, y}` com mola; `<CountUp>` anima números; `<ScrollProgress>` é a barra do topo.
+- Tudo respeita `prefers-reduced-motion` (as primitivas via `useReducedMotion`, o resto pelo bloco de mídia no CSS).
+
+**Não chame hooks dentro de `.map()`.** O `Fluxo` de `Sicc.tsx` extrai `<FlowStep>` exatamente por isso.
 
 ## Scripts
 
 ```bash
-npm install      # instalar dependências (rodar após clonar)
-npm run dev      # vite dev server
-npm run build    # tsc && vite build  (TypeScript precisa passar)
-npm run preview  # serve dist/ localmente
+npm install          # dependências
+npm run dev          # vite dev server
+npm run build        # tsc strict && vite build
+npm run preview      # serve dist/
+npm test             # Playwright: desktop + mobile (faz o build sozinho)
+npm run test:desktop # só Chromium
+npm run test:mobile  # só WebKit/iPhone 13
 ```
+
+Primeira execução dos testes precisa dos navegadores: `npx playwright install chromium webkit`.
+
+## Testes
+
+[tests/site.spec.ts](tests/site.spec.ts) cobre rotas, navegação, formulários (com POST interceptado e reCAPTCHA simulado), conformidade com o design system, acessibilidade, responsivo e o conteúdo do SICC.
+
+O subagente [`.claude/agents/testador-site.md`](.claude/agents/testador-site.md) roda a suíte e interpreta as falhas. Invoque-o depois de mexer em `src/`, `index.css` ou `index.html`.
+
+**Regra:** nunca afrouxe uma asserção para o teste passar. Se a asserção estiver errada, corrija a asserção explicando por quê.
 
 ## Variáveis de ambiente
 
-- **Nenhuma é obrigatória atualmente.** O site inteiro funciona sem `.env`.
-- `API_KEY` — antes usada pela página de Notícias (Gemini). Ainda é injetada pelo Vite via `define` em `vite.config.ts`, mas **nada em `src/` lê essa variável hoje**. Ver `.env.example`. Só voltará a importar se a integração com IA for reintroduzida.
+**Nenhuma.** O site funciona sem `.env`. O `define` de `process.env.API_KEY` e a dependência `@google/genai` foram removidos.
 
-## Convenções e padrões
+## Dados de contato
 
-- **Componentes funcionais** com TypeScript estrito. Variants do framer-motion são tipadas com `Variants`/`Transition` (há comentários `// Fix:` mostrando que TS estava reclamando antes).
-- **Estilo:** classes CSS globais definidas em `index.css`. **Não há CSS Modules nem styled-components.** Antes de inventar uma classe nova, procure por classes similares em `index.css`.
-- **Animações de entrada:** padrão `animated-item` + `transitionDelay` inline (via IntersectionObserver) **ou** `motion.div` com `variants` + `whileInView`. Os dois padrões coexistem — siga o padrão do arquivo que você está editando.
-- **Imagens:** ficam em `public/` e são referenciadas por caminho absoluto (`/Logo.png`, `/clients/itabuna.png`). Não importar imagens via JS.
-- **CTAs externos:** `target="_blank" rel="noopener noreferrer"` sempre.
-- **Acessibilidade:** botões de navegação são `<button>`, não `<a>`. Manter `aria-label` em controles sem texto (hamburger, fechar modal, etc.).
+- Fixo (73) 3301-2710 · Administrativo (73) 98118-5210 · Comercial (71) 98205-3822 · Suporte (73) 98101-9313
+- contato@infocogestaopublica.com.br
+- Av. Princesa Isabel, 1206 — 2º andar, salas 201/202, São Caetano, Itabuna/BA — 45607-127
 
-## Dados de contato (footer / página Contact)
+## Clientes exibidos
 
-- Telefone fixo: (73) 3301-2710
-- Administrativo: (73) 98118-5210
-- Comercial: (71) 98205-3822
-- Suporte: (73) 98101-9313
-- E-mail: contato@infocogestaopublica.com.br
-- Endereço: Av. Princesa Isabel, 1206 – 2º andar, Salas 201/202, São Caetano, Itabuna/BA – 45607-127
-
-## Clientes atuais (carousel da Home)
-
-Almadina, Itamaraju, Nova Viçosa, Itororó, Anagé, Itabela, Prado (todos da Bahia). Logos em `public/clients/`.
-
-## Soluções oferecidas (resumo de `Solucoes.tsx`)
-
-- **Gestão Estratégica:** PCA (Plano de Contratações Anual).
-- **Licitações e Compras:** Plataforma de Licitações, Gestão de Compras, Planejamento (PA → DFD/ETP/TR com IA), Banco de Preços (Lei 14.133/2021).
-- **Gestão Administrativa:** Protocolo Web, Patrimônio (integra com SIGA), Almoxarifado Web.
+Almadina, Itamaraju, Nova Viçosa, Itororó, Anagé, Itabela e Prado (Bahia). Brasões em `public/clients/`. **Não ampliar essa lista sem autorização comercial** — ver a restrição acima.
 
 ## Pontos de atenção
 
-- **`Cadastro.tsx`** envia uma **solicitação de cadastro** via `submit-form.com` (e-mail INFOCO) + reCAPTCHA. O campo de **senha foi removido** (nunca enviar senha por e-mail); a criação de acesso real é concluída pela INFOCO / plataforma externa.
-- **Código morto na raiz:** `index.tsx` (app antigo monolítico) e `metadata.json` (scaffolding AI Studio) não são usados. Podem ser removidos.
-- **`@google/genai` é dependência não usada** (Notícias virou vitrine do Instagram). Remover dep + `define` do Vite quando confirmado.
-- **Links placeholder do Footer** (FAQ, LGPD, Política de Privacidade) usam `href="#"` + `preventDefault` — não navegam para lugar nenhum. Substituir por páginas reais quando existirem. (Trabalhe Conosco já é página real: `/trabalhe-conosco`.)
-- **`index.css` é monolítico (~1852 linhas).** Cuidado ao renomear classes — pode quebrar coisas distantes.
-- **Bundle único grande** (~1.25 MB JS no build). Sem code-splitting. Melhoria futura: `manualChunks`/`import()` dinâmico.
-- **Sem testes, sem linter configurado.** A única verificação é `tsc` no build.
+- **`public/hero-background.png` é órfão.** O nome promete um plano de fundo, mas o arquivo é o logotipo em alta resolução, e nada o referencia. Candidato a remoção.
+- **CSS não entra no grafo do graphify** (`index.css` não é tipo detectado). Ao rodar `/graphify --update`, lembre que o design system fica de fora.
+- **O chunk do Mux tem ~887 KB**, mas é assíncrono: só baixa quando a seção de vídeo entra na viewport. O bundle inicial é ~373 KB (117 KB gzip).
+- **Links placeholder do Footer foram removidos.** Não reintroduzir `href="#"` — se a página não existe, o link não deve existir.
+- **reCAPTCHA não funciona em localhost** (o site key só aceita o domínio de produção). Os testes contornam simulando `window.grecaptcha`.
 
 ## Histórico de manutenção
 
-- **2026-07-19:** redesign visual **"Aurora Blue"** (evolução do Modern SaaS Blue). `index.css` reescrito preservando o contrato de classes: aurora/mesh de fundo, glass, profundidade em camadas, `<em>` com texto em gradiente, botões com sheen. Hero refeito com **foto do fundador recortada** (`patrao.png`, fundo transparente) + 2 cards de stat flutuantes com **parallax 3D** (`useMotionValue`) + **globo 3D em CSS** no headline. Novo `TiltCard.tsx` (tilt 3D + spotlight) e `ScrollProgress.tsx` (barra de progresso de scroll). Header glass scroll-aware. Features vira bento; HowItWorks com timeline; vídeo `mux-player` corrigido (16:9 responsivo, sem distorção). Footer: corrigido headline invisível (herdava `color:var(--ink)` no fundo escuro → `var(--white)`). **Nova página Trabalhe Conosco** (`/trabalhe-conosco`): form com upload de currículo enviado via `submit-form.com` (mesmo endpoint do contato, cai no e-mail da INFOCO) + reCAPTCHA; link ativado no Footer. Polimento das páginas internas: removidas eyebrows numeradas (`01 —`…) e travessões (—).
-- **2026-07-19:** repositório preparado para trabalho contínuo. `npm install` (deps ausentes) + `npm run build` verificado (tsc strict passa; bundle ~1.25 MB). **Sincronização da doc com o código real:** tipografia corrigida para **IBM Plex Sans** (Plus Jakarta Sans + Instrument Serif não são mais usados); Notícias documentada como **vitrine do Instagram** (não mais Gemini); `@google/genai` marcado como dependência morta; removidas referências a `Sicc.tsx`, `AmxDigital.tsx`, `AnimatedCard`, `Stats` (não existem mais); `index.tsx` da raiz e `metadata.json` sinalizados como código morto; `App.tsx` corrigido para react-router (não `useState<Page>`). Escrito `README.md` (estava vazio). `.gitignore` limpo (removido template Dynamics/AL). Adicionado `.env.example`. **Primeiro commit** do repositório e preparação para GitHub.
-- **2026-05-16:** removido componente `Stats` (banner azul "150+ / 5.000+ / 10+") da Home — usuário considerou inadequado. Componente `src/components/Contact.tsx` (órfão, e-mail desatualizado) removido. Corrigidos 15 erros de TypeScript estrito. Corrigido número do WhatsApp em `WhatsAppButton.tsx` (faltava dígito 9 do celular). Build limpo.
-- **2026-05-16:** migração para `react-router-dom` v6. SPA agora tem URLs reais (`/solucoes`, `/contato`, etc.) em vez de `useState<Page>`. `Header` usa `NavLink` com classe `.nav-link.is-active`. `Footer` usa `Link`. `Fornecedor` usa `useNavigate()`. `vercel.json` recebeu rewrite `/(.*)` → `/index.html` para SPA fallback. Tipos `Page` duplicados eliminados.
-- **2026-05-16:** redesign completo "Editorial Civic" (Fraunces + Manrope + JetBrains Mono, paleta paper warm + laranja). `index.css` reescrito do zero. Componentes órfãos apagados: `SolucoesBanner`, `NoticiasBanner`, `BannerGestaoPublica`, `AnimatedCard`, `Sicc.tsx`, `AmxDigital.tsx`. `AnimatedIdentityCard` virou flip card. *(Substituído no pivot seguinte.)*
-- **2026-05-16:** pivot estético para **Modern SaaS Blue** após feedback do usuário (cream warm e laranja não funcionaram). Paleta azul + branco predominantes com amarelo `#FFD338` como accent mínimo. Hero refeito toggl.com-inspired: 4 cards UI flutuantes animados, mesh gradient azul/amarelo blur, trustline com avatares. Cards arredondados + sombras em vez de grids hairline. *(Tipografia posteriormente trocada para IBM Plex Sans — ver 2026-07-19.)*
+- **2026-09-01:** **Remodelagem completa segundo o `DESIGN-apple.md`.** `index.css` reescrito do zero (1550 → 1064 linhas, 58 KB → 24 KB) com os tokens do spec: Action Blue único, uma sombra só, zero gradiente, tiles alternando claro/escuro, tipografia SF Pro/Inter em 17px. Chrome refeito em duas barras (nav preta 44px + sub-nav vitrificada 52px). Conteúdo reescrito a partir do FAQ oficial do SICC (`nandovitor/faq-sicc`), sem usar as capturas de tela: novo `src/data/sicc.ts` com 14 módulos, o ciclo de vida da demanda em 6 fases, 8 perguntas frequentes e os perfis de usuário. **Nova página `/sicc`** (fluxo com barras dirigidas por scroll, tramitação, SICC iA, documentos, FAQ em acordeão, glossário). Todas as 9 telas remodeladas. **404 real** substituindo o catch-all que renderizava a Home. Novas primitivas de movimento em `src/components/motion/`. Formulários unificados em `useContactForm` com timeout no reCAPTCHA. Code-splitting (`manualChunks` + Mux por `lazy`): bundle inicial de 1,26 MB → 373 KB. **Suíte Playwright** (37 testes × desktop/mobile) e o subagente `testador-site`. Removidos: 11 componentes órfãos, `index.tsx` e `metadata.json` da raiz, a dependência morta `@google/genai`, o `define` de `API_KEY` e o importmap órfão do AI Studio.
+- **2026-08-31:** grafo de conhecimento gerado com `/graphify` (275 nós, 416 arestas, 15 comunidades) em `graphify-out/`.
+- **2026-07-19:** redesign "Aurora Blue"; página Trabalhe Conosco; correção do vídeo Mux. *(Substituído pelo redesign Apple.)*
+- **2026-05-16:** migração para `react-router-dom` v6 com URLs reais e SPA fallback na Vercel.
 
 ## Ao fazer alterações
 
-- Antes de propor uma feature nova, confirmar o escopo (este é um site institucional, não a aplicação `app2.infocolicitacoes.com.br`).
-- Mudanças em textos: preservar o tom institucional em pt-BR (formal, foco em "gestão pública", "transparência", "eficiência").
-- Mudanças visuais: validar mobile (header tem hamburger + overlay; o site usa `mobile-nav-is-open` no `body`).
-- Rodar `npm run build` antes de declarar pronto — o `tsc` strict pega muita coisa.
+1. **Leia o `DESIGN-apple.md` antes de mexer em `index.css`.** As sete invariantes acima têm teste.
+2. Conteúdo do SICC entra em `src/data/sicc.ts`, não espalhado nas páginas.
+3. Números na copy: derive dos dados. Não digite.
+4. Rode `npm run build` (tsc strict) **e** `npm test` antes de declarar pronto.
+5. Mudanças visuais: valide mobile — o menu vira sheet abaixo de 833px.

@@ -29,3 +29,10 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Testes
+test-results/
+playwright-report/
+
+# Grafo de conhecimento gerado pelo /graphify (regenerável)
+graphify-out/
