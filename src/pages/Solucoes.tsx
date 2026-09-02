@@ -64,7 +64,7 @@ const Solucoes = () => {
             </section>
 
             <section className="tile tile--parchment" style={{ paddingBlock: 'var(--s-xl)' }}>
-                <div className="container container-mid" style={{ display: 'flex', justifyContent: 'center' }}>
+                <div className="container container-mid tabs-wrap">
                     <div className="tabs" role="tablist" aria-label="Filtrar módulos por grupo">
                         {GRUPOS.map(g => (
                             <button

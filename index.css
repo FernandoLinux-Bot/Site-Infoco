@@ -34,7 +34,10 @@
   --body-on-dark: #ffffff;
   --body-muted: #cccccc;
   --ink-muted-80: #333333;
-  --ink-muted-48: #7a7a7a;
+  /* #7a7a7a dava 4.29:1 sobre branco e 3.96:1 sobre parchment — abaixo do AA
+     de 4.5:1, e todo uso está entre 10px e 14px, então não vale a exceção de
+     texto grande. #6b6b6b sobe para 5.33:1 e 4.92:1. */
+  --ink-muted-48: #6b6b6b;
   --on-primary: #ffffff;
   --on-dark: #ffffff;
 
@@ -313,6 +316,8 @@ em { font-style: normal; color: var(--primary); }
   -webkit-backdrop-filter: saturate(180%) blur(20px);
 }
 
+/* `min-height` e não padding solto: o link é inline-flex, então a altura vira
+   área de toque sem empurrar o texto nem mexer no ritmo do cartão. */
 .link-action {
   color: var(--primary);
   font-family: var(--font-text);
@@ -320,6 +325,7 @@ em { font-style: normal; color: var(--primary); }
   letter-spacing: -0.374px;
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
   gap: 6px;
 }
 .link-action .chev { transition: transform 0.3s var(--ease-apple); }
@@ -362,6 +368,9 @@ em { font-style: normal; color: var(--primary); }
   justify-self: start;
   display: inline-flex;
   align-items: center;
+  /* A logo encolhe para 26px no celular; o link não, senão o alvo de toque cai
+     junto com ela. */
+  min-height: 44px;
   flex: none;
 }
 .sub-nav-brand:hover { text-decoration: none; }
@@ -816,6 +825,10 @@ em { font-style: normal; color: var(--primary); }
 /* --------------------------------------------------------------------------
    12. ABAS
    -------------------------------------------------------------------------- */
+/* Fica no CSS, e não em `style` inline no JSX: inline vence media query, e era
+   por isso que o alinhamento mobile das abas não pegava. */
+.tabs-wrap { display: flex; justify-content: center; }
+
 .tabs {
   display: inline-flex;
   gap: 4px;
@@ -873,6 +886,21 @@ em { font-style: normal; color: var(--primary); }
   min-height: 44px;
   transition: border-color 0.25s var(--ease-apple);
 }
+
+/* Sem `appearance: none` o WebKit desenha o select nativo e simplesmente ignora
+   padding e min-height: no Safari de iPhone o campo saía com 27px contra os
+   48px do input ao lado — alvo de toque abaixo do mínimo e formulário
+   desalinhado. Zerar a aparência também apaga a seta nativa, então ela volta
+   como imagem de fundo. */
+.select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 44px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%236b6b6b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 6l4 4 4-4'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right var(--s-md) center;
+}
+.select::-ms-expand { display: none; }
 .textarea { border-radius: var(--r-md); resize: vertical; min-height: 132px; }
 .input:focus, .select:focus, .textarea:focus {
   outline: 2px solid var(--primary-focus);
@@ -967,7 +995,8 @@ em { font-style: normal; color: var(--primary); }
   letter-spacing: 0;
   color: var(--ink-muted-80);
 }
-.footer-col a { transition: color 0.2s var(--ease-apple); }
+/* line-height 2.41 sobre 17px dá ~41px: 3px abaixo do mínimo de toque. */
+.footer-col a { display: block; min-height: 44px; transition: color 0.2s var(--ease-apple); }
 .footer-col a:hover { color: var(--primary); text-decoration: none; }
 .footer-brand p { line-height: 1.47; font-size: 14px; letter-spacing: -0.224px; color: var(--ink-muted-48); max-width: 34ch; }
 .footer-brand img { width: 148px; height: auto; margin-bottom: var(--s-sm); }
@@ -1120,7 +1149,10 @@ em { font-style: normal; color: var(--primary); }
   gap: var(--s-xs);
   margin-top: var(--s-lg);
 }
+/* O ponto continua com 8px de desenho, mas a área clicável vira 44px via
+   pseudo-elemento: aumentar o círculo estragaria o indicador. */
 .video-ponto {
+  position: relative;
   width: 8px; height: 8px;
   padding: 0;
   border: 0;
@@ -1128,6 +1160,13 @@ em { font-style: normal; color: var(--primary); }
   cursor: pointer;
   background: rgba(255, 255, 255, 0.3);
   transition: background-color 0.3s var(--ease-apple), transform 0.3s var(--ease-apple);
+}
+.video-ponto::after {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 44px; height: 44px;
+  transform: translate(-50%, -50%);
 }
 .video-ponto.is-active { background: var(--primary-on-dark); transform: scale(1.25); }
 
@@ -1161,6 +1200,21 @@ em { font-style: normal; color: var(--primary); }
 }
 
 @media (max-width: 833px) {
+  /* As 5 pílulas de filtro somam ~569px. Centralizadas numa tela de 390px, a
+     primeira ("Todos") nascia em x=-84 — fora da tela e impossível de tocar,
+     porque `body { overflow-x: hidden }` corta em vez de deixar rolar. Aqui o
+     próprio grupo rola, e o alinhamento passa a ser pela esquerda. */
+  .tabs-wrap {
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-inline: calc(var(--s-md) * -1);
+    padding-inline: var(--s-md);
+  }
+  .tabs-wrap::-webkit-scrollbar { display: none; }
+  .tabs { flex: none; }
+
   /* A barra escura só carrega links, e no celular eles vivem na gaveta.
      Mantê-la vazia gastaria 44px do topo e deixaria o botão de contato
      boiando sozinho num canto. `--nav-h: 0` reposiciona a sub-nav, a gaveta

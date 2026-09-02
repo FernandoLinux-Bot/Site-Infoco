@@ -367,13 +367,83 @@ test.describe('Acessibilidade e responsivo', () => {
         }
     });
 
+    test('as abas de filtro cabem na tela e a primeira é alcançável', async ({ page, isMobile }) => {
+        test.skip(!isMobile, 'o corte só acontece quando a fileira não cabe');
+        await page.goto('/solucoes');
+        const primeira = page.getByRole('tab', { name: 'Todos' });
+        const caixa = await primeira.boundingBox();
+        // `body { overflow-x: hidden }` corta o excedente em vez de deixar rolar,
+        // então uma aba com left negativo não fica só escondida: fica intocável.
+        expect(caixa!.x, 'a primeira aba não pode nascer fora da tela').toBeGreaterThanOrEqual(0);
+        // E o grupo inteiro precisa ser rolável, senão a última some.
+        const rolavel = await page.locator('.tabs-wrap').evaluate(el => el.scrollWidth > el.clientWidth);
+        expect(rolavel, 'a fileira precisa rolar quando não cabe').toBe(true);
+    });
+
+    test('o select tem a mesma altura do input em qualquer motor', async ({ page }) => {
+        // Sem `appearance: none` o WebKit desenha o select nativo e ignora padding
+        // e min-height: no Safari o campo saía com 27px contra 48px do input.
+        await page.goto('/cadastro');
+        const alturas = await page.evaluate(() => ({
+            select: Math.round(document.querySelector('select.select')!.getBoundingClientRect().height),
+            input: Math.round(document.querySelector('input.input')!.getBoundingClientRect().height),
+            appearance: getComputedStyle(document.querySelector('select.select')!).webkitAppearance,
+        }));
+        expect(alturas.appearance).toBe('none');
+        expect(alturas.select).toBeGreaterThanOrEqual(44);
+        expect(Math.abs(alturas.select - alturas.input), 'select e input desalinhados').toBeLessThanOrEqual(2);
+    });
+
+    test('a gaveta fecha mesmo ao tocar na rota em que já se está', async ({ page, isMobile }) => {
+        test.skip(!isMobile, 'a gaveta só existe abaixo de 833px');
+        await page.goto('/');
+        await page.locator('.hamburger').click();
+        await expect(page.locator('.mobile-sheet')).toBeVisible();
+        // "Início" a partir da Home não muda o pathname; sem onClick a gaveta
+        // ficava presa, e não há backdrop nem Escape para sair dela.
+        await page.locator('.mobile-sheet a[href="/"]').first().click();
+        await expect(page.locator('.mobile-sheet')).toHaveCount(0);
+    });
+
+    test('o cinza de apoio passa no contraste AA', async ({ page }) => {
+        await page.goto('/');
+        const razoes = await page.evaluate(() => {
+            const lum = (hex: string) => {
+                const c = [1, 3, 5].map(i => parseInt(hex.substr(i, 2), 16) / 255)
+                    .map(v => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)));
+                return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+            };
+            const razao = (a: string, b: string) => {
+                const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p);
+                return (x + 0.05) / (y + 0.05);
+            };
+            const s = getComputedStyle(document.documentElement);
+            const tinta = s.getPropertyValue('--ink-muted-48').trim();
+            return {
+                sobreBranco: +razao('#ffffff', tinta).toFixed(2),
+                sobreParchment: +razao(s.getPropertyValue('--canvas-parchment').trim(), tinta).toFixed(2),
+            };
+        });
+        // Todo uso desse tom está entre 10px e 14px: não vale a exceção de texto
+        // grande, então o mínimo é 4.5:1 nos dois fundos em que ele aparece.
+        expect(razoes.sobreBranco).toBeGreaterThanOrEqual(4.5);
+        expect(razoes.sobreParchment).toBeGreaterThanOrEqual(4.5);
+    });
+
     test('alvos de toque têm ao menos 44px', async ({ page, isMobile }) => {
         test.skip(!isMobile, 'só faz sentido no viewport de toque');
         await page.goto('/');
-        const pequenos = await page.locator('.btn-primary, .float-btn').evaluateAll(els =>
-            els.filter(el => el.getBoundingClientRect().height < 44).length
-        );
-        expect(pequenos).toBe(0);
+        // A auditoria móvel encontrou vários fora desta lista: a logo da sub-nav,
+        // os "Detalhes ›" dos cartões e os links do rodapé.
+        const pequenos = await page
+            .locator('.btn-primary, .float-btn, .sub-nav-brand, .link-action, .footer-col a')
+            .evaluateAll(els =>
+                els
+                    .filter(el => el.getBoundingClientRect().height > 0)
+                    .filter(el => el.getBoundingClientRect().height < 44)
+                    .map(el => `${el.className || el.tagName}: ${Math.round(el.getBoundingClientRect().height)}px`)
+            );
+        expect(pequenos).toEqual([]);
     });
 
     test('no mobile a barra escura some e a sub-nav vira o header', async ({ page, isMobile }) => {

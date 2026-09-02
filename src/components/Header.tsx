@@ -30,6 +30,10 @@ const Header = () => {
     const [open, setOpen] = useState(false);
     const { pathname } = useLocation();
 
+    // Fechar pela troca de rota não basta: tocar em "Início" já estando na Home
+    // não muda o pathname, o efeito não reexecuta e a gaveta ficava presa — sem
+    // backdrop nem Escape para sair. O onClick de cada link resolve na origem;
+    // este efeito continua como rede para navegação que venha de outro lugar.
     useEffect(() => {
         setOpen(false);
     }, [pathname]);
@@ -117,7 +121,9 @@ const Header = () => {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, ease: EASE_EXPO, delay: 0.05 + i * 0.04 }}
                             >
-                                <NavLink to={item.to} end={item.end}>{item.label}</NavLink>
+                                <NavLink to={item.to} end={item.end} onClick={() => setOpen(false)}>
+                                    {item.label}
+                                </NavLink>
                             </motion.div>
                         ))}
                         <div className="mobile-cta">
