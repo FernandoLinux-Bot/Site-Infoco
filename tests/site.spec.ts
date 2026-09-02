@@ -228,6 +228,22 @@ test.describe('Design system', () => {
         }
     });
 
+    test('usa a mesma tipografia do FAQ, auto-hospedada', async ({ page }) => {
+        await page.goto('/');
+        const familia = await page.evaluate(() => getComputedStyle(document.body).fontFamily);
+        expect(familia).toContain('Plus Jakarta Sans');
+        // Auto-hospedada: nada de requisição a domínio de terceiro para a fonte.
+        const externas = await page.evaluate(() =>
+            [...document.querySelectorAll('link[rel="stylesheet"], link[as="font"]')]
+                .map(l => l.getAttribute('href') || '')
+                .filter(h => /^https?:\/\//.test(h))
+        );
+        expect(externas).toEqual([]);
+        // E o arquivo precisa mesmo existir.
+        const resp = await page.request.get('/fonts/plus-jakarta-sans-latin-normal.woff2');
+        expect(resp.status()).toBe(200);
+    });
+
     test('corpo do texto roda em 17px, não 16px', async ({ page }) => {
         await page.goto('/');
         const size = await page.evaluate(() => getComputedStyle(document.body).fontSize);
@@ -350,6 +366,41 @@ test.describe('Acessibilidade e responsivo', () => {
         await page.goto('/');
         await expect(page.locator('.global-nav-links a[href="/contato"]')).toHaveCount(1);
         await expect(page.locator('.global-nav-actions')).toHaveCount(0);
+    });
+
+    test('o CTA da gaveta mantém o texto dentro da pílula', async ({ page, isMobile }) => {
+        test.skip(!isMobile, 'a gaveta só existe abaixo de 833px');
+        await page.goto('/');
+        await page.locator('.hamburger').click();
+        const cta = page.locator('.mobile-sheet .btn-primary');
+        await expect(cta).toBeVisible();
+
+        // A gaveta precisa ser opaca: translúcida, o hero atravessa por trás
+        // dos links e a leitura vai junto.
+        const fundo = await page.locator('.mobile-sheet').evaluate(el => getComputedStyle(el).backgroundColor);
+        const alfa = fundo.startsWith('rgba') ? parseFloat(fundo.split(',')[3]) : 1;
+        expect(alfa).toBe(1);
+
+        const m = await cta.evaluate(el => {
+            const s = getComputedStyle(el);
+            const r = el.getBoundingClientRect();
+            const t = (el as HTMLElement).firstChild as Text;
+            const faixa = document.createRange();
+            faixa.selectNodeContents(el);
+            const texto = faixa.getBoundingClientRect();
+            return {
+                display: s.display,
+                padEsq: parseFloat(s.paddingLeft),
+                sobraEsq: texto.left - r.left,
+                sobraDir: r.right - texto.right,
+                temTexto: !!t,
+            };
+        });
+        // O texto não pode encostar nem vazar: a pílula tem padding dos dois lados.
+        expect(m.display).toContain('flex');
+        expect(m.padEsq).toBeGreaterThan(8);
+        expect(m.sobraEsq, 'texto vazando à esquerda').toBeGreaterThan(4);
+        expect(m.sobraDir, 'texto vazando à direita').toBeGreaterThan(4);
     });
 
     test('menu mobile abre, trava a rolagem e fecha', async ({ page, isMobile }) => {

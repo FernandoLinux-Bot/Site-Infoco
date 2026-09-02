@@ -62,9 +62,15 @@
   --s-xxl: 48px;
   --s-section: 80px;
 
-  /* Tipografia */
-  --font-display: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
-  --font-text: "SF Pro Text", system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+  /* Tipografia
+     Plus Jakarta Sans, a mesma do FAQ — as duas pontas do ecossistema passam a
+     ler igual. É um desvio do DESIGN-apple.md, que pede SF Pro/Inter, feito de
+     propósito e registrado no CLAUDE.md.
+     Uma família só para display e corpo: a Jakarta é variável de 200 a 800 e
+     não tem irmã de texto como a SF Pro. A distinção continua vindo do peso e
+     do tamanho, não de duas fontes. */
+  --font-display: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-text: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Cronometragem do movimento */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -438,13 +444,17 @@ em { font-style: normal; color: var(--primary); }
   position: fixed;
   inset: calc(var(--nav-h) + var(--subnav-h)) 0 0 0;
   z-index: 880;
-  background: rgba(244, 246, 249, 0.95);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  /* Opaca, não vitrificada: a gaveta cobre a tela inteira, e ali a
+     translucidez só deixava o hero atravessar por trás dos links. O vidro
+     continua nas barras fixas, onde ele serve para dar profundidade. */
+  background: var(--canvas-parchment);
   padding: var(--s-xl) var(--s-lg) var(--s-xxl);
   overflow-y: auto;
 }
-.mobile-sheet a {
+/* `:not(.btn)` é obrigatório: sem ele esta regra pegava também o CTA no pé da
+   gaveta, trocava o flex do botão por `display: block`, zerava o padding
+   horizontal e subia a fonte para 24px — o texto vazava para fora da pílula. */
+.mobile-sheet a:not(.btn) {
   display: block;
   padding: var(--s-md) 0;
   border-bottom: 1px solid var(--hairline-soft);
@@ -454,7 +464,7 @@ em { font-style: normal; color: var(--primary); }
   font-weight: 600;
   letter-spacing: -0.2px;
 }
-.mobile-sheet a:hover { text-decoration: none; color: var(--primary); }
+.mobile-sheet a:not(.btn):hover { text-decoration: none; color: var(--primary); }
 .mobile-sheet .mobile-cta { margin-top: var(--s-xl); }
 .mobile-sheet .mobile-cta .btn { width: 100%; }
 

@@ -13,11 +13,12 @@
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:image" content="/logo-infoco.png" />
     <title>INFOCO Gestão Pública | SICC — Sistema Integrado de Compras e Contratações</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Inter é a substituta open-source de SF Pro em plataformas não-Apple.
-         Em macOS/iOS a stack resolve para a SF Pro real antes de chegar aqui. -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Plus Jakarta Sans, a mesma do FAQ (faq.infocogestaopublica.com.br).
+         Auto-hospedada e variável (200-800): um arquivo cobre toda a escada de
+         pesos, sem requisição a domínio de terceiro. O preload é só do peso
+         latino normal, que é o que a primeira dobra usa. -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/plus-jakarta-sans-latin-normal.woff2" crossorigin>
+    <link rel="stylesheet" href="/fonts/fonte.css">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   </head>

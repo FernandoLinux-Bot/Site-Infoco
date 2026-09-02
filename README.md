@@ -19,7 +19,7 @@ O produto apresentado é o **SICC — Sistema Integrado de Compras e Contrataç�
 
 O sistema visual segue o [`DESIGN-apple.md`](DESIGN-apple.md): fotografia e produto em primeiro plano, chrome quase invisível, tiles alternando claro e escuro, **um único azul de ação** (`#0066cc`), **uma única sombra** (reservada à imagem de produto) e **zero gradiente decorativo**.
 
-As superfícies escuras são uma família **navy** (`#1e2a3b` / `#223040` / `#1a2534`) em vez do near-black neutro do spec — a mesma do FAQ em `faq.infocogestaopublica.com.br`, para os dois produtos lerem como um só.
+Dois desvios deliberados do spec, para o site e o FAQ (`faq.infocogestaopublica.com.br`) lerem como um produto só: as superfícies escuras são uma família **navy** (`#1e2a3b` / `#223040` / `#1a2534`) em vez do near-black neutro, e a tipografia é **Plus Jakarta Sans** auto-hospedada em vez de SF Pro/Inter.
 
 `index.css` é a implementação — 20 seções numeradas, todas ancoradas nos tokens do spec.
 

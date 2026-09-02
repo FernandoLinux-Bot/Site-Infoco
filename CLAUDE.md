@@ -39,13 +39,15 @@ O sistema visual segue o `DESIGN-apple.md` na raiz. **Ele é a fonte da verdade*
 6. **Tiles full-bleed sem raio.** A troca de cor é o divisor. Raio só em card (`--r-lg` 18px), utilitário (`--r-sm` 8px), pearl (`--r-md` 11px) e pílula (`--r-pill`).
 7. **`transform: scale(0.95)` no estado ativo** de todo botão — é a micro-interação do sistema.
 
-**Tipografia:** SF Pro Display / SF Pro Text via `system-ui, -apple-system, BlinkMacSystemFont`. Em plataformas não-Apple cai para **Inter** (Google Fonts), a substituta recomendada pelo próprio spec.
+**Tipografia:** **Plus Jakarta Sans**, a mesma do FAQ — auto-hospedada em `public/fonts/` e variável (200–800), então um arquivo cobre a escada inteira de pesos sem requisição a domínio de terceiro. Uma família só para display e corpo: a Jakarta não tem irmã de texto como a SF Pro, e a distinção continua vindo do peso e do tamanho.
+
+> **Segundo desvio deliberado do spec.** O `DESIGN-apple.md` pede SF Pro com fallback Inter. A troca por Plus Jakarta Sans foi decisão do cliente, pelo mesmo motivo do navy: site e FAQ lendo como um produto só. Um teste trava a família e exige que nenhum `<link>` de fonte aponte para domínio externo.
 
 **Superfícies:** `--canvas` #ffffff · `--canvas-parchment` #f4f6f9 · `--surface-tile-1/2/3` #1e2a3b/#223040/#1a2534 · `--surface-black` #0d141d.
 
 > **Desvio deliberado do spec.** O `DESIGN-apple.md` define as superfícies escuras como near-black neutro (#272729/#2a2a2c/#252527) e a nav como preto puro. Aqui elas são uma família **navy**, por decisão do cliente, para o site e o FAQ (`faq.infocogestaopublica.com.br`) lerem como um produto só. Tudo o mais do spec continua valendo — inclusive o micro-degrau entre tiles vizinhos, que é o que substitui borda e sombra. Um teste trava os quatro valores e exige que o canal azul supere o vermelho em cada um.
 
-**Ecossistema:** o FAQ usa a mesma paleta (`_deploy/site/{index,login,comunidade}.html`, cada um com seu `:root` — ao mexer numa cor, mexa nos três). A logo é a mesma arte (`public/logo-infoco.png`, vinda de `_deploy/site/assets/logo.png` do FAQ).
+**Ecossistema:** o FAQ usa a mesma paleta e a mesma fonte (`_deploy/site/{index,login,comunidade}.html`, cada um com seu `:root` — ao mexer numa cor, mexa nos três). A logo é a mesma arte (`public/logo-infoco.png`, vinda de `_deploy/site/assets/logo.png` do FAQ).
 
 **Chrome de navegação:** duas barras fixas — `.global-nav` escura de 44px (só links, incluindo Contato) e `.sub-nav` vitrificada de 52px com a logo estruturada, os links do produto e o CTA persistente. As duas usam a mesma grade `1fr auto 1fr`, e é isso que faz a fileira de cima cair exatamente sobre a de baixo. **Abaixo de 833px a barra escura some** e `--nav-h` vira `0px`: os links passam para a gaveta e a sub-nav vira o header inteiro.
 
