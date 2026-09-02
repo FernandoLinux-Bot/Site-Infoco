@@ -36,3 +36,6 @@ playwright-report/
 
 # Grafo de conhecimento gerado pelo /graphify (regenerável)
 graphify-out/
+
+# Scripts temporários de auditoria
+.audit-tmp*.mjs
