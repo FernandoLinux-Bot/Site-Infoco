@@ -418,6 +418,26 @@ test.describe('Conteúdo do SICC', () => {
         expect(ajuste).toBe('contain');
     });
 
+    test('o carrossel traz os dois vídeos e navega entre eles', async ({ page, isMobile }) => {
+        await page.goto('/');
+        await page.locator('.video-carrossel').scrollIntoViewIfNeeded();
+        await expect(page.locator('.video-card')).toHaveCount(2);
+
+        // Todo cartão precisa de um Playback ID de verdade: o Asset ID do painel
+        // do Mux devolve 400 e o cartão apareceria vazio.
+        const capas = await page.locator('.video-frame img, .video-frame mux-player')
+            .evaluateAll(els => els.map(el => el.getAttribute('poster') || el.getAttribute('src') || ''));
+        expect(capas).toHaveLength(2);
+        for (const url of capas) expect(url).toContain('image.mux.com');
+
+        if (!isMobile) return;
+        // No celular as setas movem o trilho e o indicador acompanha.
+        await expect(page.locator('.video-ponto').first()).toHaveClass(/is-active/);
+        await page.locator('.video-seta--prox').click();
+        await expect(page.locator('.video-ponto').nth(1)).toHaveClass(/is-active/, { timeout: 5000 });
+        await expect(page.locator('.video-seta--prox')).toBeDisabled();
+    });
+
     test('a carteira completa de clientes não é exposta', async ({ page }) => {
         // O FAQ do SICC trata a lista de municípios como informação comercial restrita.
         await page.goto('/');

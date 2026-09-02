@@ -1160,7 +1160,10 @@ em { font-style: normal; color: var(--primary); }
   /* A pilha flutuante fica fora do caminho enquanto o hero está na tela. */
   .float-stack { opacity: 0; pointer-events: none; transition: opacity .35s var(--ease-apple); }
   .float-stack.is-rolado { opacity: 1; pointer-events: auto; }
-  .video-trilho { grid-auto-columns: 100%; gap: 0; }
+  /* `justify-content: center` num trilho que rola desloca a posição inicial e
+     pode deixar o primeiro slide inalcançável. No carrossel cada coluna já
+     ocupa a largura toda, então centralizar não significa nada — e atrapalha. */
+  .video-trilho { grid-auto-columns: 100%; gap: 0; justify-content: start; }
   .video-card { width: min(320px, 82vw); }
   .video-seta { display: grid; }
   .video-pontos { display: flex; }
