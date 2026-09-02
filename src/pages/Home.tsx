@@ -5,7 +5,7 @@ import VideoSection from '../components/VideoSection';
 import Clients from '../components/Clients';
 import { CountUp, Reveal, Stagger, StaggerItem, useParallax } from '../components/motion';
 import { MODULOS, NUMEROS, PERFIS } from '../data/sicc';
-import { SISTEMA } from '../data/links';
+import { CONHECER } from '../data/links';
 
 
 const Numeros = () => (
@@ -153,8 +153,8 @@ const CtaFinal = () => (
                 </p>
                 <div className="cta-row cta-row--center">
                     <Link to="/contato" className="btn btn-store">Falar com a INFOCO</Link>
-                    <a className="btn btn-secondary" href={SISTEMA} target="_blank" rel="noopener noreferrer">
-                        Acessar o sistema
+                    <a className="btn btn-secondary" href={CONHECER} target="_blank" rel="noopener noreferrer">
+                        Ver o sistema por dentro
                     </a>
                 </div>
             </Reveal>

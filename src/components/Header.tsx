@@ -42,12 +42,6 @@ const Header = () => {
         <>
             <header className="global-nav">
                 <div className="global-nav-inner">
-                    <Link to="/" className="global-nav-brand" aria-label="INFOCO Gestão Pública, início">
-                        <span className="logo-window">
-                            <img src="/logo-infoco.png" alt="INFOCO Gestão Pública" width={72} height={23} />
-                        </span>
-                    </Link>
-
                     <nav className="global-nav-links" aria-label="Navegação principal">
                         {globalNav.map(item => (
                             <NavLink
@@ -69,7 +63,9 @@ const Header = () => {
 
             <div className="sub-nav">
                 <div className="sub-nav-inner">
-                    <Link to="/sicc" className="sub-nav-title">SICC</Link>
+                    <Link to="/" className="sub-nav-brand" aria-label="INFOCO Gestão Pública, início">
+                        <img src="/logo-infoco.png" alt="INFOCO Gestão Pública" width={106} height={34} />
+                    </Link>
 
                     <nav className="sub-nav-links" aria-label="Navegação do produto">
                         {subNav.map(item => (

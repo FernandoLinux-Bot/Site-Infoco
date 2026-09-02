@@ -1,7 +1,7 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { EASE_EXPO, WordReveal, useParallax } from './motion';
-import { SISTEMA } from '../data/links';
+import { CONHECER } from '../data/links';
 
 
 /**
@@ -84,8 +84,8 @@ const Hero = () => {
                     transition={{ duration: 0.8, ease: EASE_EXPO, delay: 0.58 }}
                 >
                     <Link to="/sicc" className="btn btn-primary">Conhecer o SICC</Link>
-                    <a className="btn btn-secondary" href={SISTEMA} target="_blank" rel="noopener noreferrer">
-                        Acessar o sistema
+                    <a className="btn btn-secondary" href={CONHECER} target="_blank" rel="noopener noreferrer">
+                        Ver o sistema por dentro
                     </a>
                 </motion.div>
 

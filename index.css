@@ -338,7 +338,7 @@ em { font-style: normal; color: var(--primary); }
 }
 .global-nav-inner {
   height: 100%;
-  max-width: 1024px;
+  max-width: 1440px;
   margin: 0 auto;
   padding-inline: var(--s-lg);
   display: flex;
@@ -346,34 +346,22 @@ em { font-style: normal; color: var(--primary); }
   justify-content: space-between;
   gap: var(--s-md);
 }
-.global-nav-brand {
+/* A logo estruturada vive na sub-nav clara, onde cabe inteira e nas cores
+   originais. A barra escura fica só com a navegação. */
+.sub-nav-brand {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  color: var(--on-dark);
-  font-family: var(--font-text);
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: -0.224px;
+  flex: none;
 }
-.global-nav-brand:hover { text-decoration: none; }
-/* A mesma logo do FAQ. A barra tem 44px: o wordmark "INFOCO" cabe e lê bem,
-   mas a linha "GESTÃO PÚBLICA" viraria um borrão — então a janela recorta só
-   o terço superior da arte. O logotipo completo aparece no rodapé. */
-.global-nav-brand .logo-window {
+.sub-nav-brand:hover { text-decoration: none; }
+.sub-nav-brand img {
   display: block;
-  height: 15px;
-  overflow: hidden;
-}
-.global-nav-brand .logo-window img {
-  display: block;
-  height: 23px;
+  height: 34px;
   width: auto;
-  object-fit: cover;
-  object-position: top center;
-  filter: brightness(0) invert(1);
 }
-.global-nav-links { display: flex; align-items: center; gap: 2px; }
+/* Recuo negativo de 10px: anula o padding do primeiro link para que a
+   primeira letra caia na mesma vertical da logo da sub-nav. */
+.global-nav-links { display: flex; align-items: center; gap: 2px; margin-left: -10px; }
 .global-nav-links a {
   color: rgba(255, 255, 255, 0.82);
   font-family: var(--font-text);
@@ -387,7 +375,9 @@ em { font-style: normal; color: var(--primary); }
 }
 .global-nav-links a:hover { color: #fff; text-decoration: none; }
 .global-nav-links a.is-active { color: #fff; }
-.global-nav-actions { display: flex; align-items: center; gap: var(--s-xs); }
+/* `margin-left: auto` e não `space-between`: abaixo de 833px os links somem e
+   o space-between deixaria o único filho restante encostado à esquerda. */
+.global-nav-actions { display: flex; align-items: center; gap: var(--s-xs); margin-left: auto; }
 
 /* Sub-nav vitrificada, presa abaixo da nav global */
 .sub-nav {
@@ -411,15 +401,6 @@ em { font-style: normal; color: var(--primary); }
   justify-content: space-between;
   gap: var(--s-md);
 }
-.sub-nav-title {
-  font-family: var(--font-display);
-  font-size: 21px;
-  font-weight: 600;
-  line-height: 1.19;
-  letter-spacing: 0.231px;
-  color: var(--ink);
-}
-.sub-nav-title:hover { text-decoration: none; }
 .sub-nav-links { display: flex; align-items: center; gap: var(--s-md); }
 .sub-nav-links a {
   color: var(--ink-muted-80);
@@ -1104,7 +1085,7 @@ em { font-style: normal; color: var(--primary); }
   /* O CTA persistente estreita para não espremer o titulo e o hamburger.
      A altura fica em 44px: o minimo de alvo de toque do spec. */
   .sub-nav-right .btn-primary { font-size: 14px; padding: 11px 16px; min-height: 44px; }
-  .sub-nav-title { font-size: 17px; letter-spacing: -0.374px; }
+  .sub-nav-brand img { height: 26px; }
   .t-hero { font-size: 34px; }
   .t-display { font-size: 28px; }
   .t-lead { font-size: 21px; }

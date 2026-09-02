@@ -6,12 +6,17 @@ export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 1 : 0,
+  retries: 1,
   reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : 'list',
+  // O `vite preview` é single-thread e serve um chunk de ~900 KB (o player de
+  // vídeo). Com os dois projetos em paralelo cheio ele engasgava e o page.goto
+  // estourava 30s — falha de infraestrutura, não do site.
+  workers: process.env.CI ? 2 : 4,
   use: {
     baseURL: `http://localhost:${PORT}`,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
+    navigationTimeout: 45_000,
   },
   projects: [
     { name: 'desktop', use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } } },

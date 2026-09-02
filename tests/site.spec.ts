@@ -59,6 +59,24 @@ test.describe('Navegação', () => {
         await expect(cta).toHaveAttribute('rel', /noopener/);
     });
 
+    test('a logo estruturada abre a Home e a barra escura não a repete', async ({ page }) => {
+        await page.goto('/sicc');
+        const marca = page.locator('.sub-nav-brand img');
+        await expect(marca).toBeVisible();
+        await expect(marca).toHaveAttribute('src', '/logo-infoco.png');
+        await expect(page.locator('.sub-nav-brand')).toHaveAttribute('href', '/');
+        // A logo aparece uma vez no chrome: a barra escura ficou só com navegação.
+        await expect(page.locator('.global-nav img')).toHaveCount(0);
+    });
+
+    test('a vitrine pública não passa pelo muro de login', async ({ page }) => {
+        await page.goto('/');
+        const vitrine = page.locator('a[href="https://faq.infocogestaopublica.com.br/conhecer"]');
+        await expect(vitrine.first()).toBeVisible();
+        await expect(vitrine.first()).toHaveAttribute('target', '_blank');
+        await expect(vitrine.first()).toHaveAttribute('rel', /noopener/);
+    });
+
     test('toda rota do App é alcançável pela navegação visível', async ({ page, isMobile }) => {
         await page.goto('/');
         if (isMobile) {
@@ -292,6 +310,17 @@ test.describe('Acessibilidade e responsivo', () => {
             els.filter(el => el.getBoundingClientRect().height < 44).length
         );
         expect(pequenos).toBe(0);
+    });
+
+    test('no mobile o botão de contato fica à direita, não encostado à esquerda', async ({ page, isMobile }) => {
+        test.skip(!isMobile, 'só importa quando os links da nav somem');
+        await page.goto('/');
+        const { botao, barra } = await page.evaluate(() => {
+            const b = document.querySelector('.global-nav-actions .btn')!.getBoundingClientRect();
+            const n = document.querySelector('.global-nav-inner')!.getBoundingClientRect();
+            return { botao: b.right, barra: n.right };
+        });
+        expect(barra - botao, 'o botão deve encostar na margem direita').toBeLessThan(40);
     });
 
     test('menu mobile abre, trava a rolagem e fecha', async ({ page, isMobile }) => {
