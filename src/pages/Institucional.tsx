@@ -12,7 +12,7 @@ const VALORES = [
 ];
 
 const Institucional = () => {
-    const { ref, y } = useParallax(30);
+    const parallax = useParallax(30);
 
     return (
         <>
@@ -43,7 +43,7 @@ const Institucional = () => {
                 </div>
             </section>
 
-            <section className="tile tile--parchment" ref={ref}>
+            <section className="tile tile--parchment">
                 <div className="container container-mid">
                     <div className="split split--wide">
                         <Reveal>
@@ -69,7 +69,7 @@ const Institucional = () => {
                             </div>
                         </Reveal>
 
-                        <motion.div style={{ y }}>
+                        <div ref={parallax}>
                             <Reveal delay={0.1}>
                                 <img
                                     src="/patrao.png"
@@ -79,7 +79,7 @@ const Institucional = () => {
                                     loading="lazy"
                                 />
                             </Reveal>
-                        </motion.div>
+                        </div>
                     </div>
                 </div>
             </section>

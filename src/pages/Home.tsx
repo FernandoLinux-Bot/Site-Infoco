@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import Hero from '../components/Hero';
 import VideoSection from '../components/VideoSection';
 import Clients from '../components/Clients';
@@ -31,9 +30,9 @@ const Numeros = () => (
 );
 
 const ProdutoTile = () => {
-    const { ref, y } = useParallax(34);
+    const parallax = useParallax(34);
     return (
-        <section className="tile tile--dark on-dark" ref={ref}>
+        <section className="tile tile--dark on-dark">
             <div className="container container-mid">
                 <div className="split split--wide">
                     <Reveal>
@@ -61,7 +60,7 @@ const ProdutoTile = () => {
                         </div>
                     </Reveal>
 
-                    <motion.div style={{ y }}>
+                    <div ref={parallax}>
                         <Reveal delay={0.12}>
                             <div className="grid grid-2">
                                 {MODULOS.slice(0, 6).map((m, i) => (
@@ -75,7 +74,7 @@ const ProdutoTile = () => {
                                 ))}
                             </div>
                         </Reveal>
-                    </motion.div>
+                    </div>
                 </div>
             </div>
         </section>

@@ -342,11 +342,73 @@ test.describe('Acessibilidade e responsivo', () => {
         });
     }
 
+    test('com prefers-reduced-motion nada nasce escondido', async ({ browser }) => {
+        // O GSAP esconde o elemento por JS, no mesmo tick em que cria o gatilho.
+        // Se o atalho de movimento reduzido saísse pela metade — escondendo mas
+        // não revelando — a pessoa ficaria com a página em branco. Este é o
+        // risco que a troca de engine introduziu, então ele tem guarda própria.
+        const ctx = await browser.newContext({ reducedMotion: 'reduce' });
+        const page = await ctx.newPage();
+        for (const rota of ['/', '/sicc', '/solucoes']) {
+            await page.goto(rota);
+            // As entradas de hero têm delay 0.4 + duração 0.8: medir antes disso
+            // flagra animação em curso como se fosse bloco preso.
+            await page.waitForTimeout(1800);
+            // Só opacidade escrita no style inline: é essa que o JS controla, e
+            // portanto a única que pode ficar presa. Opacidade vinda do CSS —
+            // botão desabilitado, seta de carrossel no fim, brasão em repouso —
+            // é intencional e não entra na conta.
+            const escondidos = await page.evaluate(() =>
+                [...document.querySelectorAll<HTMLElement>('.tile [style*="opacity"]')]
+                    .filter(el => {
+                        const r = el.getBoundingClientRect();
+                        return r.height > 40 && parseFloat(el.style.opacity || '1') < 0.9;
+                    })
+                    .map(el => `${el.className || el.tagName} (${el.style.opacity})`)
+            );
+            expect(escondidos, `escondidos sem movimento em ${rota}`).toEqual([]);
+        }
+        await ctx.close();
+    });
+
+    test('o scroll é do GSAP e a presença é do framer-motion', async ({ page }) => {
+        // Duas engines convivem de propósito. Se alguém migrar a camada errada,
+        // o site passa a carregar duas bibliotecas fazendo a mesma coisa.
+        await page.goto('/solucoes');
+        // Presença: a pílula das abas é layoutId do framer-motion.
+        await expect(page.locator('.tab-pill')).toHaveCount(1);
+
+        await page.goto('/sicc');
+        await page.locator('#fluxo').scrollIntoViewIfNeeded();
+        await page.waitForTimeout(900);
+        // Scroll: as barras do fluxo são scrub do ScrollTrigger — elas respondem
+        // à rolagem nos dois sentidos, não a um disparo único.
+        const escalaDe = () =>
+            page.locator('.flow-rule').evaluateAll(els =>
+                els.map(e => +new DOMMatrix(getComputedStyle(e).transform).a.toFixed(2))
+            );
+        const noComeco = await escalaDe();
+        await page.evaluate(() => window.scrollBy(0, 800));
+        await page.waitForTimeout(900);
+        const depois = await escalaDe();
+        const somar = (a: number[]) => a.reduce((x, y) => x + y, 0);
+        expect(somar(depois), 'as barras precisam avançar com a rolagem').toBeGreaterThan(somar(noComeco));
+    });
+
     test('nenhum limiar de viewport é fração da altura', async () => {
         // A fração só falha em telas pequenas, e só quando o bloco cresce — o tipo
         // de bug que volta sem ninguém notar. O guarda é no código, não na tela.
         const fs = await import('node:fs/promises');
-        const alvos = ['src/components/motion/index.tsx', 'src/pages/Sicc.tsx'];
+        // A camada de scroll virou GSAP, onde o gatilho é posição e não fração.
+        // O framer-motion segue no projeto para presença, e é por lá que a
+        // fração pode voltar.
+        const alvos = [
+            'src/components/motion/index.tsx',
+            'src/components/motion/gsap.ts',
+            'src/pages/Sicc.tsx',
+            'src/App.tsx',
+            'src/components/Header.tsx',
+        ];
         for (const arq of alvos) {
             const fonte = await fs.readFile(arq, 'utf-8');
             const linhas = fonte.split('\n');

@@ -1,15 +1,9 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-    AnimatePresence,
-    motion,
-    useScroll,
-    useSpring,
-    useTransform,
-    type MotionValue,
-} from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { CICLO_DEMANDA, PERGUNTAS } from '../data/sicc';
-import { EASE_EXPO, Reveal, Stagger, StaggerItem, VIEWPORT, WordReveal } from '../components/motion';
+import { EASE_EXPO, Reveal, Stagger, StaggerItem, WordReveal } from '../components/motion';
+import { gsap, semMovimento } from '../components/motion/gsap';
 import { CONHECER } from '../data/links';
 
 
@@ -55,40 +49,38 @@ const SiccHero = () => (
 );
 
 /* --------------------------------------------------------------- Fluxo --- */
-const FlowStep = ({
-    fase,
-    detalhe,
-    index,
-    total,
-    progress,
-}: {
-    fase: string;
-    detalhe: string;
-    index: number;
-    total: number;
-    progress: MotionValue<number>;
-}) => {
-    const scaleX = useTransform(progress, [index / total, (index + 1) / total], [0, 1], { clamp: true });
-    return (
-        <motion.div
-            className="flow-step"
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={VIEWPORT}
-            transition={{ duration: 0.7, ease: EASE_EXPO, delay: index * 0.06 }}
-        >
-            <motion.span className="flow-rule" style={{ scaleX, width: '100%' }} aria-hidden="true" />
-            <span className="flow-n">Fase {String(index + 1).padStart(2, '0')}</span>
-            <h3>{fase}</h3>
-            <p>{detalhe}</p>
-        </motion.div>
-    );
-};
-
+/**
+ * As seis barras se preenchem conforme a rolagem atravessa a seção.
+ * É `scrub`: a barra acompanha o dedo nos dois sentidos, em vez de disparar
+ * uma vez e terminar sozinha. Cada barra tem a sua fatia do trecho, então a
+ * quarta só começa quando a terceira fecha.
+ */
 const Fluxo = () => {
-    const ref = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.85', 'end 0.4'] });
-    const progress = useSpring(scrollYProgress, { stiffness: 90, damping: 28 });
+    const secao = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const el = secao.current;
+        if (!el) return;
+        const barras = gsap.utils.toArray<HTMLElement>('.flow-rule', el);
+        if (!barras.length) return;
+
+        if (semMovimento()) {
+            gsap.set(barras, { scaleX: 1 });
+            return;
+        }
+
+        gsap.set(barras, { scaleX: 0, transformOrigin: 'left center' });
+        const linha = gsap.timeline({
+            scrollTrigger: { trigger: el, start: 'top 72%', end: 'bottom 62%', scrub: 0.5 },
+        });
+        barras.forEach(barra => linha.to(barra, { scaleX: 1, ease: 'none' }, '>'));
+
+        return () => {
+            linha.scrollTrigger?.kill();
+            linha.kill();
+            gsap.set(barras, { clearProps: 'transform' });
+        };
+    }, []);
 
     return (
         <section className="tile tile--dark on-dark" id="fluxo">
@@ -104,16 +96,16 @@ const Fluxo = () => {
                     </div>
                 </Reveal>
 
-                <div className="flow" ref={ref}>
+                <div className="flow" ref={secao}>
                     {CICLO_DEMANDA.map((f, i) => (
-                        <FlowStep
-                            key={f.fase}
-                            fase={f.fase}
-                            detalhe={f.detalhe}
-                            index={i}
-                            total={CICLO_DEMANDA.length}
-                            progress={progress}
-                        />
+                        <Reveal key={f.fase} delay={i * 0.06}>
+                            <div className="flow-step">
+                                <span className="flow-rule" aria-hidden="true" />
+                                <span className="flow-n">Fase {String(i + 1).padStart(2, '0')}</span>
+                                <h3>{f.fase}</h3>
+                                <p>{f.detalhe}</p>
+                            </div>
+                        </Reveal>
                     ))}
                 </div>
             </div>

@@ -20,7 +20,7 @@ O produto que o site apresenta é o **SICC — Sistema Integrado de Compras e Co
 | Framework | React 18 + TypeScript (strict) |
 | Bundler | Vite 4 (`@vitejs/plugin-react`), com `manualChunks` |
 | Roteamento | `react-router-dom` v6 (BrowserRouter) |
-| Animação | `framer-motion` 11 |
+| Animação | `gsap` 3.15 + ScrollTrigger (rolagem) · `framer-motion` 11 (presença) |
 | Ícones | `react-icons` (FA) |
 | Vídeo | `@mux/mux-player-react` (carregado por `lazy` + IntersectionObserver) |
 | Analytics | `@vercel/analytics` + `@vercel/speed-insights` |
@@ -58,7 +58,7 @@ O sistema visual segue o `DESIGN-apple.md` na raiz. **Ele é a fonte da verdade*
 ├── index.html                # entry (lang=pt-BR, Inter, reCAPTCHA, OG tags)
 ├── index.css                 # design system completo (~1064 linhas, 20 seções numeradas)
 ├── DESIGN-apple.md           # o spec visual — fonte da verdade
-├── vite.config.ts            # manualChunks (react, motion)
+├── vite.config.ts            # manualChunks (react, motion, gsap)
 ├── vercel.json               # build + SPA fallback
 ├── playwright.config.ts      # desktop (Chromium 1440) + mobile (WebKit/iPhone 13)
 ├── tests/site.spec.ts        # 37 testes × 2 projetos
@@ -71,8 +71,10 @@ O sistema visual segue o `DESIGN-apple.md` na raiz. **Ele é a fonte da verdade*
     ├── data/sicc.ts          # TODO o conteúdo do SICC (fonte única)
     ├── hooks/useContactForm.ts  # useRecaptcha + useFormSubmit
     ├── components/
-    │   ├── motion/index.tsx  # primitivas: Reveal, Stagger, WordReveal, CountUp,
-    │   │                     # useParallax, ScrollProgress, EASE_EXPO
+    │   ├── motion/
+    │   │   ├── gsap.ts       # registra ScrollTrigger + CustomEase, semMovimento()
+    │   │   └── index.tsx     # Reveal, Stagger, WordReveal, CountUp, useParallax,
+    │   │                     # ScrollProgress
     │   ├── Header.tsx        # global-nav + sub-nav + sheet mobile
     │   ├── Footer.tsx        # rodapé parchment com colunas densas
     │   ├── Hero.tsx          # painel do SICC desenhado em CSS
@@ -114,15 +116,22 @@ Para adicionar rota: criar a página, adicionar `<Route>` em [App.tsx](src/App.t
 
 ## Movimento
 
-Todas as animações passam pelas primitivas de [src/components/motion/index.tsx](src/components/motion/index.tsx):
+O site usa **duas engines de animação, de propósito**, cada uma no que faz melhor. Misturar as duas camadas é a regressão a evitar — o custo já foi pago em bundle, então não vale carregar as duas fazendo a mesma coisa.
 
-- `EASE_EXPO` = `[0.16, 1, 0.3, 1]` — a curva única do site.
-- `<Reveal>` sobe e revela ao entrar na viewport; `<Stagger>` + `<StaggerItem>` escalonam filhos.
-- `<WordReveal>` revela palavra a palavra com máscara `overflow: hidden`. **O espaço entre as máscaras é um nó de texto real** — se ele virar nbsp ou for para dentro da máscara, a manchete deixa de quebrar linha.
-- `useParallax(distance)` devolve `{ref, y}` com mola; `<CountUp>` anima números; `<ScrollProgress>` é a barra do topo.
-- Tudo respeita `prefers-reduced-motion` (as primitivas via `useReducedMotion`, o resto pelo bloco de mídia no CSS).
+| Camada | Engine | Onde |
+|---|---|---|
+| **Rolagem** | GSAP + ScrollTrigger | revelações, escalonamento, parallax, barras do fluxo, progresso do topo |
+| **Presença e layout** | framer-motion | transição de rota, acordeão do FAQ, gaveta mobile, saída do filtro de módulos, pílula das abas (`layoutId`) |
 
-**Não chame hooks dentro de `.map()`.** O `Fluxo` de `Sicc.tsx` extrai `<FlowStep>` exatamente por isso.
+A divisão não é estética: o framer-motion resolve com `AnimatePresence` o caso de **animar antes de o React desmontar**, e com `layoutId` o de elemento compartilhado entre estados. O GSAP não tem equivalente direto disso em React. Já o ScrollTrigger dispara por **posição do gatilho na tela**, não por fração da altura do elemento — foi essa diferença que eliminou de vez a classe de bug das seções em branco.
+
+- [src/components/motion/gsap.ts](src/components/motion/gsap.ts) registra os plugins uma vez, cria a curva `expoOut` (a mesma `cubic-bezier(.16,1,.3,1)` do CSS, via `CustomEase`) e expõe `semMovimento()`.
+- [src/components/motion/index.tsx](src/components/motion/index.tsx) traz as primitivas: `Reveal`, `Stagger` + `StaggerItem`, `useParallax` (devolve **só a ref** — o GSAP escreve direto no transform, sem passar por React), `WordReveal`, `CountUp` e `ScrollProgress`.
+- **O estado inicial é escrito por JS, não por CSS.** O elemento nasce visível no HTML e só é escondido quando o gatilho é criado. Se o script falhar, o conteúdo continua na tela.
+- `<MotionConfig reducedMotion="user">` no App faz **todo** framer-motion respeitar a preferência do sistema, inclusive os `motion.p` soltos nos heros. O GSAP respeita por `semMovimento()`. Um teste roda as três rotas principais com `reducedMotion: 'reduce'` e falha se algo ficar escondido.
+- **O `ScrollManager` do App é o dono único de "rota mudou → remedir → posicionar".** O ScrollTrigger mede a página ao criar os gatilhos e numa SPA a altura muda sem recarregar; mas remedir e rolar ao mesmo tempo viram corrida, porque o `refresh()` restaura a rolagem e desfaz o salto para a âncora. Por isso: `ScrollTrigger.refresh()` primeiro, posicionamento depois, e âncora com `behavior: 'auto'`.
+
+**Não chame hooks dentro de `.map()`.**
 
 ## Scripts
 

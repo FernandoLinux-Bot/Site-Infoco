@@ -11,7 +11,8 @@ O produto apresentado é o **SICC — Sistema Integrado de Compras e Contrataç�
 - **React 18** + **TypeScript** (strict)
 - **Vite 4** com code-splitting
 - **react-router-dom v6** — URLs em pt-BR
-- **framer-motion** — movimento dirigido por scroll
+- **GSAP + ScrollTrigger** — movimento dirigido por scroll
+- **framer-motion** — transição de rota, acordeão, gaveta e a pílula das abas
 - **Playwright** — testes desktop (Chromium) e mobile (WebKit)
 - Deploy na **Vercel**
 

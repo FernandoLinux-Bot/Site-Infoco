@@ -46,7 +46,7 @@ const Card = ({ d, delay }: { d: typeof emElaboracao[number]; delay: number }) =
 
 const Hero = () => {
     const reduce = useReducedMotion();
-    const { ref, y } = useParallax(28);
+    const parallax = useParallax(28);
 
     return (
         <section className="tile tile--light hero hero--split">
@@ -109,9 +109,8 @@ const Hero = () => {
                 </motion.figure>
                 </div>
 
-                <div className="hero-stage" ref={ref}>
+                <div className="hero-stage" ref={parallax}>
                     <motion.div
-                        style={reduce ? undefined : { y }}
                         initial={{ opacity: 0, y: 48, rotateX: reduce ? 0 : 7 }}
                         animate={{ opacity: 1, y: 0, rotateX: 0 }}
                         transition={{ duration: 1.1, ease: EASE_EXPO, delay: 0.5 }}

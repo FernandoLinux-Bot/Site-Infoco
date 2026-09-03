@@ -1,57 +1,45 @@
 /**
  * Primitivas de movimento do site.
- * Regra do design system: o movimento serve à leitura — entra com a mesma
- * curva (ease-out-expo), respeita prefers-reduced-motion e nunca compete
- * com o conteúdo.
+ *
+ * A camada de rolagem é GSAP + ScrollTrigger; a de presença continua em
+ * framer-motion (ver o cabeçalho de ./gsap.ts para o porquê da divisão).
+ *
+ * Regra que vale para todas: o elemento nasce visível no HTML e só é escondido
+ * pelo JS, no mesmo tick em que o gatilho é criado. Se o script falhar, o
+ * conteúdo fica na tela — o contrário do que acontecia quando o estado inicial
+ * morava no CSS.
  */
-import { Fragment, ReactNode, useEffect, useRef, useState } from 'react';
-import {
-    motion,
-    useInView,
-    useMotionValue,
-    useReducedMotion,
-    useScroll,
-    useSpring,
-    useTransform,
-    type MotionValue,
-    type Transition,
-    type Variants,
-} from 'framer-motion';
+import { ReactNode, useEffect, useRef, useState } from 'react';
+import { gsap, INICIO, semMovimento } from './gsap';
 
 export const EASE_EXPO = [0.16, 1, 0.3, 1] as const;
 
-/**
- * Regra de viewport de toda revelação do site.
- *
- * `amount` NÃO pode ser fração. Ele é a parcela do elemento que precisa estar
- * visível, e num bloco mais alto que a janela essa parcela é impossível: o grid
- * de módulos da Home tem 3721px num viewport de 664px, então `amount: 0.2`
- * exigiria 744px visíveis. O limiar nunca era atingido, `whileInView` nunca
- * disparava e a seção inteira ficava presa em `opacity: 0` — em branco no
- * celular. `'some'` dispara com qualquer parte visível, e a margem negativa
- * segura a entrada até o bloco estar de fato dentro da tela.
- */
-export const VIEWPORT = { once: true, amount: 'some', margin: '0px 0px -12% 0px' } as const;
+/** Anima o elemento subindo até a posição, quando ele entra na tela. */
+function revelar(alvo: Element | Element[], { y = 28, delay = 0, stagger = 0 } = {}) {
+    if (semMovimento()) return undefined;
+    const de = gsap.set(alvo, { opacity: 0, y });
+    void de;
+    const tween = gsap.to(alvo, {
+        opacity: 1,
+        y: 0,
+        delay,
+        stagger,
+        scrollTrigger: { trigger: alvo instanceof Element ? alvo : alvo[0], start: INICIO, once: true },
+    });
+    return () => {
+        tween.scrollTrigger?.kill();
+        tween.kill();
+        gsap.set(alvo, { clearProps: 'opacity,transform' });
+    };
+}
 
-export const ENTER: Transition = { duration: 0.8, ease: EASE_EXPO };
-
-export const stagger = (delayChildren = 0.05, staggerChildren = 0.07): Variants => ({
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { delayChildren, staggerChildren } },
-});
-
-export const riseItem: Variants = {
-    hidden: { opacity: 0, y: 28 },
-    visible: { opacity: 1, y: 0, transition: ENTER },
-};
-
-/** Bloco que sobe e aparece quando entra na viewport. */
+/** Bloco que sobe e aparece ao entrar na viewport. */
 export function Reveal({
     children,
     delay = 0,
     y = 28,
     className,
-    as = 'div',
+    as: Tag = 'div',
 }: {
     children: ReactNode;
     delay?: number;
@@ -59,22 +47,20 @@ export function Reveal({
     className?: string;
     as?: 'div' | 'section' | 'li' | 'article' | 'header';
 }) {
-    const reduce = useReducedMotion();
-    const Cmp = motion[as];
+    const ref = useRef<HTMLElement>(null);
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        return revelar(el, { y, delay });
+    }, [y, delay]);
     return (
-        <Cmp
-            className={className}
-            initial={reduce ? { opacity: 0 } : { opacity: 0, y }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={VIEWPORT}
-            transition={{ ...ENTER, delay }}
-        >
+        <Tag className={className} ref={ref as never}>
             {children}
-        </Cmp>
+        </Tag>
     );
 }
 
-/** Container que escalona a entrada dos filhos. */
+/** Container que escalona a entrada dos filhos diretos. */
 export function Stagger({
     children,
     className,
@@ -86,112 +72,136 @@ export function Stagger({
     delayChildren?: number;
     staggerChildren?: number;
 }) {
-    return (
-        <motion.div
-            className={className}
-            initial="hidden"
-            whileInView="visible"
-            viewport={VIEWPORT}
-            variants={stagger(delayChildren, staggerChildren)}
-        >
-            {children}
-        </motion.div>
-    );
-}
-
-/** Filho de <Stagger>. */
-export function StaggerItem({ children, className }: { children: ReactNode; className?: string }) {
-    return (
-        <motion.div className={className} variants={riseItem}>
-            {children}
-        </motion.div>
-    );
-}
-
-/** Desloca o elemento no eixo Y conforme a rolagem — parallax discreto. */
-export function useParallax(distance = 60): { ref: React.RefObject<HTMLDivElement>; y: MotionValue<number> } {
     const ref = useRef<HTMLDivElement>(null);
-    const reduce = useReducedMotion();
-    const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
-    const raw = useTransform(scrollYProgress, [0, 1], [distance, -distance]);
-    const zero = useMotionValue(0);
-    const y = useSpring(reduce ? zero : raw, { stiffness: 120, damping: 30, mass: 0.6 });
-    return { ref, y };
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        const filhos = Array.from(el.children);
+        if (!filhos.length) return;
+        return revelar(filhos, { delay: delayChildren, stagger: staggerChildren });
+    }, [delayChildren, staggerChildren]);
+    return (
+        <div className={className} ref={ref}>
+            {children}
+        </div>
+    );
 }
 
-/** Título cujas palavras entram uma a uma. */
-export function WordReveal({
-    text,
-    className,
-    delay = 0,
-}: {
-    text: string;
-    className?: string;
-    delay?: number;
-}) {
-    const reduce = useReducedMotion();
-    const words = text.split(' ');
-    if (reduce) return <span className={className}>{text}</span>;
+/** Filho de <Stagger>. É só o invólucro: quem anima é o pai. */
+export function StaggerItem({ children, className }: { children: ReactNode; className?: string }) {
+    return <div className={className}>{children}</div>;
+}
+
+/**
+ * Desloca o elemento no eixo Y conforme a rolagem.
+ * Devolve só a ref — o GSAP escreve direto no transform, sem passar por React.
+ */
+export function useParallax(distance = 60) {
+    const ref = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        const el = ref.current;
+        if (!el || semMovimento()) return;
+        const tween = gsap.fromTo(
+            el,
+            { y: distance },
+            {
+                y: -distance,
+                ease: 'none',
+                scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: 0.6 },
+            }
+        );
+        return () => {
+            tween.scrollTrigger?.kill();
+            tween.kill();
+            gsap.set(el, { clearProps: 'transform' });
+        };
+    }, [distance]);
+    return ref;
+}
+
+/** Título que revela palavra a palavra, cada uma atrás da sua máscara. */
+export function WordReveal({ text, className, delay = 0 }: { text: string; className?: string; delay?: number }) {
+    const ref = useRef<HTMLSpanElement>(null);
+    useEffect(() => {
+        const el = ref.current;
+        if (!el || semMovimento()) return;
+        const palavras = el.querySelectorAll<HTMLElement>('[data-palavra]');
+        if (!palavras.length) return;
+        gsap.set(palavras, { yPercent: 108 });
+        const tween = gsap.to(palavras, {
+            yPercent: 0,
+            duration: 0.85,
+            delay,
+            stagger: 0.045,
+            scrollTrigger: { trigger: el, start: INICIO, once: true },
+        });
+        return () => {
+            tween.scrollTrigger?.kill();
+            tween.kill();
+            gsap.set(palavras, { clearProps: 'transform' });
+        };
+    }, [text, delay]);
+
+    const palavras = text.split(' ');
     return (
-        <motion.span
-            className={className}
-            initial="hidden"
-            whileInView="visible"
-            viewport={VIEWPORT}
-            variants={{ visible: { transition: { delayChildren: delay, staggerChildren: 0.045 } } }}
-        >
-            {words.map((w, i) => (
-                <Fragment key={`${w}-${i}`}>
+        <span className={className} ref={ref}>
+            {palavras.map((p, i) => (
+                <span key={`${p}-${i}`}>
+                    {/* A máscara e a palavra são elementos separados: o espaço
+                        entre elas é um nó de texto real, e é o único ponto de
+                        quebra da linha. Se ele entrar na máscara, a manchete
+                        deixa de quebrar. */}
                     <span style={{ display: 'inline-block', overflow: 'hidden', verticalAlign: 'bottom' }}>
-                        <motion.span
-                            style={{ display: 'inline-block' }}
-                            variants={{
-                                hidden: { y: '108%' },
-                                visible: { y: '0%', transition: { duration: 0.85, ease: EASE_EXPO } },
-                            }}
-                        >
-                            {w}
-                        </motion.span>
+                        <span data-palavra style={{ display: 'inline-block' }}>{p}</span>
                     </span>
-                    {/* Espaco real entre as mascaras: e o unico ponto de quebra da linha. */}
-                    {i < words.length - 1 ? '\u0020' : null}
-                </Fragment>
+                    {i < palavras.length - 1 ? ' ' : null}
+                </span>
             ))}
-        </motion.span>
+        </span>
     );
 }
 
 /** Contador que anima até o valor quando entra na tela. */
 export function CountUp({ to, duration = 1.4, decimals = 0 }: { to: number; duration?: number; decimals?: number }) {
     const ref = useRef<HTMLSpanElement>(null);
-    // 'some' pela mesma razão do VIEWPORT: nenhuma fração de altura no código.
-    const inView = useInView(ref, { once: true, amount: 'some' });
-    const reduce = useReducedMotion();
-    const [value, setValue] = useState(reduce ? to : 0);
+    const [valor, setValor] = useState(() => (semMovimento() ? to : 0));
 
     useEffect(() => {
-        if (!inView || reduce) {
-            if (reduce) setValue(to);
-            return;
-        }
-        let raf = 0;
-        const start = performance.now();
-        const tick = (now: number) => {
-            const p = Math.min((now - start) / (duration * 1000), 1);
-            const eased = 1 - Math.pow(1 - p, 3);
-            setValue(to * eased);
-            if (p < 1) raf = requestAnimationFrame(tick);
+        const el = ref.current;
+        if (!el || semMovimento()) return;
+        const contador = { n: 0 };
+        const tween = gsap.to(contador, {
+            n: to,
+            duration,
+            ease: 'power3.out',
+            onUpdate: () => setValor(contador.n),
+            scrollTrigger: { trigger: el, start: 'top 92%', once: true },
+        });
+        return () => {
+            tween.scrollTrigger?.kill();
+            tween.kill();
         };
-        raf = requestAnimationFrame(tick);
-        return () => cancelAnimationFrame(raf);
-    }, [inView, to, duration, reduce]);
+    }, [to, duration]);
 
-    return <span ref={ref}>{value.toFixed(decimals)}</span>;
+    return <span ref={ref}>{valor.toFixed(decimals)}</span>;
 }
 
 /** Barra de progresso da rolagem da página. */
 export function ScrollProgress() {
-    const { scrollYProgress } = useScroll();
-    const scaleX = useSpring(scrollYProgress, { stiffness: 220, damping: 40, restDelta: 0.001 });
-    return <motion.div className="scroll-progress" style={{ scaleX }} aria-hidden="true" />;
+    const ref = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        gsap.set(el, { scaleX: 0 });
+        const tween = gsap.to(el, {
+            scaleX: 1,
+            ease: 'none',
+            scrollTrigger: { start: 0, end: 'max', scrub: 0.25 },
+        });
+        return () => {
+            tween.scrollTrigger?.kill();
+            tween.kill();
+        };
+    }, []);
+    return <div className="scroll-progress" ref={ref} aria-hidden="true" />;
 }
