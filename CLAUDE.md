@@ -10,7 +10,7 @@ O produto que o site apresenta é o **SICC — Sistema Integrado de Compras e Co
 
 - **Idioma:** Português Brasileiro (pt-BR). Todo texto visível e toda URL de rota em português.
 - **Empresa:** Infoco Gestão Pública Ltda. — CNPJ 46.554.439/0001-67.
-- **Porta de entrada do sistema (CTA):** `https://faq.infocogestaopublica.com.br` — o FAQ autentica contra o SICC do município e leva ao sistema. Todo link externo vive em [src/data/links.ts](src/data/links.ts); não repita URL em página.
+- **Porta de entrada do sistema (CTA):** `https://app2.infocolicitacoes.com.br/cadastro/` — é para onde vai o "Acessar o sistema" do cabeçalho (`ACESSO`). O FAQ (`https://faq.infocogestaopublica.com.br`) segue como Central de Ajuda e vitrine pública. Todo link externo vive em [src/data/links.ts](src/data/links.ts); não repita URL em página.
 - **Deploy:** Vercel (`vercel.json` → `vite build` → `dist/`).
 
 ## Stack

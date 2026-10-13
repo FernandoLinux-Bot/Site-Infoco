@@ -57,7 +57,7 @@ test.describe('Navegação', () => {
     test('CTA persistente aponta para a plataforma externa', async ({ page }) => {
         await page.goto('/');
         const cta = page.locator('.sub-nav-right a.btn-primary');
-        await expect(cta).toHaveAttribute('href', 'https://faq.infocogestaopublica.com.br/conhecer');
+        await expect(cta).toHaveAttribute('href', 'https://app2.infocolicitacoes.com.br/cadastro/');
         await expect(cta).toHaveAttribute('target', '_blank');
         await expect(cta).toHaveAttribute('rel', /noopener/);
     });

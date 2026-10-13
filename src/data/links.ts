@@ -3,6 +3,8 @@
  * O FAQ é a porta de entrada: ele autentica contra o SICC do município
  * e é de lá que o servidor chega ao sistema.
  */
+/** O login do SICC: é para onde vai o "Acessar o sistema" do cabeçalho. */
+export const ACESSO = 'https://app2.infocolicitacoes.com.br/cadastro/';
 /** Central de Ajuda: exige conta no SICC — é para quem já é cliente. */
 export const SISTEMA = 'https://faq.infocogestaopublica.com.br';
 /** A vitrine pública do sistema, aberta a quem ainda não é cliente. */

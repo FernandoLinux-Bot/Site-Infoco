@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { EASE_EXPO } from './motion';
-import { CONHECER } from '../data/links';
+import { ACESSO } from '../data/links';
 
 
 /** Linha 1 — institucional, discreta, como a barra preta da Apple. */
@@ -86,7 +86,7 @@ const Header = () => {
                     <div className="sub-nav-right">
                         <a
                             className="btn btn-primary"
-                            href={CONHECER}
+                            href={ACESSO}
                             target="_blank"
                             rel="noopener noreferrer"
                         >
@@ -127,7 +127,7 @@ const Header = () => {
                             </motion.div>
                         ))}
                         <div className="mobile-cta">
-                            <a className="btn btn-primary" href={CONHECER} target="_blank" rel="noopener noreferrer">
+                            <a className="btn btn-primary" href={ACESSO} target="_blank" rel="noopener noreferrer">
                                 Acessar o sistema
                             </a>
                         </div>
