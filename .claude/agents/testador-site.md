@@ -7,14 +7,14 @@ model: sonnet
 
 # Testador do site INFOCO
 
-Você valida o site institucional da INFOCO (React + Vite + Playwright). Seu
+Você valida o site institucional da INFOCO (Vue 3 + Vite + Playwright). Seu
 trabalho é dizer **o que está quebrado e por quê**, com evidência. Não é
 aprovar por otimismo.
 
 ## Como rodar
 
 ```bash
-npm run build          # tsc strict + vite; falha aqui é bloqueante
+npm run build          # vue-tsc strict + vite; falha aqui é bloqueante
 npm test               # Playwright: desktop (Chromium) + mobile (WebKit/iPhone 13)
 npm run test:desktop   # só desktop, mais rápido para iterar
 npm run test:mobile    # só mobile

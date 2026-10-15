@@ -8,11 +8,11 @@ O produto apresentado é o **SICC — Sistema Integrado de Compras e Contrataç�
 
 ## Stack
 
-- **React 18** + **TypeScript** (strict)
-- **Vite 4** com code-splitting
-- **react-router-dom v6** — URLs em pt-BR
+- **Vue 3.5** + **TypeScript** (strict, `vue-tsc`)
+- **Vite 7** com code-splitting
+- **vue-router 4** — URLs em pt-BR
 - **GSAP + ScrollTrigger** — movimento dirigido por scroll
-- **framer-motion** — transição de rota, acordeão, gaveta e a pílula das abas
+- **motion-v** — transição de rota, acordeão, gaveta e a pílula das abas
 - **Playwright** — testes desktop (Chromium) e mobile (WebKit)
 - Deploy na **Vercel**
 
@@ -36,7 +36,7 @@ npm run dev          # http://localhost:5173
 Outros comandos:
 
 ```bash
-npm run build        # tsc strict + vite build → dist/
+npm run build        # vue-tsc strict + vite build → dist/
 npm run preview      # serve o build de produção
 npm test             # Playwright (faz o build e sobe o preview sozinho)
 ```
@@ -68,10 +68,11 @@ Há também um subagente do Claude Code em [`.claude/agents/testador-site.md`](.
 
 ```
 src/
-├── main.tsx              # bootstrap
-├── App.tsx               # rotas + scroll manager
+├── main.ts               # bootstrap
+├── router.ts             # rotas
+├── App.vue               # troca de rota + scroll manager
 ├── data/sicc.ts          # todo o conteúdo do SICC (fonte única)
-├── hooks/                # useContactForm (reCAPTCHA + envio)
+├── composables/          # useContactForm (reCAPTCHA + envio)
 ├── components/
 │   ├── motion/           # Reveal, Stagger, WordReveal, CountUp, parallax
 │   └── ...               # Header, Footer, Hero, VideoSection, Clients

@@ -17,12 +17,12 @@ O produto que o site apresenta é o **SICC — Sistema Integrado de Compras e Co
 
 | Camada | Tecnologia |
 |---|---|
-| Framework | React 18 + TypeScript (strict) |
-| Bundler | Vite 4 (`@vitejs/plugin-react`), com `manualChunks` |
-| Roteamento | `react-router-dom` v6 (BrowserRouter) |
-| Animação | `gsap` 3.15 + ScrollTrigger (rolagem) · `framer-motion` 11 (presença) |
-| Ícones | `react-icons` (FA) |
-| Vídeo | `@mux/mux-player-react` (carregado por `lazy` + IntersectionObserver) |
+| Framework | Vue 3.5 (`<script setup>`) + TypeScript (strict, `vue-tsc`) |
+| Bundler | Vite 7 (`@vitejs/plugin-vue`), com `manualChunks` |
+| Roteamento | `vue-router` 4 (`createWebHistory`) |
+| Animação | `gsap` 3.15 + ScrollTrigger (rolagem) · `motion-v` 1.x (presença) |
+| Ícones | três SVGs Font Awesome em `src/components/icones.ts` (os mesmos traços do antigo `react-icons`) |
+| Vídeo | web component `@mux/mux-player` 2.x (importado sob demanda pelo `useIntersectionObserver` do `@vueuse/core`) |
 | Analytics | `@vercel/analytics` + `@vercel/speed-insights` |
 | Formulários | submit-form.com (endpoint `Z4G5K3MOm`) + Google reCAPTCHA v2 |
 | Testes | Playwright (Chromium desktop + WebKit/iPhone 13) |
@@ -58,7 +58,7 @@ O sistema visual segue o `DESIGN-apple.md` na raiz. **Ele é a fonte da verdade*
 ├── index.html                # entry (lang=pt-BR, Inter, reCAPTCHA, OG tags)
 ├── index.css                 # design system completo (~1064 linhas, 20 seções numeradas)
 ├── DESIGN-apple.md           # o spec visual — fonte da verdade
-├── vite.config.ts            # manualChunks (react, motion, gsap)
+├── vite.config.ts            # manualChunks (vue, motion, gsap)
 ├── vercel.json               # build + SPA fallback
 ├── playwright.config.ts      # desktop (Chromium 1440) + mobile (WebKit/iPhone 13)
 ├── tests/site.spec.ts        # 37 testes × 2 projetos
@@ -66,21 +66,22 @@ O sistema visual segue o `DESIGN-apple.md` na raiz. **Ele é a fonte da verdade*
 │   └── testador-site.md      # subagente que roda e interpreta a suíte
 ├── public/                   # Logo.png, favicon.png, patrao.png, clients/*.png
 └── src/
-    ├── main.tsx              # bootstrap (importa ../index.css)
-    ├── App.tsx               # rotas + ScrollManager + AnimatePresence
+    ├── main.ts               # bootstrap (importa ../index.css)
+    ├── router.ts             # as rotas
+    ├── App.vue               # ScrollManager + AnimatePresence da troca de rota
     ├── data/sicc.ts          # TODO o conteúdo do SICC (fonte única)
-    ├── hooks/useContactForm.ts  # useRecaptcha + useFormSubmit
+    ├── composables/useContactForm.ts  # useRecaptcha + useFormSubmit
     ├── components/
     │   ├── motion/
     │   │   ├── gsap.ts       # registra ScrollTrigger + CustomEase, semMovimento()
-    │   │   └── index.tsx     # Reveal, Stagger, WordReveal, CountUp, useParallax,
+    │   │   └── index.ts      # Reveal, Stagger, WordReveal, CountUp, useParallax,
     │   │                     # ScrollProgress
-    │   ├── Header.tsx        # global-nav + sub-nav + sheet mobile
-    │   ├── Footer.tsx        # rodapé parchment com colunas densas
-    │   ├── Hero.tsx          # painel do SICC desenhado em CSS
-    │   ├── VideoSection.tsx  # Mux com lazy + IntersectionObserver
-    │   ├── Clients.tsx       # brasões dos municípios
-    │   └── FloatingActions.tsx
+    │   ├── Header.vue        # global-nav + sub-nav + sheet mobile
+    │   ├── Footer.vue        # rodapé parchment com colunas densas
+    │   ├── Hero.vue          # painel do SICC desenhado em CSS
+    │   ├── VideoSection.vue  # Mux sob demanda + IntersectionObserver
+    │   ├── Clients.vue       # brasões dos municípios
+    │   └── FloatingActions.vue
     └── pages/                # Home · Sicc · Solucoes · Institucional · Fornecedor
                               # Cadastro · Contact · Noticias · TrabalheConosco · NotFound
 ```
@@ -110,7 +111,7 @@ Origem do conteúdo: repositório **`nandovitor/faq-sicc`** (`sintese/*.md` e `_
 | `/trabalhe-conosco` | `TrabalheConosco` |
 | `*` | `NotFound` — **404 de verdade**, não mais a Home |
 
-Para adicionar rota: criar a página, adicionar `<Route>` em [App.tsx](src/App.tsx), incluir em `globalNav` de [Header.tsx](src/components/Header.tsx) **e** adicionar ao array `ROTAS` de [tests/site.spec.ts](tests/site.spec.ts) — a suíte falha se a rota não for alcançável por link visível.
+Para adicionar rota: criar a página, adicionar a rota em [router.ts](src/router.ts), incluir em `globalNav` de [Header.vue](src/components/Header.vue) **e** adicionar ao array `ROTAS` de [tests/site.spec.ts](tests/site.spec.ts) — a suíte falha se a rota não for alcançável por link visível.
 
 **Âncoras:** o `ScrollManager` do App trata `/sicc#fluxo` e `/sicc#perguntas`.
 
@@ -121,24 +122,24 @@ O site usa **duas engines de animação, de propósito**, cada uma no que faz me
 | Camada | Engine | Onde |
 |---|---|---|
 | **Rolagem** | GSAP + ScrollTrigger | revelações, escalonamento, parallax, barras do fluxo, progresso do topo |
-| **Presença e layout** | framer-motion | transição de rota, acordeão do FAQ, gaveta mobile, saída do filtro de módulos, pílula das abas (`layoutId`) |
+| **Presença e layout** | motion-v | transição de rota, acordeão do FAQ, gaveta mobile, saída do filtro de módulos, pílula das abas (`layoutId`) |
 
-A divisão não é estética: o framer-motion resolve com `AnimatePresence` o caso de **animar antes de o React desmontar**, e com `layoutId` o de elemento compartilhado entre estados. O GSAP não tem equivalente direto disso em React. Já o ScrollTrigger dispara por **posição do gatilho na tela**, não por fração da altura do elemento — foi essa diferença que eliminou de vez a classe de bug das seções em branco.
+A divisão não é estética: o motion-v resolve com `AnimatePresence` o caso de **animar antes de o Vue desmontar**, e com `layout-id` o de elemento compartilhado entre estados. O GSAP não tem equivalente direto disso. Já o ScrollTrigger dispara por **posição do gatilho na tela**, não por fração da altura do elemento — foi essa diferença que eliminou de vez a classe de bug das seções em branco.
 
 - [src/components/motion/gsap.ts](src/components/motion/gsap.ts) registra os plugins uma vez, cria a curva `expoOut` (a mesma `cubic-bezier(.16,1,.3,1)` do CSS, via `CustomEase`) e expõe `semMovimento()`.
-- [src/components/motion/index.tsx](src/components/motion/index.tsx) traz as primitivas: `Reveal`, `Stagger` + `StaggerItem`, `useParallax` (devolve **só a ref** — o GSAP escreve direto no transform, sem passar por React), `WordReveal`, `CountUp` e `ScrollProgress`.
+- [src/components/motion/index.ts](src/components/motion/index.ts) traz as primitivas: `Reveal`, `Stagger` + `StaggerItem`, `useParallax('chave', distância)` (liga-se ao `ref="chave"` do template — o GSAP escreve direto no transform, sem passar pelo Vue), `WordReveal`, `CountUp` e `ScrollProgress`.
 - **O estado inicial é escrito por JS, não por CSS.** O elemento nasce visível no HTML e só é escondido quando o gatilho é criado. Se o script falhar, o conteúdo continua na tela.
-- `<MotionConfig reducedMotion="user">` no App faz **todo** framer-motion respeitar a preferência do sistema, inclusive os `motion.p` soltos nos heros. O GSAP respeita por `semMovimento()`. Um teste roda as três rotas principais com `reducedMotion: 'reduce'` e falha se algo ficar escondido.
+- `<MotionConfig reduced-motion="user">` no App faz **todo** motion-v respeitar a preferência do sistema, inclusive os `motion.p` soltos nos heros. O GSAP respeita por `semMovimento()`. Um teste roda as três rotas principais com `reducedMotion: 'reduce'` e falha se algo ficar escondido.
 - **O `ScrollManager` do App é o dono único de "rota mudou → remedir → posicionar".** O ScrollTrigger mede a página ao criar os gatilhos e numa SPA a altura muda sem recarregar; mas remedir e rolar ao mesmo tempo viram corrida, porque o `refresh()` restaura a rolagem e desfaz o salto para a âncora. Por isso: `ScrollTrigger.refresh()` primeiro, posicionamento depois, e âncora com `behavior: 'auto'`.
 
-**Não chame hooks dentro de `.map()`.**
+**Composables (`useParallax`, `useRecaptcha`) só no `<script setup>`, nunca dentro de `v-for`.** E o nome da variável não pode coincidir com a chave de um `ref` do template: `const recaptcha = useRecaptcha()` com `<div ref="recaptcha">` derruba a página.
 
 ## Scripts
 
 ```bash
 npm install          # dependências
 npm run dev          # vite dev server
-npm run build        # tsc strict && vite build
+npm run build        # vue-tsc strict && vite build
 npm run preview      # serve dist/
 npm test             # Playwright: desktop + mobile (faz o build sozinho)
 npm run test:desktop # só Chromium
@@ -180,6 +181,7 @@ Almadina, Itamaraju, Nova Viçosa, Itororó, Anagé, Itabela e Prado (Bahia). Br
 
 ## Histórico de manutenção
 
+- **2026-10-15:** **Port de React 18 para Vue 3.5** (branch `vue`). Mesmo layout, textos, rotas, CSS e timelines GSAP; framer-motion → motion-v, react-router → vue-router 4, react-icons → SVGs locais, `@mux/mux-player-react` → web component `@mux/mux-player` 2.x. Capturas de 1280 e 390 px de todas as rotas idênticas ao pixel, exceto kerning em três frases que no React eram nós de texto separados. Única mudança de comportamento: link para âncora de outra rota (ex.: rodapé → `/sicc#fluxo`) agora rola até a seção — no React a âncora era procurada antes de a página nova montar e a rolagem ficava onde estava.
 - **2026-09-01:** **Remodelagem completa segundo o `DESIGN-apple.md`.** `index.css` reescrito do zero (1550 → 1064 linhas, 58 KB → 24 KB) com os tokens do spec: Action Blue único, uma sombra só, zero gradiente, tiles alternando claro/escuro, tipografia SF Pro/Inter em 17px. Chrome refeito em duas barras (nav preta 44px + sub-nav vitrificada 52px). Conteúdo reescrito a partir do FAQ oficial do SICC (`nandovitor/faq-sicc`), sem usar as capturas de tela: novo `src/data/sicc.ts` com 14 módulos, o ciclo de vida da demanda em 6 fases, 8 perguntas frequentes e os perfis de usuário. **Nova página `/sicc`** (fluxo com barras dirigidas por scroll, tramitação, SICC iA, documentos, FAQ em acordeão, glossário). Todas as 9 telas remodeladas. **404 real** substituindo o catch-all que renderizava a Home. Novas primitivas de movimento em `src/components/motion/`. Formulários unificados em `useContactForm` com timeout no reCAPTCHA. Code-splitting (`manualChunks` + Mux por `lazy`): bundle inicial de 1,26 MB → 373 KB. **Suíte Playwright** (37 testes × desktop/mobile) e o subagente `testador-site`. Removidos: 11 componentes órfãos, `index.tsx` e `metadata.json` da raiz, a dependência morta `@google/genai`, o `define` de `API_KEY` e o importmap órfão do AI Studio.
 - **2026-08-31:** grafo de conhecimento gerado com `/graphify` (275 nós, 416 arestas, 15 comunidades) em `graphify-out/`.
 - **2026-07-19:** redesign "Aurora Blue"; página Trabalhe Conosco; correção do vídeo Mux. *(Substituído pelo redesign Apple.)*
@@ -190,5 +192,5 @@ Almadina, Itamaraju, Nova Viçosa, Itororó, Anagé, Itabela e Prado (Bahia). Br
 1. **Leia o `DESIGN-apple.md` antes de mexer em `index.css`.** As sete invariantes acima têm teste.
 2. Conteúdo do SICC entra em `src/data/sicc.ts`, não espalhado nas páginas.
 3. Números na copy: derive dos dados. Não digite.
-4. Rode `npm run build` (tsc strict) **e** `npm test` antes de declarar pronto.
+4. Rode `npm run build` (vue-tsc strict) **e** `npm test` antes de declarar pronto.
 5. Mudanças visuais: valide mobile — o menu vira sheet abaixo de 833px.
