@@ -371,11 +371,11 @@ test.describe('Acessibilidade e responsivo', () => {
         await ctx.close();
     });
 
-    test('o scroll é do GSAP e a presença é do framer-motion', async ({ page }) => {
+    test('o scroll é do GSAP e a presença é do motion-v', async ({ page }) => {
         // Duas engines convivem de propósito. Se alguém migrar a camada errada,
         // o site passa a carregar duas bibliotecas fazendo a mesma coisa.
         await page.goto('/solucoes');
-        // Presença: a pílula das abas é layoutId do framer-motion.
+        // Presença: a pílula das abas é layoutId do motion-v.
         await expect(page.locator('.tab-pill')).toHaveCount(1);
 
         await page.goto('/sicc');
@@ -400,14 +400,15 @@ test.describe('Acessibilidade e responsivo', () => {
         // de bug que volta sem ninguém notar. O guarda é no código, não na tela.
         const fs = await import('node:fs/promises');
         // A camada de scroll virou GSAP, onde o gatilho é posição e não fração.
-        // O framer-motion segue no projeto para presença, e é por lá que a
+        // O motion-v segue no projeto para presença, e é por lá que a
         // fração pode voltar.
         const alvos = [
-            'src/components/motion/index.tsx',
+            'src/components/motion/index.ts',
+            'src/components/motion/revelar.ts',
             'src/components/motion/gsap.ts',
-            'src/pages/Sicc.tsx',
-            'src/App.tsx',
-            'src/components/Header.tsx',
+            'src/pages/Sicc.vue',
+            'src/App.vue',
+            'src/components/Header.vue',
         ];
         for (const arq of alvos) {
             const fonte = await fs.readFile(arq, 'utf-8');

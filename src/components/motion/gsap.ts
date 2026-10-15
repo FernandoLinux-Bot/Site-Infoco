@@ -4,9 +4,9 @@
  * O site usa duas engines de propósito, cada uma no que faz melhor:
  *  · GSAP + ScrollTrigger — tudo que é dirigido pela rolagem (revelações,
  *    parallax, barras de progresso do fluxo).
- *  · framer-motion — tudo que é presença e layout: transição de rota,
+ *  · motion-v — tudo que é presença e layout: transição de rota,
  *    acordeão, gaveta e a pílula que desliza entre as abas. São coisas que
- *    dependem de o React desmontar o elemento *depois* da animação, e é
+ *    dependem de o Vue desmontar o elemento *depois* da animação, e é
  *    exatamente o que o AnimatePresence resolve e o GSAP não.
  *
  * Um detalhe que o ScrollTrigger corrige de graça: ele dispara por posição do
