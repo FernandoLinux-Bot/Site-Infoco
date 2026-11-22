@@ -1189,6 +1189,396 @@ em { font-style: normal; color: var(--primary); }
 .split--wide { gap: 64px; }
 
 /* --------------------------------------------------------------------------
+   17b. PALCOS DE ROLAGEM (Home)
+   Uma seção alta com um filho preso; a coreografia é função do progresso da
+   rolagem. O JS (motion/palco.ts) só escreve números em propriedades CSS:
+   o desenho de cada quadro está aqui. A classe `is-ativo` entra só quando o
+   palco liga; sem ela (movimento reduzido) vale o leiaute estático de sempre.
+   Nenhum degradê e nenhuma sombra nova: a profundidade vem das camadas
+   andando em ritmos diferentes.
+   -------------------------------------------------------------------------- */
+
+/* --- Abertura: a papelada converge para o painel do SICC ------------------ */
+.palco { background: var(--canvas-parchment); }
+.palco .hero-portrait::before { background: var(--canvas); }
+.palco-papeis, .palco-marca, .palco-patrao, .palco-dica { display: none; }
+
+.palco.is-ativo { height: 280vh; height: 280svh; padding-block: 0; }
+.palco.is-ativo .palco-fixo {
+  position: sticky;
+  top: calc(var(--nav-h) + var(--subnav-h));
+  height: calc(100vh - var(--nav-h) - var(--subnav-h));
+  height: calc(100svh - var(--nav-h) - var(--subnav-h));
+  overflow: hidden;
+}
+/* No palco cada peça é uma camada do quadro, não um item da grade. */
+.palco.is-ativo .container,
+.palco.is-ativo .hero-split { display: contents; }
+.palco.is-ativo .hero-portrait { display: none; }
+
+.palco.is-ativo .palco-texto {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-inline: var(--s-lg);
+  text-align: center;
+  opacity: calc(1 - var(--sai, 0));
+  transform: translate3d(0, calc(var(--sai, 0) * -14svh), 0);
+}
+.palco.is-ativo .palco-texto.is-fora { visibility: hidden; }
+.palco.is-ativo .palco-texto h1 { max-width: 16ch; margin-inline: auto; }
+.palco.is-ativo .palco-texto .hero-sub { margin-inline: auto; }
+.palco.is-ativo .palco-texto .cta-row { justify-content: center; }
+
+/* A marca resolve atrás do painel: o espaçamento fecha e o desfoque some.
+   A margem negativa devolve o espaço que sobra depois da última letra. */
+.palco.is-ativo .palco-marca {
+  display: block;
+  position: absolute;
+  inset: 4% 0 auto;
+  z-index: 1;
+  text-align: center;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: min(23vw, 38svh);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: calc(0.5em - var(--marca, 0) * 0.46em);
+  margin-right: calc(-0.5em + var(--marca, 0) * 0.46em);
+  opacity: var(--marca, 0);
+  filter: blur(calc((1 - var(--marca, 0)) * 12px));
+  user-select: none;
+}
+
+.palco.is-ativo .hero-stage {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  top: 30%;
+  width: min(980px, 86vw);
+  margin: 0;
+  perspective: none;
+  transform-origin: 50% 0;
+  transform:
+    translate3d(-50%, calc((1 - var(--sobe, 0)) * 85svh), 0)
+    scale(calc(var(--escala, 1) * (0.9 + var(--sobe, 0) * 0.1)));
+  will-change: transform;
+}
+.palco.is-ativo .sicc-card {
+  opacity: var(--c, 0);
+  transform: translate3d(0, calc((1 - var(--c, 0)) * 14px), 0);
+}
+
+.palco.is-ativo .palco-papeis {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+/* Cada folha parte do seu canto (--x, --y, --r, --s) e chega ao centro do
+   painel conforme --k vai de 0 a 1; some só no fim do caminho. */
+.papel {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 148px;
+  margin: -94px 0 0 -74px;
+  transform:
+    translate3d(calc(var(--x) * (1 - var(--k, 0))), calc(var(--y) * (1 - var(--k, 0)) + var(--k, 0) * 8svh), 0)
+    rotate(calc(var(--r) * (1 - var(--k, 0))))
+    scale(calc(var(--s) * (1 - var(--k, 0) * 0.7)));
+  opacity: clamp(0, calc((1 - var(--k, 0)) * 4), 1);
+  will-change: transform;
+}
+.papel-folha {
+  height: 188px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 14px;
+  background: var(--canvas);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-sm);
+  animation: papel-flutua 7s ease-in-out infinite alternate;
+}
+.papel-folha .chip { align-self: flex-start; margin-bottom: 6px; }
+.papel-folha i { display: block; height: 6px; border-radius: 3px; background: var(--hairline); }
+.papel-folha i:nth-of-type(2) { width: 82%; }
+.papel-folha i:nth-of-type(3) { width: 94%; }
+.papel-folha i:nth-of-type(4) { width: 58%; }
+.papel-folha i:nth-of-type(5) { width: 88%; }
+.papel-folha i:nth-of-type(6) { width: 44%; }
+.papel:nth-child(2n) .papel-folha { animation-duration: 9s; animation-delay: -3s; }
+.papel:nth-child(3n) .papel-folha { animation-duration: 8s; animation-delay: -5s; }
+@keyframes papel-flutua {
+  from { transform: translate3d(0, -7px, 0); }
+  to   { transform: translate3d(0, 7px, 0); }
+}
+
+.papel--1 { --x: -38vw; --y: -24svh; --r: -8deg; --s: 1; }
+.papel--2 { --x: -29vw; --y: 25svh;  --r: 6deg;  --s: 0.86; }
+.papel--3 { --x: 36vw;  --y: -25svh; --r: 7deg;  --s: 0.92; }
+.papel--4 { --x: 30vw;  --y: 23svh;  --r: -5deg; --s: 1.04; }
+.papel--5 { --x: -45vw; --y: 3svh;   --r: 4deg;  --s: 0.72; }
+.papel--6 { --x: 44vw;  --y: -1svh;  --r: -9deg; --s: 0.76; }
+.papel--7 { --x: -16vw; --y: -39svh; --r: 3deg;  --s: 0.62; }
+.papel--8 { --x: 24vw;  --y: 40svh;  --r: -4deg; --s: 0.66; }
+
+.palco.is-ativo .palco-patrao {
+  display: block;
+  position: absolute;
+  z-index: 4;
+  /* 84px livres à direita: é onde mora a pilha de botões flutuantes. */
+  right: max(84px, calc(50% - 660px));
+  bottom: 0;
+  width: auto;
+  max-width: none;
+  height: 40svh;
+  transform: translate3d(0, calc((1 - var(--patrao, 0)) * 102%), 0);
+}
+
+.palco.is-ativo .palco-dica {
+  display: flex;
+  justify-content: center;
+  gap: var(--s-xs);
+  position: absolute;
+  inset: auto 0 var(--s-lg);
+  z-index: 5;
+  font-size: 14px;
+  letter-spacing: -0.224px;
+  color: var(--ink-muted-48);
+  opacity: calc(1 - var(--dica, 0));
+}
+.palco-dica span { animation: dica-quica 1.4s var(--ease-apple) infinite alternate; }
+@keyframes dica-quica {
+  from { transform: translate3d(0, -2px, 0); }
+  to   { transform: translate3d(0, 4px, 0); }
+}
+
+/* --- O ciclo, desenhado enquanto a página rola ---------------------------- */
+.ciclo { padding-top: 0; }
+.ciclo-fixo { padding-block: var(--s-section) var(--s-xxl); }
+.ciclo-topo {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--s-lg);
+}
+.ciclo-topo h2 { max-width: 20ch; }
+.ciclo-topo .eyebrow { color: var(--primary-on-dark); }
+.ciclo-contador {
+  flex: none;
+  display: none;
+  font-size: 14px;
+  letter-spacing: -0.224px;
+  color: var(--body-muted);
+  font-variant-numeric: tabular-nums;
+}
+.ciclo-contador b { font-weight: 600; color: var(--on-dark); }
+
+.ciclo-janela { margin-block: var(--s-xl); }
+.ciclo-desenho { width: 100%; height: auto; overflow: visible; }
+.ciclo-fantasma, .ciclo-traco { fill: none; stroke-linecap: round; }
+.ciclo-fantasma { stroke: var(--hairline-on-dark); stroke-width: 1.5; stroke-dasharray: 3 7; }
+.ciclo-traco { stroke: var(--primary-on-dark); stroke-width: 2.5; stroke-dasharray: 1 1; stroke-dashoffset: 0; }
+.ciclo-corpo { fill: var(--surface-tile-2); stroke: var(--hairline-on-dark); stroke-width: 1.5; transition: fill 0.5s var(--ease-apple), stroke 0.5s var(--ease-apple); }
+.ciclo-corpo--fim { fill: var(--primary-on-dark); stroke: var(--primary-on-dark); }
+.ciclo-visto { fill: none; stroke: var(--on-dark); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; transition: opacity 0.4s var(--ease-apple); }
+.ciclo-sigla { font-family: var(--font-display); font-size: 21px; font-weight: 600; fill: var(--on-dark); }
+.ciclo-legenda { font-family: var(--font-text); font-size: 14px; fill: var(--body-muted); }
+.ciclo-rotulo { font-family: var(--font-text); font-size: 15px; font-weight: 600; fill: var(--on-dark); transition: fill 0.4s var(--ease-apple); }
+.ciclo-estacao { fill: var(--primary-on-dark); stroke: var(--primary-on-dark); stroke-width: 2; transition: fill 0.4s var(--ease-apple), stroke 0.4s var(--ease-apple); }
+.ciclo-marcador { display: none; }
+.ciclo-halo { fill: var(--primary-on-dark); opacity: 0.28; }
+.ciclo-ponta { fill: var(--on-dark); }
+
+.ciclo-fases {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-lg) var(--s-xl);
+}
+.ciclo-fase-n {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  letter-spacing: -0.12px;
+  color: var(--primary-on-dark);
+}
+.ciclo-fase h3 { font-family: var(--font-display); font-size: 21px; font-weight: 600; letter-spacing: 0.231px; }
+.ciclo-fase p { margin-top: var(--s-xs); font-size: 14px; line-height: 1.43; letter-spacing: -0.224px; color: var(--body-muted); }
+.ciclo-texto { padding-top: var(--s-lg); }
+
+/* Palco ligado: a seção prende, a linha parte vazia e só a fase em curso fala. */
+.ciclo-palco.is-ativo { height: 360vh; height: 360svh; }
+.ciclo-palco.is-ativo .ciclo-fixo {
+  position: sticky;
+  top: calc(var(--nav-h) + var(--subnav-h));
+  height: calc(100vh - var(--nav-h) - var(--subnav-h));
+  height: calc(100svh - var(--nav-h) - var(--subnav-h));
+  padding-block: var(--s-xxl) var(--s-xl);
+  overflow: hidden;
+}
+.ciclo-palco.is-ativo .ciclo-quadro { height: 100%; display: flex; flex-direction: column; }
+.ciclo-palco.is-ativo .ciclo-contador { display: block; }
+.ciclo-palco.is-ativo .ciclo-janela { flex: 1; min-height: 0; display: flex; align-items: center; margin-block: var(--s-md); }
+.ciclo-palco.is-ativo .ciclo-desenho { max-height: 100%; }
+.ciclo-palco.is-ativo .ciclo-marcador { display: block; }
+.ciclo-palco.is-ativo .ciclo-rotulo { fill: rgba(255, 255, 255, 0.4); }
+.ciclo-palco.is-ativo .ciclo-rotulo.is-atual { fill: var(--on-dark); }
+.ciclo-palco.is-ativo .ciclo-estacao { fill: var(--surface-tile-1); stroke: var(--hairline-on-dark); }
+.ciclo-palco.is-ativo .ciclo-estacao.is-feita { fill: var(--primary-on-dark); stroke: var(--primary-on-dark); }
+.ciclo-palco.is-ativo .ciclo-corpo--fim { fill: var(--surface-tile-2); stroke: var(--hairline-on-dark); }
+.ciclo-palco.is-ativo .ciclo-visto { opacity: 0; }
+.ciclo-palco.is-ativo.is-fim .ciclo-corpo--fim { fill: var(--primary-on-dark); stroke: var(--primary-on-dark); }
+.ciclo-palco.is-ativo.is-fim .ciclo-visto { opacity: 1; }
+.ciclo-palco.is-ativo.is-fim .ciclo-marcador { display: none; }
+/* As seis fases ocupam a mesma célula; a grade toma a altura da mais longa,
+   então o quadro não pula quando o texto troca. */
+.ciclo-palco.is-ativo .ciclo-fases {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  padding-top: var(--s-md);
+  border-top: 1px solid var(--hairline-on-dark);
+}
+.ciclo-palco.is-ativo .ciclo-fase {
+  grid-area: 1 / 1;
+  max-width: 62ch;
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+  transition: opacity 0.45s var(--ease-out-expo), transform 0.45s var(--ease-out-expo);
+}
+.ciclo-palco.is-ativo .ciclo-fase.is-atual { opacity: 1; transform: none; }
+
+/* --- Esteira de módulos --------------------------------------------------- */
+.esteira-intro { max-width: 1180px; margin: 0 auto var(--s-xl); padding-inline: var(--s-lg); }
+.esteira-intro h2 { max-width: 22ch; }
+.esteira-intro .t-body { margin-top: var(--s-md); max-width: 44ch; color: var(--ink-muted-80); }
+.esteira-contador { display: none; }
+.esteira-trilho {
+  display: flex;
+  gap: var(--s-md);
+  padding-inline: max(var(--s-lg), calc((100% - 1180px) / 2 + var(--s-lg)));
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--s-lg);
+  scrollbar-width: none;
+}
+.esteira-trilho::-webkit-scrollbar { display: none; }
+.esteira-trilho:focus-visible { outline: 2px solid var(--primary-focus); outline-offset: -2px; }
+.esteira-item { flex: none; width: min(340px, 78vw); scroll-snap-align: start; }
+.esteira-cartao { height: 100%; min-height: 380px; }
+.esteira-cartao-topo { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: var(--s-xl); }
+.esteira-n { font-family: var(--font-display); font-size: 64px; font-weight: 300; line-height: 0.9; letter-spacing: -2px; color: var(--ink); }
+
+/* Palco ligado (desktop): a seção prende e a fila corre com a rolagem. */
+.esteira.is-ativo { height: 300vh; padding-block: 0; }
+.esteira.is-ativo .esteira-fixo {
+  position: sticky;
+  top: calc(var(--nav-h) + var(--subnav-h));
+  height: calc(100vh - var(--nav-h) - var(--subnav-h));
+  height: calc(100svh - var(--nav-h) - var(--subnav-h));
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+/* A coluna de texto é opaca e fica por cima: os cartões passam por baixo dela
+   e somem, em vez de atravessar o título. */
+.esteira.is-ativo .esteira-intro {
+  position: relative;
+  z-index: 2;
+  flex: none;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 34vw;
+  max-width: none;
+  margin: 0;
+  padding: 0 var(--s-xl) 0 max(var(--s-lg), calc((100vw - 1180px) / 2 + var(--s-lg)));
+  background: var(--canvas-parchment);
+}
+.esteira.is-ativo .esteira-contador {
+  display: flex;
+  align-items: center;
+  gap: var(--s-md);
+  margin-top: var(--s-xl);
+  font-size: 14px;
+  letter-spacing: -0.224px;
+  color: var(--ink-muted-48);
+  font-variant-numeric: tabular-nums;
+}
+.esteira-contador b { font-weight: 600; color: var(--ink); }
+.esteira-barra { position: relative; width: 128px; height: 1px; background: var(--hairline); }
+.esteira-barra span {
+  position: absolute;
+  inset: -0.5px 0;
+  transform-origin: 0 50%;
+  transform: scaleX(var(--k, 0));
+  background: var(--primary);
+}
+.esteira.is-ativo .esteira-trilho {
+  position: relative;
+  flex: none;
+  gap: var(--s-lg);
+  padding-inline: 0;
+  overflow: visible;
+  scroll-snap-type: none;
+  will-change: transform;
+}
+.esteira.is-ativo .esteira-item {
+  width: clamp(264px, 24vw, 360px);
+  transform-origin: 50% 100%;
+  opacity: calc(1 - var(--f, 0) * 0.5);
+  transform: scale(calc(1 - var(--f, 0) * 0.06));
+}
+.esteira.is-ativo .esteira-cartao { min-height: min(440px, 62svh); }
+
+@media (max-width: 1068px) {
+  /* Tela estreita: as folhas ficam só nos cantos, menores, para a manchete
+     respirar. As do meio das laterais e a do pé saem. */
+  .papel--1 { --x: -38vw; --y: -41svh; --s: 0.6; }
+  .papel--2 { --x: -38vw; --y: 41svh;  --s: 0.56; }
+  .papel--3 { --x: 38vw;  --y: -40svh; --s: 0.58; }
+  .papel--4 { --x: 38vw;  --y: 40svh;  --s: 0.62; }
+  .papel--5, .papel--6, .papel--7, .papel--8 { display: none; }
+}
+
+@media (max-width: 833px) {
+  .palco.is-ativo .hero-stage { top: 21%; width: calc(100% - var(--s-md) * 2); }
+  .palco.is-ativo .palco-marca { inset-block-start: 3%; font-size: min(27vw, 20svh); }
+  /* No celular o painel mostra uma coluna só: as duas não cabem no quadro. */
+  .palco.is-ativo .sicc-col:nth-child(2) { display: none; }
+  .palco.is-ativo .palco-patrao { height: 26svh; right: 0; }
+
+  .ciclo-topo { align-items: flex-start; }
+  .ciclo-fases { grid-template-columns: minmax(0, 1fr); }
+  /* Nesta escala os nomes dentro do desenho ficariam ilegíveis; quem nomeia a
+     fase é o bloco de texto logo abaixo. */
+  .ciclo-rotulo, .ciclo-legenda { display: none; }
+  /* O desenho toma a altura inteira da janela, passa da largura da tela e o
+     JS o desliza para acompanhar o marcador. */
+  .ciclo-palco.is-ativo .ciclo-janela { position: relative; }
+  .ciclo-palco.is-ativo .ciclo-desenho {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: auto;
+    height: 100%;
+    max-width: none;
+    will-change: transform;
+  }
+  /* Folga para a pilha de botões flutuantes não cobrir o fim das linhas. */
+  .ciclo-palco.is-ativo .ciclo-fases { padding-right: 52px; }
+}
+
+/* --------------------------------------------------------------------------
    18. RESPONSIVO
    -------------------------------------------------------------------------- */
 @media (max-width: 1068px) {

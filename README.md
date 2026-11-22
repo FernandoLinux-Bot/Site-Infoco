@@ -74,7 +74,7 @@ src/
 ├── data/sicc.ts          # todo o conteúdo do SICC (fonte única)
 ├── composables/          # useContactForm (reCAPTCHA + envio)
 ├── components/
-│   ├── motion/           # Reveal, Stagger, WordReveal, CountUp, parallax
+│   ├── motion/           # Reveal, Stagger, WordReveal, CountUp, parallax, palco (seções presas da Home)
 │   └── ...               # Header, Footer, Hero, VideoSection, Clients
 └── pages/                # Home, Sicc, Solucoes, Institucional, Fornecedor,
                           # Cadastro, Contact, Noticias, TrabalheConosco, NotFound

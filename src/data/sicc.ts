@@ -14,6 +14,14 @@ export type Modulo = {
     fundamento?: string;
 };
 
+/** O nome de cada grupo, como aparece nos selos e no filtro. */
+export const GRUPO_NOME: Record<Modulo['grupo'], string> = {
+    planejamento: 'Planejamento',
+    execucao: 'Execução',
+    solicitacoes: 'Solicitações',
+    transparencia: 'Transparência',
+};
+
 /** Os módulos do SICC, na ordem do menu real do sistema. */
 export const MODULOS: Modulo[] = [
     {

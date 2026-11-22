@@ -674,3 +674,125 @@ test.describe('Conteúdo do SICC', () => {
         expect(brasoes).toBeLessThanOrEqual(7);
     });
 });
+
+test.describe('Palcos de rolagem da Home', () => {
+    /** Onde a seção começa a prender e onde solta, em pixels de rolagem. */
+    const limites = (page: Page, seletor: string) =>
+        page.evaluate(sel => {
+            const r = document.querySelector(sel)!.getBoundingClientRect();
+            const chrome = parseFloat(getComputedStyle(document.querySelector('.app-main')!).paddingTop);
+            return { ini: r.top + scrollY - chrome, fim: r.bottom + scrollY - innerHeight };
+        }, seletor);
+    const rolar = async (page: Page, y: number) => {
+        await page.evaluate(v => window.scrollTo(0, v), y);
+        // O scrub do ScrollTrigger alcança a rolagem em meio segundo.
+        await page.waitForTimeout(1100);
+    };
+    const numero = (page: Page, seletor: string, prop: string) =>
+        page.locator(seletor).first().evaluate((el, p) => parseFloat(getComputedStyle(el).getPropertyValue(p) || '0'), prop);
+
+    test('a abertura prende, a manchete sai e o painel sobe', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.palco')).toHaveClass(/is-ativo/);
+        // No topo a manchete está inteira e o painel ainda não subiu.
+        await expect(page.locator('h1')).toBeInViewport();
+        expect(await numero(page, '.palco', '--sobe')).toBe(0);
+
+        const { fim } = await limites(page, '.palco');
+        await rolar(page, fim);
+        expect(await numero(page, '.palco', '--sobe')).toBe(1);
+        await expect(page.locator('.sicc-panel')).toBeInViewport();
+        // Os cartões entram por último: no fim do palco nenhum fica apagado.
+        const apagados = await page.locator('.palco .sicc-card').evaluateAll(els =>
+            els.filter(el => el.getClientRects().length > 0 && parseFloat(getComputedStyle(el).opacity) < 1).length
+        );
+        expect(apagados).toBe(0);
+        // Fora do quadro, a manchete não pode continuar clicável por baixo do painel.
+        await expect(page.locator('.palco-texto')).toBeHidden();
+    });
+
+    test('o ciclo se desenha conforme a página rola', async ({ page }) => {
+        await page.goto('/');
+        const { ini, fim } = await limites(page, '.ciclo-palco');
+        const ultimo = () =>
+            page.locator('.ciclo-traco').last().evaluate(el => parseFloat(getComputedStyle(el).strokeDashoffset));
+
+        await rolar(page, ini);
+        expect(await ultimo(), 'o último trecho começa por desenhar').toBe(1);
+        await expect(page.locator('.ciclo-contador b')).toHaveText('01');
+
+        await rolar(page, fim);
+        expect(await ultimo(), 'e termina desenhado').toBe(0);
+        await expect(page.locator('.ciclo-contador b')).toHaveText('06');
+        await expect(page.locator('.ciclo-fase.is-atual h3')).toHaveText('Contratação');
+    });
+
+    test('a esteira corre de lado no desktop e é carrossel no celular', async ({ page, isMobile }) => {
+        await page.goto('/');
+        const trilho = page.locator('.esteira-trilho');
+        await expect(page.locator('.esteira-item')).toHaveCount(14);
+
+        if (isMobile) {
+            // Sem palco: a fila rola com o dedo, dentro do próprio trilho.
+            await expect(page.locator('.esteira')).not.toHaveClass(/is-ativo/);
+            const sobra = await trilho.evaluate(el => el.scrollWidth - el.clientWidth);
+            expect(sobra).toBeGreaterThan(1000);
+            return;
+        }
+        const { ini, fim } = await limites(page, '.esteira');
+        const x = () => trilho.evaluate(el => new DOMMatrix(getComputedStyle(el).transform).e);
+        await rolar(page, ini);
+        expect(await x()).toBe(0);
+        await expect(page.locator('.esteira-contador b')).toHaveText('01');
+        await rolar(page, fim);
+        expect(await x(), 'a fila precisa andar para a esquerda').toBeLessThan(-1000);
+        await expect(page.locator('.esteira-contador b')).toHaveText('14');
+        // O último cartão termina dentro da tela, não cortado.
+        await expect(page.locator('.esteira-item').last()).toBeInViewport({ ratio: 0.95 });
+    });
+
+    test('com movimento reduzido nenhum palco liga e nada some', async ({ browser }) => {
+        const ctx = await browser.newContext({ reducedMotion: 'reduce' });
+        const page = await ctx.newPage();
+        await page.goto('/');
+        await expect(page.locator('.is-ativo')).toHaveCount(0);
+        // Leiaute estático: a manchete, o retrato, o painel e as seis fases na tela.
+        await expect(page.locator('.hero-portrait img')).toBeVisible();
+        await expect(page.locator('.sicc-panel')).toBeVisible();
+        await expect(page.locator('.ciclo-fase')).toHaveCount(6);
+        for (const fase of await page.locator('.ciclo-fase').all()) await expect(fase).toBeVisible();
+        const tracado = await page.locator('.ciclo-traco').first().evaluate(el => parseFloat(getComputedStyle(el).strokeDashoffset));
+        expect(tracado, 'a linha já nasce desenhada').toBe(0);
+        await ctx.close();
+    });
+});
+
+test.describe('Indexação', () => {
+    test('robots.txt libera o site e aponta o sitemap', async ({ request }) => {
+        const resp = await request.get('/robots.txt');
+        expect(resp.headers()['content-type']).toContain('text/plain');
+        const texto = await resp.text();
+        expect(texto).toMatch(/^Allow: \/$/m);
+        expect(texto).toMatch(/^Sitemap: https:\/\/www\.infocogestaopublica\.com\.br\/sitemap\.xml$/m);
+    });
+
+    test('o sitemap lista exatamente as rotas do site', async ({ request }) => {
+        // Rota nova precisa entrar aqui também: é a quarta lista (router, menu,
+        // ROTAS e sitemap), e esta é a única que ninguém vê quebrar.
+        const resp = await request.get('/sitemap.xml');
+        expect(resp.headers()['content-type']).toMatch(/xml/);
+        const locs = [...(await resp.text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
+        const base = 'https://www.infocogestaopublica.com.br';
+        expect(locs.sort()).toEqual(ROTAS.map(r => base + r.path).sort());
+    });
+
+    test('o ícone é quadrado, em múltiplo de 48 px, e o /favicon.ico existe', async ({ page, request }) => {
+        await page.goto('/');
+        const png = await page.locator('link[rel="icon"][type="image/png"]').getAttribute('sizes');
+        const lado = Number(png?.split('x')[0]);
+        expect(png).toBe(`${lado}x${lado}`);
+        expect(lado % 48).toBe(0);
+        const ico = await request.get('/favicon.ico');
+        expect(ico.headers()['content-type']).toMatch(/icon/);
+    });
+});

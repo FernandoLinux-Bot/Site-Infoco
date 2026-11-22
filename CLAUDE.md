@@ -61,10 +61,11 @@ O sistema visual segue o `DESIGN-apple.md` na raiz. **Ele é a fonte da verdade*
 ├── vite.config.ts            # manualChunks (vue, motion, gsap)
 ├── vercel.json               # build + SPA fallback
 ├── playwright.config.ts      # desktop (Chromium 1440) + mobile (WebKit/iPhone 13)
-├── tests/site.spec.ts        # 37 testes × 2 projetos
+├── tests/site.spec.ts        # 70 testes × 2 projetos
 ├── .claude/agents/
 │   └── testador-site.md      # subagente que roda e interpreta a suíte
-├── public/                   # logo-infoco.png, favicon.{svg,ico} + favicon-192.png (só o símbolo), og-infoco.png, patrao.png, clients/*.png
+├── public/                   # logo-infoco.png, favicon.{svg,ico} + favicon-192.png (só o símbolo), og-infoco.png,
+│                             # robots.txt, sitemap.xml, patrao.png, clients/*.png
 └── src/
     ├── main.ts               # bootstrap (importa ../index.css)
     ├── router.ts             # as rotas
@@ -74,11 +75,14 @@ O sistema visual segue o `DESIGN-apple.md` na raiz. **Ele é a fonte da verdade*
     ├── components/
     │   ├── motion/
     │   │   ├── gsap.ts       # registra ScrollTrigger + CustomEase, semMovimento()
-    │   │   └── index.ts      # Reveal, Stagger, WordReveal, CountUp, useParallax,
-    │   │                     # ScrollProgress
+    │   │   ├── index.ts      # Reveal, Stagger, WordReveal, CountUp, useParallax,
+    │   │   │                 # ScrollProgress
+    │   │   └── palco.ts      # usePalco: seção presa dirigida pelo progresso da rolagem
     │   ├── Header.vue        # global-nav + sub-nav + sheet mobile
     │   ├── Footer.vue        # rodapé parchment com colunas densas
-    │   ├── Hero.vue          # painel do SICC desenhado em CSS
+    │   ├── Hero.vue          # palco de abertura: a papelada converge para o painel do SICC
+    │   ├── Ciclo.vue         # palco: o ciclo da demanda se desenha com a rolagem
+    │   ├── Esteira.vue       # palco: os módulos correm de lado (carrossel no celular)
     │   ├── VideoSection.vue  # Mux sob demanda + IntersectionObserver
     │   ├── Clients.vue       # brasões dos municípios
     │   └── FloatingActions.vue
@@ -111,7 +115,7 @@ Origem do conteúdo: repositório **`nandovitor/faq-sicc`** (`sintese/*.md` e `_
 | `/trabalhe-conosco` | `TrabalheConosco` |
 | `*` | `NotFound` — **404 de verdade**, não mais a Home |
 
-Para adicionar rota: criar a página, adicionar a rota em [router.ts](src/router.ts), incluir em `globalNav` de [Header.vue](src/components/Header.vue) **e** adicionar ao array `ROTAS` de [tests/site.spec.ts](tests/site.spec.ts) — a suíte falha se a rota não for alcançável por link visível.
+Para adicionar rota: criar a página, adicionar a rota em [router.ts](src/router.ts), incluir em `globalNav` de [Header.vue](src/components/Header.vue), adicionar ao array `ROTAS` de [tests/site.spec.ts](tests/site.spec.ts) **e** ao [public/sitemap.xml](public/sitemap.xml) — a suíte falha se a rota não for alcançável por link visível ou se o sitemap divergir de `ROTAS`.
 
 **Âncoras:** o `ScrollManager` do App trata `/sicc#fluxo` e `/sicc#perguntas`.
 
@@ -132,7 +136,25 @@ A divisão não é estética: o motion-v resolve com `AnimatePresence` o caso de
 - `<MotionConfig reduced-motion="user">` no App faz **todo** motion-v respeitar a preferência do sistema, inclusive os `motion.p` soltos nos heros. O GSAP respeita por `semMovimento()`. Um teste roda as três rotas principais com `reducedMotion: 'reduce'` e falha se algo ficar escondido.
 - **O `ScrollManager` do App é o dono único de "rota mudou → remedir → posicionar".** O ScrollTrigger mede a página ao criar os gatilhos e numa SPA a altura muda sem recarregar; mas remedir e rolar ao mesmo tempo viram corrida, porque o `refresh()` restaura a rolagem e desfaz o salto para a âncora. Por isso: `ScrollTrigger.refresh()` primeiro, posicionamento depois, e âncora com `behavior: 'auto'`.
 
-**Composables (`useParallax`, `useRecaptcha`) só no `<script setup>`, nunca dentro de `v-for`.** E o nome da variável não pode coincidir com a chave de um `ref` do template: `const recaptcha = useRecaptcha()` com `<div ref="recaptcha">` derruba a página.
+### Palcos de rolagem (Home)
+
+A Home tem três seções presas, adaptadas do template Selene (scrolltide.co) para o visual do site — sem as fotos, sem Lenis e sem degradê: a profundidade vem de camadas andando em ritmos diferentes.
+
+| Palco | O que acontece | Onde liga |
+|---|---|---|
+| `Hero.vue` (`.palco`) | a manchete cede, as folhas (DFD, ETP, Edital…) convergem e passam por baixo do painel, `SICC` resolve ao fundo, os cartões entram e o fundador sobe | todo tamanho |
+| `Ciclo.vue` (`.ciclo-palco`) | a onda das seis fases de `CICLO_DEMANDA` se traça trecho a trecho, com marcador e a fase em curso no rodapé; no celular o desenho desliza junto | todo tamanho |
+| `Esteira.vue` (`.esteira`) | os módulos correm de lado, um pixel de fila por pixel de rolagem; o cartão em foco fica inteiro | só ≥ 834px |
+
+Como funciona, e o que não quebrar:
+
+- **[motion/palco.ts](src/components/motion/palco.ts) é a única porta.** `usePalco(chave, { media, montar, aplicar })` cria um ScrollTrigger com `scrub` sobre a seção (do topo encostando no chrome fixo até `bottom bottom`) e chama `aplicar(p)` a cada quadro. É um `gsap.matchMedia`: fora da media query a classe `is-ativo` nunca entra.
+- **O JS só escreve números; o desenho mora no CSS.** `aplicar` grava propriedades como `--sobe`, `--k`, `--c` e o [index.css](index.css) (seção 17b) calcula transform e opacidade a partir delas. Nada passa pelo estado do Vue durante a rolagem. Por isso também não existe `opacity` inline nesses elementos — o teste de "bloco invisível" continua vigiando só as revelações.
+- **Sem `is-ativo`, vale o leiaute estático.** Com `prefers-reduced-motion` o hero volta a ser manchete + retrato + painel, o ciclo nasce desenhado com as seis fases em lista e a esteira é um carrossel de arrastar (que também é o modo do celular). Um teste cobre os três.
+- **Altura do palco = duração da cena.** `.palco` 280svh, `.ciclo-palco` 360svh; a esteira mede a própria viagem e define a altura em pixels (refeita no `refreshInit`). Mexer na altura muda a velocidade de tudo.
+- **O retrato aparece duas vezes no HTML do hero**: o `figure.hero-portrait` do leiaute estático e o `img.palco-patrao` do palco. Só um é exibido por vez.
+
+**Composables (`useParallax`, `usePalco`, `useRecaptcha`) só no `<script setup>`, nunca dentro de `v-for`.** E o nome da variável não pode coincidir com a chave de um `ref` do template: `const recaptcha = useRecaptcha()` com `<div ref="recaptcha">` derruba a página.
 
 ## Scripts
 
@@ -180,6 +202,8 @@ Almadina, Itamaraju, Nova Viçosa, Itororó, Anagé, Itabela e Prado (Bahia). Br
 - **reCAPTCHA não funciona em localhost** (o site key só aceita o domínio de produção). Os testes contornam simulando `window.grecaptcha`.
 
 ## Histórico de manutenção
+
+- **2026-11-22:** **Home com rolagem cinematográfica.** Três palcos presos (abertura, ciclo e esteira de módulos) a partir do template Selene, adaptados ao design do site: mesmo GSAP + ScrollTrigger, nenhuma dependência nova, nenhuma foto. A grade de 14 cartões e o bloco "O produto" deram lugar à esteira e ao ciclo. `robots.txt` e `sitemap.xml` criados (antes devolviam o HTML da SPA), arquivo de verificação do Google renomeado para o nome que o próprio arquivo declara, e ícone do site refeito só com o símbolo. Suíte: 70 testes × 2 projetos.
 
 - **2026-10-15:** **Port de React 18 para Vue 3.5** (branch `vue`). Mesmo layout, textos, rotas, CSS e timelines GSAP; framer-motion → motion-v, react-router → vue-router 4, react-icons → SVGs locais, `@mux/mux-player-react` → web component `@mux/mux-player` 2.x. Capturas de 1280 e 390 px de todas as rotas idênticas ao pixel, exceto kerning em três frases que no React eram nós de texto separados. Única mudança de comportamento: link para âncora de outra rota (ex.: rodapé → `/sicc#fluxo`) agora rola até a seção — no React a âncora era procurada antes de a página nova montar e a rolagem ficava onde estava.
 - **2026-09-01:** **Remodelagem completa segundo o `DESIGN-apple.md`.** `index.css` reescrito do zero (1550 → 1064 linhas, 58 KB → 24 KB) com os tokens do spec: Action Blue único, uma sombra só, zero gradiente, tiles alternando claro/escuro, tipografia SF Pro/Inter em 17px. Chrome refeito em duas barras (nav preta 44px + sub-nav vitrificada 52px). Conteúdo reescrito a partir do FAQ oficial do SICC (`nandovitor/faq-sicc`), sem usar as capturas de tela: novo `src/data/sicc.ts` com 14 módulos, o ciclo de vida da demanda em 6 fases, 8 perguntas frequentes e os perfis de usuário. **Nova página `/sicc`** (fluxo com barras dirigidas por scroll, tramitação, SICC iA, documentos, FAQ em acordeão, glossário). Todas as 9 telas remodeladas. **404 real** substituindo o catch-all que renderizava a Home. Novas primitivas de movimento em `src/components/motion/`. Formulários unificados em `useContactForm` com timeout no reCAPTCHA. Code-splitting (`manualChunks` + Mux por `lazy`): bundle inicial de 1,26 MB → 373 KB. **Suíte Playwright** (37 testes × desktop/mobile) e o subagente `testador-site`. Removidos: 11 componentes órfãos, `index.tsx` e `metadata.json` da raiz, a dependência morta `@google/genai`, o `define` de `API_KEY` e o importmap órfão do AI Studio.

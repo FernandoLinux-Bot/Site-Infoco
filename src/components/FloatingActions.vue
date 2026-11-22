@@ -13,8 +13,10 @@ const onScroll = () => {
     const y = window.scrollY;
     showTop.value = y > 600;
     // No celular a pilha só entra depois que a pessoa sai do hero: parada
-    // ali, ela cobria justamente o parágrafo de abertura.
-    rolou.value = y > 320;
+    // ali, ela cobria justamente o parágrafo de abertura. Na Home o hero é um
+    // palco de várias telas de altura, então o limite acompanha a altura dele.
+    const hero = document.querySelector<HTMLElement>('.hero');
+    rolou.value = y > Math.max(320, (hero?.offsetHeight ?? 0) - window.innerHeight * 0.6);
 };
 onScroll();
 useEventListener(window, 'scroll', onScroll, { passive: true });
