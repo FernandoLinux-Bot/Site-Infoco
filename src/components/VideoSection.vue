@@ -80,7 +80,7 @@ const irPara = (i: number) => {
                                     :playback-id.attr="v.id"
                                     :poster.attr="poster(v)"
                                     :metadata-video-title.attr="v.titulo"
-                                    accent-color="#0071e3"
+                                    accent-color="#3a7bff"
                                     preload="none"
                                     :autoplay.attr="escolhido === v.id ? '' : undefined"
                                 />

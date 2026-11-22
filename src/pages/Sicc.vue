@@ -129,7 +129,7 @@ const GLOSSARIO = [
     </section>
 
     <!-- Fluxo -->
-    <section id="fluxo" class="tile tile--dark on-dark">
+    <section id="fluxo" class="tile tile--dark-3 on-dark">
         <div class="container container-mid">
             <Reveal>
                 <div class="tile-head">

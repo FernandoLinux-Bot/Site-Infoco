@@ -9,37 +9,38 @@
    1. TOKENS
    -------------------------------------------------------------------------- */
 :root {
-  /* Ação — o único acento interativo do sistema */
-  --primary: #0066cc;
-  --primary-focus: #0071e3;
-  --primary-on-dark: #2997ff;
-  /* O azul da marca INFOCO, o do símbolo. É a superfície dos banners
-     (`.tile--marca`), não um segundo acento: sobre ele a ação é branca.
-     `--marca-luz` é a ponta clara do símbolo e pinta o disco; `--marca-ceu` é
-     o tom de texto de apoio sobre a marca. */
+  /* Ação — o único acento interativo do sistema: o azul da marca INFOCO, o do
+     símbolo. `--primary-on-dark` é o tom de destaque sobre as superfícies
+     azuis, onde o próprio azul não aparece. */
+  --primary: #1449d3;
+  --primary-focus: #3a7bff;
+  --primary-on-dark: #c9dbff;
+  /* Os mesmos tons com o nome da marca, para o que é arte e não ação: a
+     superfície dos banners, o disco do símbolo (`--marca-luz`) e o texto de
+     apoio sobre o azul (`--marca-ceu`). */
   --marca: #1449d3;
   --marca-luz: #3a7bff;
   --marca-ceu: #c9dbff;
 
   /* Superfícies
-     O near-black neutro do spec Apple foi trocado por uma família navy, para
-     o site e o FAQ (faq.infocogestaopublica.com.br) lerem como um sistema só.
-     Os micro-degraus entre tile-1/2/3 seguem a mesma lógica do spec: separar
-     dois tiles escuros vizinhos sem borda nem sombra. */
+     O near-black neutro do spec Apple virou o azul da marca: tile-1 é o azul
+     exato do símbolo e os outros são tons dele. Os micro-degraus seguem a
+     mesma lógica do spec: separar dois tiles escuros vizinhos sem borda nem
+     sombra. */
   --canvas: #ffffff;
   --canvas-parchment: #f4f6f9;
   --surface-pearl: #fafbfd;
-  --surface-tile-1: #1e2a3b;
-  --surface-tile-2: #223040;
-  --surface-tile-3: #1a2534;
-  --surface-black: #0d141d;
+  --surface-tile-1: #1449d3;
+  --surface-tile-2: #1a50dc;
+  --surface-tile-3: #1143c6;
+  --surface-black: #0f3cb6;
   --surface-chip-translucent: rgba(210, 215, 225, 0.64);
 
   /* Texto */
   --ink: #1d1d1f;
   --body: #1d1d1f;
   --body-on-dark: #ffffff;
-  --body-muted: #cccccc;
+  --body-muted: #d6e3ff;
   --ink-muted-80: #333333;
   /* #7a7a7a dava 4.29:1 sobre branco e 3.96:1 sobre parchment — abaixo do AA
      de 4.5:1, e todo uso está entre 10px e 14px, então não vale a exceção de
@@ -495,7 +496,7 @@ em { font-style: normal; color: var(--primary); }
   left: 0; right: 0;
   height: 2px;
   transform-origin: 0 50%;
-  background: var(--primary);
+  background: var(--marca-luz);   /* aparece sobre o branco e sobre o azul */
   z-index: 899;
 }
 
@@ -1236,8 +1237,12 @@ em { font-style: normal; color: var(--primary); }
 @property --c     { syntax: '<number>'; inherits: false; initial-value: 0; }
 @property --f     { syntax: '<number>'; inherits: false; initial-value: 0; }
 
-/* --- A superfície da marca: sobre o azul da INFOCO, a ação é branca -------- */
+/* --- Sobre o azul da INFOCO, a ação é branca ------------------------------
+   Vale para toda superfície azul: os banners (`.tile--marca`) e os tiles
+   escuros, que são tons do mesmo azul. */
 .tile.tile--marca { background: var(--marca); }
+:is(.tile--dark, .tile--dark-2, .tile--dark-3, .tile--black) :is(.btn-primary, .btn-store) { background: var(--canvas); color: var(--primary); }
+:is(.tile--marca, .tile--dark, .tile--dark-2, .tile--dark-3, .tile--black, .global-nav) :focus-visible { outline-color: var(--on-dark); }
 .tile--marca h1, .tile--marca h2, .tile--marca h3 { color: var(--on-dark); }
 .tile--marca .eyebrow,
 .tile--marca .hero-sub,
@@ -1640,7 +1645,7 @@ em { font-style: normal; color: var(--primary); }
 .ciclo-traco { stroke: var(--primary-on-dark); stroke-width: 2.5; stroke-dasharray: 1 1; stroke-dashoffset: 0; }
 .ciclo-corpo { fill: var(--surface-tile-2); stroke: var(--hairline-on-dark); stroke-width: 1.5; transition: fill 0.5s var(--ease-apple), stroke 0.5s var(--ease-apple); }
 .ciclo-corpo--fim { fill: var(--primary-on-dark); stroke: var(--primary-on-dark); }
-.ciclo-visto { fill: none; stroke: var(--on-dark); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; transition: opacity 0.4s var(--ease-apple); }
+.ciclo-visto { fill: none; stroke: var(--primary); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; transition: opacity 0.4s var(--ease-apple); }
 .ciclo-sigla { font-family: var(--font-display); font-size: 21px; font-weight: 600; fill: var(--on-dark); }
 .ciclo-legenda { font-family: var(--font-text); font-size: 14px; fill: var(--body-muted); }
 .ciclo-rotulo { font-family: var(--font-text); font-size: 15px; font-weight: 600; fill: var(--on-dark); transition: fill 0.4s var(--ease-apple); }

@@ -18,11 +18,11 @@ O produto apresentado é o **SICC — Sistema Integrado de Compras e Contrataç�
 
 ## Design
 
-O sistema visual segue o [`DESIGN-apple.md`](DESIGN-apple.md): fotografia e produto em primeiro plano, chrome quase invisível, tiles alternando claro e escuro, **um único azul de ação** (`#0066cc`), **uma única sombra** (reservada à imagem de produto) e **zero gradiente decorativo**.
+O sistema visual segue o [`DESIGN-apple.md`](DESIGN-apple.md): fotografia e produto em primeiro plano, chrome quase invisível, tiles alternando claro e escuro, **um único azul** (`#1449d3`, o da marca INFOCO), **uma única sombra** (reservada à imagem de produto) e **zero gradiente decorativo**.
 
-Dois desvios deliberados do spec, para o site e o FAQ (`faq.infocogestaopublica.com.br`) lerem como um produto só: as superfícies escuras são uma família **navy** (`#1e2a3b` / `#223040` / `#1a2534`) em vez do near-black neutro, e a tipografia é **Plus Jakarta Sans** auto-hospedada em vez de SF Pro/Inter.
+Dois desvios deliberados do spec, por decisão do cliente: as superfícies escuras e a cor de ação são **o azul da marca** (tons de `#1449d3`) em vez do near-black neutro e do `#0066cc`, e a tipografia é **Plus Jakarta Sans** auto-hospedada em vez de SF Pro/Inter.
 
-Um terceiro, pedido pelo cliente: o banner principal e o banner das outras páginas usam o **azul da marca** (`--marca: #1449d3`, o do símbolo) como superfície, com a ação em branco. As demais seções escuras seguem navy.
+O banner principal e o banner das outras páginas usam o azul exato da marca como superfície, com o símbolo em tom mais claro e a ação em branco. O FAQ (`faq.infocogestaopublica.com.br`) ainda usa a paleta navy antiga.
 
 `index.css` é a implementação — 20 seções numeradas, todas ancoradas nos tokens do spec.
 

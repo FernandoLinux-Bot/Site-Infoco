@@ -204,23 +204,25 @@ test.describe('Design system', () => {
             };
         });
         expect(vars).toEqual({
-            primary: '#0066cc',
-            focus: '#0071e3',
-            onDark: '#2997ff',
+            // O azul de ação é o da marca INFOCO, o do símbolo (decisão do
+            // cliente em 22/11/2026: o site inteiro num azul só).
+            primary: '#1449d3',
+            focus: '#3a7bff',
+            onDark: '#c9dbff',
             ink: '#1d1d1f',
             parchment: '#f4f6f9',
         });
     });
 
-    test('as superfícies escuras são navy, não cinza neutro', async ({ page }) => {
+    test('as superfícies escuras são tons do azul da marca, não cinza neutro', async ({ page }) => {
         await page.goto('/');
         const tiles = await page.evaluate(() => {
             const s = getComputedStyle(document.documentElement);
             return ['--surface-tile-1', '--surface-tile-2', '--surface-tile-3', '--surface-black']
                 .map(n => s.getPropertyValue(n).trim());
         });
-        expect(tiles).toEqual(['#1e2a3b', '#223040', '#1a2534', '#0d141d']);
-        // Navy de verdade: o canal azul precisa superar o vermelho em cada tile.
+        expect(tiles).toEqual(['#1449d3', '#1a50dc', '#1143c6', '#0f3cb6']);
+        // Azul de verdade: o canal azul precisa superar o vermelho em cada tile.
         for (const hex of tiles) {
             const r = parseInt(hex.slice(1, 3), 16);
             const b = parseInt(hex.slice(5, 7), 16);
