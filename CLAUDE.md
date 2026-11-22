@@ -64,7 +64,7 @@ O sistema visual segue o `DESIGN-apple.md` na raiz. **Ele é a fonte da verdade*
 ├── tests/site.spec.ts        # 37 testes × 2 projetos
 ├── .claude/agents/
 │   └── testador-site.md      # subagente que roda e interpreta a suíte
-├── public/                   # Logo.png, favicon.png, patrao.png, clients/*.png
+├── public/                   # logo-infoco.png, favicon.{svg,ico} + favicon-192.png (só o símbolo), og-infoco.png, patrao.png, clients/*.png
 └── src/
     ├── main.ts               # bootstrap (importa ../index.css)
     ├── router.ts             # as rotas
