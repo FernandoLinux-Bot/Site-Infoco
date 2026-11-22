@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BannerFundo from '../components/BannerFundo.vue';
 import { useRouter } from 'vue-router';
 import { motion } from 'motion-v';
 import { EASE_EXPO, Reveal, Stagger, StaggerItem, WordReveal } from '../components/motion';
@@ -18,7 +19,8 @@ const irParaCadastro = () => router.push('/cadastro');
 </script>
 
 <template>
-    <section class="tile tile--light hero">
+    <section class="tile tile--black on-dark hero banner">
+        <BannerFundo :folhas="['Edital', 'Proposta', 'Ata']" />
         <div class="container container-narrow">
             <motion.span
                 class="eyebrow"

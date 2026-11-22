@@ -2,13 +2,13 @@
 import { Reveal, Stagger, StaggerItem } from './motion';
 
 const CLIENTES = [
-    { nome: 'Almadina', logo: '/clients/almadina.png' },
-    { nome: 'Itamaraju', logo: '/clients/itamaraju.png' },
-    { nome: 'Nova Viçosa', logo: '/clients/nova-vicosa.png' },
-    { nome: 'Itororó', logo: '/clients/itororo.png' },
-    { nome: 'Anagé', logo: '/clients/anage.png' },
-    { nome: 'Itabela', logo: '/clients/itabela.png' },
-    { nome: 'Prado', logo: '/clients/prado.png' },
+    { nome: 'Almadina', logo: '/clients/almadina.webp' },
+    { nome: 'Itamaraju', logo: '/clients/itamaraju.webp' },
+    { nome: 'Nova Viçosa', logo: '/clients/nova-vicosa.webp' },
+    { nome: 'Itororó', logo: '/clients/itororo.webp' },
+    { nome: 'Anagé', logo: '/clients/anage.webp' },
+    { nome: 'Itabela', logo: '/clients/itabela.webp' },
+    { nome: 'Prado', logo: '/clients/prado.webp' },
 ];
 </script>
 

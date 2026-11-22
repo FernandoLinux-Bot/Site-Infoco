@@ -696,12 +696,20 @@ test.describe('Palcos de rolagem da Home', () => {
         await expect(page.locator('.palco')).toHaveClass(/is-ativo/);
         // No topo a manchete está inteira e o painel ainda não subiu.
         await expect(page.locator('h1')).toBeInViewport();
-        expect(await numero(page, '.palco', '--sobe')).toBe(0);
+        expect(await numero(page, '.hero-stage', '--sobe')).toBe(0);
+        // O fundador está no quadro desde o começo, e continua até o fim.
+        await expect(page.locator('.hero-portrait img')).toBeInViewport();
 
         const { fim } = await limites(page, '.palco');
         await rolar(page, fim);
-        expect(await numero(page, '.palco', '--sobe')).toBe(1);
+        expect(await numero(page, '.hero-stage', '--sobe')).toBe(1);
         await expect(page.locator('.sicc-panel')).toBeInViewport();
+        await expect(page.locator('.hero-portrait img')).toBeInViewport();
+        // A marca fica inteira na tela, e o painel começa abaixo dela: nada a cobre.
+        await expect(page.locator('.palco-marca')).toBeInViewport({ ratio: 1 });
+        const marca = (await page.locator('.palco-marca').boundingBox())!;
+        const painel = (await page.locator('.sicc-panel').boundingBox())!;
+        expect(painel.y, 'o painel não pode subir por cima da marca').toBeGreaterThanOrEqual(marca.y + marca.height);
         // Os cartões entram por último: no fim do palco nenhum fica apagado.
         const apagados = await page.locator('.palco .sicc-card').evaluateAll(els =>
             els.filter(el => el.getClientRects().length > 0 && parseFloat(getComputedStyle(el).opacity) < 1).length
@@ -794,5 +802,57 @@ test.describe('Indexação', () => {
         expect(lado % 48).toBe(0);
         const ico = await request.get('/favicon.ico');
         expect(ico.headers()['content-type']).toMatch(/icon/);
+    });
+});
+
+test.describe('Banners e peso', () => {
+    test('todo banner de página traz o símbolo e mantém o texto fora dele', async ({ page, isMobile }) => {
+        for (const rota of ROTAS.filter(r => r.path !== '/')) {
+            await page.goto(rota.path);
+            await expect(page.locator('.banner .banner-disco svg'), rota.path).toBeVisible();
+            if (isMobile) continue;
+            // No desktop o texto termina antes de o disco começar.
+            const texto = (await page.locator('.banner h1').boundingBox())!;
+            const disco = (await page.locator('.banner-disco').boundingBox())!;
+            expect(texto.x + texto.width, `manchete sobre o símbolo em ${rota.path}`).toBeLessThanOrEqual(disco.x);
+        }
+    });
+
+    test('o reCAPTCHA só é pedido nas páginas com formulário', async ({ page }) => {
+        const pedidos: string[] = [];
+        page.on('request', r => r.url().includes('recaptcha') && pedidos.push(r.url()));
+        await page.goto('/');
+        await page.waitForTimeout(800);
+        expect(pedidos, 'a Home não tem formulário').toEqual([]);
+        await page.goto('/contato');
+        await expect.poll(() => pedidos.length).toBeGreaterThan(0);
+    });
+
+    test('o player de vídeo só é baixado quando alguém aperta para assistir', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('.video-carrossel').scrollIntoViewIfNeeded();
+        await page.waitForTimeout(600);
+        // A seção passou pela tela e o player (quase 900 KB) continua fora.
+        await expect(page.locator('mux-player')).toHaveCount(0);
+        await page.locator('.video-play').first().click();
+        await expect(page.locator('mux-player')).toHaveCount(2);
+        await expect(page.locator('.video-play')).toHaveCount(0);
+    });
+
+    test('nenhuma imagem do site passa de 100 KB', async ({ page }) => {
+        const pesadas: string[] = [];
+        page.on('response', async r => {
+            if (!/\.(png|jpe?g|webp|gif)$/.test(new URL(r.url()).pathname) || !r.url().includes('localhost')) return;
+            const kb = (await r.body()).length / 1024;
+            if (kb > 100) pesadas.push(`${new URL(r.url()).pathname}: ${Math.round(kb)} KB`);
+        });
+        await page.goto('/');
+        const altura = await page.evaluate(() => document.body.scrollHeight);
+        for (let y = 0; y < altura; y += 700) {
+            await page.evaluate(v => window.scrollTo(0, v), y);
+            await page.waitForTimeout(40);
+        }
+        await page.waitForLoadState('networkidle');
+        expect(pesadas).toEqual([]);
     });
 });

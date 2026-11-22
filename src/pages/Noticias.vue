@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BannerFundo from '../components/BannerFundo.vue';
 import { motion } from 'motion-v';
 import { FaInstagram } from '../components/icones';
 import { EASE_EXPO, Reveal, Stagger, StaggerItem, WordReveal } from '../components/motion';
@@ -24,7 +25,8 @@ const TEMAS = [
 </script>
 
 <template>
-    <section class="tile tile--light hero">
+    <section class="tile tile--black on-dark hero banner">
+        <BannerFundo :folhas="['Novidades', 'Agenda']" />
         <div class="container container-narrow">
             <motion.span
                 class="eyebrow"

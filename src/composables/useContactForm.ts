@@ -25,6 +25,15 @@ export function useRecaptcha() {
     let id = 0;
 
     onMounted(() => {
+        // O script do Google (quase 1 MB) só entra nas páginas que têm
+        // formulário, e uma vez só: antes ele pesava em toda rota do site.
+        if (!window.grecaptcha && !document.querySelector('script[data-recaptcha]')) {
+            const script = document.createElement('script');
+            script.src = 'https://www.google.com/recaptcha/api.js?render=explicit';
+            script.async = true;
+            script.dataset.recaptcha = '';
+            document.head.appendChild(script);
+        }
         let attempts = 0;
         id = window.setInterval(() => {
             attempts += 1;

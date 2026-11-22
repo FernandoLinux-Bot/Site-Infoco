@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BannerFundo from '../components/BannerFundo.vue';
 import { motion } from 'motion-v';
 import { EASE_EXPO, Reveal, Stagger, StaggerItem, WordReveal, useParallax } from '../components/motion';
 
@@ -15,7 +16,8 @@ useParallax('parallax', 30);
 </script>
 
 <template>
-    <section class="tile tile--light hero">
+    <section class="tile tile--black on-dark hero banner">
+        <BannerFundo :folhas="['Prefeituras', 'Câmaras', 'Consórcios']" />
         <div class="container container-narrow">
             <motion.span
                 class="eyebrow"
@@ -70,7 +72,7 @@ useParallax('parallax', 30);
                 <div ref="parallax">
                     <Reveal :delay="0.1">
                         <img
-                            src="/patrao.png"
+                            src="/patrao.webp"
                             alt="Fundador da INFOCO Gestão Pública"
                             class="product-shadow"
                             style="width: 100%; max-width: 420px; margin-inline: auto"

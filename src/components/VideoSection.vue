@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useIntersectionObserver } from '@vueuse/core';
 import { Reveal } from './motion';
 import { VIDEOS_PUBLICADOS, type Video } from '../data/videos';
 
@@ -9,22 +8,19 @@ const poster = (v: Video) =>
     `https://image.mux.com/${v.id}/thumbnail.webp?width=810&height=1440&fit_mode=preserve&time=${v.posterEm}`;
 
 const total = VIDEOS_PUBLICADOS.length;
-const secao = ref<HTMLElement | null>(null);
 const trilho = ref<HTMLDivElement | null>(null);
 const atual = ref(0);
-/** O player pesa mais que todo o resto do site — só entra quando a seção aparece. */
+/**
+ * O player pesa mais que todo o resto do site (quase 900 KB). Ele só é baixado
+ * quando a pessoa aperta para assistir; até lá o quadro mostra a capa com um
+ * botão por cima. O vídeo escolhido começa a tocar assim que o player chega.
+ */
 const playerPronto = ref(false);
-
-const { stop } = useIntersectionObserver(
-    secao,
-    entries => {
-        if (!entries.some(e => e.isIntersecting)) return;
-        stop();
-        // Enquanto o chunk do player baixa, a capa continua no lugar.
-        import('@mux/mux-player').then(() => (playerPronto.value = true));
-    },
-    { rootMargin: '320px' }
-);
+const escolhido = ref<string | null>(null);
+function assistir(id: string) {
+    escolhido.value = id;
+    import('@mux/mux-player').then(() => (playerPronto.value = true));
+}
 
 // O slide ativo vem da rolagem real do trilho, então arrastar com o dedo e
 // clicar nas setas mantêm o indicador coerente.
@@ -45,7 +41,7 @@ const irPara = (i: number) => {
 </script>
 
 <template>
-    <section v-if="total > 0" ref="secao" class="tile tile--black on-dark">
+    <section v-if="total > 0" class="tile tile--black on-dark">
         <div class="container container-mid">
             <Reveal>
                 <div class="tile-head">
@@ -69,15 +65,15 @@ const irPara = (i: number) => {
                         @scroll="aoRolar"
                     >
                         <article
-                            v-for="(v, i) in VIDEOS_PUBLICADOS"
+                            v-for="v in VIDEOS_PUBLICADOS"
                             :key="v.id"
                             class="video-card"
                             aria-roledescription="slide"
                             :aria-label="v.titulo"
                         >
                             <div class="video-frame">
-                                <!-- `preload` só no slide visível: dois players buscando
-                                     manifesto ao mesmo tempo atrasa o que a pessoa vai ver. -->
+                                <!-- `preload="none"`: com `metadata` o player baixava ~4 MB de
+                                     vídeo sem ninguém ter pedido. -->
                                 <mux-player
                                     v-if="playerPronto"
                                     stream-type="on-demand"
@@ -85,9 +81,15 @@ const irPara = (i: number) => {
                                     :poster.attr="poster(v)"
                                     :metadata-video-title.attr="v.titulo"
                                     accent-color="#0071e3"
-                                    :preload.attr="i === atual ? 'metadata' : 'none'"
+                                    preload="none"
+                                    :autoplay.attr="escolhido === v.id ? '' : undefined"
                                 />
-                                <img v-else :src="poster(v)" alt="" aria-hidden="true" loading="lazy" />
+                                <template v-else>
+                                    <img :src="poster(v)" alt="" aria-hidden="true" loading="lazy" />
+                                    <button type="button" class="video-play" :aria-label="`Assistir: ${v.titulo}`" @click="assistir(v.id)">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor" /></svg>
+                                    </button>
+                                </template>
                             </div>
                             <div class="video-legenda">
                                 <h3>{{ v.titulo }}</h3>

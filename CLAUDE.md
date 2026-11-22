@@ -31,7 +31,7 @@ O produto que o site apresenta é o **SICC — Sistema Integrado de Compras e Co
 
 O sistema visual segue o `DESIGN-apple.md` na raiz. **Ele é a fonte da verdade**; `index.css` é a implementação. As invariantes que não podem ser quebradas:
 
-1. **Um único acento interativo:** `--primary: #0066cc` (Action Blue). `--primary-focus: #0071e3` só para o anel de foco; `--primary-on-dark: #2997ff` só sobre tile escuro. Não existe segunda cor de marca.
+1. **Um único acento interativo:** `--primary: #0066cc` (Action Blue). `--primary-focus: #0071e3` só para o anel de foco; `--primary-on-dark: #2997ff` só sobre tile escuro. Não existe segunda cor de marca. O `--simbolo: #1449d3` é o azul do símbolo da INFOCO e só pinta o próprio símbolo (o disco dos banners) — nunca botão, link ou destaque de texto.
 2. **Uma única sombra:** `drop-shadow(rgba(0,0,0,.22) 3px 5px 30px)`, aplicada só a imagem de produto (`.product-shadow`, `.sicc-panel`, `.media-frame`). **Nunca** `box-shadow` em card, botão ou nav — a elevação vem da troca de superfície.
 3. **Zero gradiente decorativo.** Profundidade vem da alternância de tiles e do `backdrop-filter` das barras fixas.
 4. **Corpo em 17px / peso 400 / line-height 1.47 / tracking −0.374px.** Não 16px.
@@ -61,7 +61,7 @@ O sistema visual segue o `DESIGN-apple.md` na raiz. **Ele é a fonte da verdade*
 ├── vite.config.ts            # manualChunks (vue, motion, gsap)
 ├── vercel.json               # build + SPA fallback
 ├── playwright.config.ts      # desktop (Chromium 1440) + mobile (WebKit/iPhone 13)
-├── tests/site.spec.ts        # 70 testes × 2 projetos
+├── tests/site.spec.ts        # 74 testes × 2 projetos
 ├── .claude/agents/
 │   └── testador-site.md      # subagente que roda e interpreta a suíte
 ├── public/                   # logo-infoco.png, favicon.{svg,ico} + favicon-192.png (só o símbolo), og-infoco.png,
@@ -80,7 +80,9 @@ O sistema visual segue o `DESIGN-apple.md` na raiz. **Ele é a fonte da verdade*
     │   │   └── palco.ts      # usePalco: seção presa dirigida pelo progresso da rolagem
     │   ├── Header.vue        # global-nav + sub-nav + sheet mobile
     │   ├── Footer.vue        # rodapé parchment com colunas densas
-    │   ├── Hero.vue          # palco de abertura: a papelada converge para o painel do SICC
+    │   ├── Hero.vue          # palco de abertura em duas colunas: fundador + símbolo à direita, cena à esquerda
+    │   ├── BannerFundo.vue   # fundo dos banners de página: o símbolo nasce no canto, com folhas do assunto
+    │   ├── SimboloInfoco.vue # o símbolo em vetor (mesma geometria do favicon)
     │   ├── Ciclo.vue         # palco: o ciclo da demanda se desenha com a rolagem
     │   ├── Esteira.vue       # palco: os módulos correm de lado (carrossel no celular)
     │   ├── VideoSection.vue  # Mux sob demanda + IntersectionObserver
@@ -142,17 +144,22 @@ A Home tem três seções presas, adaptadas do template Selene (scrolltide.co) p
 
 | Palco | O que acontece | Onde liga |
 |---|---|---|
-| `Hero.vue` (`.palco`) | a manchete cede, as folhas (DFD, ETP, Edital…) convergem e passam por baixo do painel, `SICC` resolve ao fundo, os cartões entram e o fundador sobe | todo tamanho |
+| `Hero.vue` (`.palco`) | duas colunas: à direita o fundador fica o tempo todo, com o símbolo nascendo atrás; à esquerda a manchete cede, as folhas (DFD, ETP, Edital…) convergem, `SICC` resolve letra a letra e o painel sobe **abaixo** dela, com os cartões entrando | todo tamanho |
 | `Ciclo.vue` (`.ciclo-palco`) | a onda das seis fases de `CICLO_DEMANDA` se traça trecho a trecho, com marcador e a fase em curso no rodapé; no celular o desenho desliza junto | todo tamanho |
 | `Esteira.vue` (`.esteira`) | os módulos correm de lado, um pixel de fila por pixel de rolagem; o cartão em foco fica inteiro | só ≥ 834px |
 
 Como funciona, e o que não quebrar:
 
 - **[motion/palco.ts](src/components/motion/palco.ts) é a única porta.** `usePalco(chave, { media, montar, aplicar })` cria um ScrollTrigger com `scrub` sobre a seção (do topo encostando no chrome fixo até `bottom bottom`) e chama `aplicar(p)` a cada quadro. É um `gsap.matchMedia`: fora da media query a classe `is-ativo` nunca entra.
-- **O JS só escreve números; o desenho mora no CSS.** `aplicar` grava propriedades como `--sobe`, `--k`, `--c` e o [index.css](index.css) (seção 17b) calcula transform e opacidade a partir delas. Nada passa pelo estado do Vue durante a rolagem. Por isso também não existe `opacity` inline nesses elementos — o teste de "bloco invisível" continua vigiando só as revelações.
+- **O JS só escreve números; o desenho mora no CSS.** `aplicar` grava, com `gravar()`, propriedades como `--sobe`, `--k`, `--c` **no próprio elemento que as usa** (não na raiz da seção: isso recalcularia a subárvore inteira a cada quadro) e só quando o valor muda; elas são registradas com `@property` sem herança. O [index.css](index.css) (seção 17b) calcula transform e opacidade a partir delas. Nada passa pelo estado do Vue durante a rolagem. Por isso também não existe `opacity` inline nesses elementos — o teste de "bloco invisível" continua vigiando só as revelações.
 - **Sem `is-ativo`, vale o leiaute estático.** Com `prefers-reduced-motion` o hero volta a ser manchete + retrato + painel, o ciclo nasce desenhado com as seis fases em lista e a esteira é um carrossel de arrastar (que também é o modo do celular). Um teste cobre os três.
-- **Altura do palco = duração da cena.** `.palco` 280svh, `.ciclo-palco` 360svh; a esteira mede a própria viagem e define a altura em pixels (refeita no `refreshInit`). Mexer na altura muda a velocidade de tudo.
-- **O retrato aparece duas vezes no HTML do hero**: o `figure.hero-portrait` do leiaute estático e o `img.palco-patrao` do palco. Só um é exibido por vez.
+- **Altura do palco = duração da cena.** `.palco` 260svh, `.ciclo-palco` 360svh; a esteira mede a própria viagem e define a altura em pixels (refeita no `refreshInit`). Mexer na altura muda a velocidade de tudo.
+- **A marca `SICC` nunca fica atrás de nada.** Ela e o painel estão na mesma coluna (`.palco-cena`), um abaixo do outro; o painel encolhe (`--escala`) para caber no que sobra. Um teste mede as duas caixas. A foto do fundador também não sai do quadro em nenhum ponto da rolagem.
+- **Laços param fora da tela.** O `usePalco` marca `is-visivel` enquanto a seção está presa, e as folhas só flutuam com essa classe.
+
+### Banners de página
+
+Toda página fora da Home abre com `.tile.banner` (navy) e um `<BannerFundo :folhas="[…]" />`: o símbolo nasce no canto direito, com duas ou três folhas do assunto da página, e os dois andam em ritmos diferentes com a rolagem (`useParallax`). O texto fica à esquerda e termina antes do disco (há teste). No celular as folhas somem e o símbolo vira uma calota no pé do banner.
 
 **Composables (`useParallax`, `usePalco`, `useRecaptcha`) só no `<script setup>`, nunca dentro de `v-for`.** E o nome da variável não pode coincidir com a chave de um `ref` do template: `const recaptcha = useRecaptcha()` com `<div ref="recaptcha">` derruba a página.
 
@@ -195,13 +202,16 @@ Almadina, Itamaraju, Nova Viçosa, Itororó, Anagé, Itabela e Prado (Bahia). Br
 ## Pontos de atenção
 
 - **Os vídeos são verticais (9:16) e têm legendas queimadas.** O carrossel respeita a proporção nativa (`.video-frame` em 9/16, `object-fit: contain`): forçar 16:9 obrigava a recortar, e o recorte distorcia o rosto e comia as legendas. Os vídeos vivem em [src/data/videos.ts](src/data/videos.ts) e o campo `id` é o **Playback ID**, não o Asset ID — o Asset ID responde HTTP 400 em `image.mux.com` e `stream.mux.com`. O Playback ID fica na aba "Playback and Thumbnails" do painel do asset. Vídeo com `id` vazio simplesmente não entra no carrossel.
-- **`patrao.png` tem 640×640 e o assunto encosta na borda inferior.** Por isso o retrato do hero usa máscara em vez de sombra: a sombra desenharia o corte reto.
+- **`patrao.webp` tem 640×640 e o assunto encosta na borda inferior.** No leiaute estático o retrato usa máscara para dissolver o corte; no palco ele encosta na borda de baixo do quadro e dispensa a máscara.
+- **Peso.** Imagens do site em WebP (um teste recusa qualquer uma acima de 100 KB); o reCAPTCHA só é injetado pelo `useRecaptcha`, nas páginas com formulário; o player do Mux só é importado quando alguém aperta o botão sobre a capa (`.video-play`). A Home rolada até o fim baixa ~0,9 MB; antes eram ~9 MB.
 - **CSS não entra no grafo do graphify** (`index.css` não é tipo detectado). Ao rodar `/graphify --update`, lembre que o design system fica de fora.
-- **O chunk do Mux tem ~887 KB**, mas é assíncrono: só baixa quando a seção de vídeo entra na viewport. O bundle inicial é ~373 KB (117 KB gzip).
+- **O chunk do Mux tem ~887 KB**, mas é assíncrono: só baixa quando a pessoa aperta para assistir. O bundle inicial é ~373 KB (117 KB gzip).
 - **Links placeholder do Footer foram removidos.** Não reintroduzir `href="#"` — se a página não existe, o link não deve existir.
 - **reCAPTCHA não funciona em localhost** (o site key só aceita o domínio de produção). Os testes contornam simulando `window.grecaptcha`.
 
 ## Histórico de manutenção
+
+- **2026-11-22 (2):** **Banner principal refeito, banners nas outras páginas e desempenho.** O hero virou duas colunas sobre navy: o fundador e o símbolo da INFOCO à direita o tempo todo, e a cena trocando à esquerda, com `SICC` acima do painel (antes o painel passava por cima da marca). As nove páginas internas ganharam o banner com o símbolo nascendo. Peso: imagens em WebP, reCAPTCHA só onde há formulário, player de vídeo só ao apertar e escrita por quadro no elemento-alvo. Removido `animated-banner.gif` (3,3 MB, sem uso). Suíte: 74 testes × 2 projetos.
 
 - **2026-11-22:** **Home com rolagem cinematográfica.** Três palcos presos (abertura, ciclo e esteira de módulos) a partir do template Selene, adaptados ao design do site: mesmo GSAP + ScrollTrigger, nenhuma dependência nova, nenhuma foto. A grade de 14 cartões e o bloco "O produto" deram lugar à esteira e ao ciclo. `robots.txt` e `sitemap.xml` criados (antes devolviam o HTML da SPA), arquivo de verificação do Google renomeado para o nome que o próprio arquivo declara, e ícone do site refeito só com o símbolo. Suíte: 70 testes × 2 projetos.
 

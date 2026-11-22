@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ScrollTrigger } from './motion/gsap';
-import { COM_MOVIMENTO, faixa, limitar, usePalco } from './motion/palco';
+import { COM_MOVIMENTO, esquecer, faixa, gravar, limitar, usePalco } from './motion/palco';
 import { GRUPO_NOME, MODULOS } from '../data/sicc';
 
 /**
@@ -15,6 +15,7 @@ const total = dois(MODULOS.length);
 let trilho: HTMLElement | null = null;
 let itens: HTMLElement[] = [];
 let contador: HTMLElement | null = null;
+let barra: HTMLElement | null = null;
 let centros: number[] = [];
 let viagem = 0;
 let largura = 0;
@@ -26,6 +27,7 @@ usePalco('palco', {
         trilho = secao.querySelector<HTMLElement>('.esteira-trilho');
         itens = Array.from(secao.querySelectorAll<HTMLElement>('.esteira-item'));
         contador = secao.querySelector<HTMLElement>('.esteira-contador b');
+        barra = secao.querySelector<HTMLElement>('.esteira-barra span');
         const fixo = secao.querySelector<HTMLElement>('.esteira-fixo');
         perto = -1;
         // A rolagem vertical dura o mesmo que a viagem horizontal: um pixel de
@@ -42,10 +44,11 @@ usePalco('palco', {
         ScrollTrigger.addEventListener('refreshInit', medir);
         return () => {
             ScrollTrigger.removeEventListener('refreshInit', medir);
-            [secao, trilho, ...itens].forEach(el => el?.removeAttribute('style'));
+            [secao, trilho, barra, ...itens].forEach(el => el?.removeAttribute('style'));
+            esquecer(barra, ...itens);
         };
     },
-    aplicar(p, secao) {
+    aplicar(p) {
         if (!trilho) return;
         const k = faixa(p, 0.04, 0.96);
         const dx = -k * viagem;
@@ -58,13 +61,13 @@ usePalco('palco', {
         let indice = 0;
         itens.forEach((el, i) => {
             const fora = Math.abs((centros[i] + dx - foco) / largura);
-            el.style.setProperty('--f', limitar(fora * 1.6).toFixed(3));
+            gravar(el, '--f', limitar(fora * 1.6));
             if (fora < melhor) {
                 melhor = fora;
                 indice = i;
             }
         });
-        secao.style.setProperty('--k', k.toFixed(4));
+        gravar(barra, '--k', k);
         if (indice !== perto && contador) {
             perto = indice;
             contador.textContent = dois(indice + 1);

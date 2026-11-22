@@ -13,6 +13,9 @@
   --primary: #0066cc;
   --primary-focus: #0071e3;
   --primary-on-dark: #2997ff;
+  /* O azul do símbolo da INFOCO. É arte da marca: só pinta o próprio símbolo,
+     nunca botão, link ou destaque de texto. */
+  --simbolo: #1449d3;
 
   /* Superfícies
      O near-black neutro do spec Apple foi trocado por uma família navy, para
@@ -1106,6 +1109,27 @@ em { font-style: normal; color: var(--primary); }
   --controls-backdrop-color: rgba(13, 20, 29, 0.4);
 }
 
+/* Botão sobre a capa: o player só é baixado quando alguém aperta. */
+.video-play {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 72px; height: 72px;
+  margin: -36px 0 0 -36px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  background: var(--surface-chip-translucent);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  color: var(--ink);
+  transition: transform 0.25s var(--ease-apple);
+}
+.video-play svg { width: 30px; height: 30px; }
+.video-play:hover { transform: scale(1.06); }
+.video-play:active { transform: scale(0.95); }
+
 .video-legenda { margin-top: var(--s-md); text-align: center; }
 .video-legenda h3 {
   font-family: var(--font-display);
@@ -1198,13 +1222,31 @@ em { font-style: normal; color: var(--primary); }
    andando em ritmos diferentes.
    -------------------------------------------------------------------------- */
 
-/* --- Abertura: a papelada converge para o painel do SICC ------------------ */
-.palco { background: var(--canvas-parchment); }
-.palco .hero-portrait::before { background: var(--canvas); }
-.palco-papeis, .palco-marca, .palco-patrao, .palco-dica { display: none; }
+/* Números que o JS grava por quadro. Registrados sem herança: mudar um deles
+   num elemento não obriga o navegador a recalcular os filhos. */
+@property --sai   { syntax: '<number>'; inherits: false; initial-value: 0; }
+@property --sobe  { syntax: '<number>'; inherits: false; initial-value: 0; }
+@property --nasce { syntax: '<number>'; inherits: false; initial-value: 0; }
+@property --enc   { syntax: '<number>'; inherits: false; initial-value: 0; }
+@property --k     { syntax: '<number>'; inherits: false; initial-value: 0; }
+@property --c     { syntax: '<number>'; inherits: false; initial-value: 0; }
+@property --f     { syntax: '<number>'; inherits: false; initial-value: 0; }
 
-.palco.is-ativo { height: 280vh; height: 280svh; padding-block: 0; }
+/* --- Abertura: duas colunas; o fundador fica, a cena da esquerda troca ----- */
+.palco {
+  --margem: clamp(var(--s-lg), 5vw, 96px);
+  background: var(--surface-black);
+}
+.palco .hero-sub { color: var(--body-muted); }
+.palco .hero-portrait::before { background: var(--simbolo); }
+.palco-disco, .palco-papeis, .palco-marca, .palco-legenda, .palco-dica { display: none; }
+
+.palco.is-ativo { height: 260vh; height: 260svh; padding-block: 0; }
 .palco.is-ativo .palco-fixo {
+  --p: min(36vw, 70svh);                              /* lado do retrato */
+  --dir: max(72px, 5vw);                              /* 72px: folga da pilha de botões flutuantes */
+  --col: calc(var(--dir) + var(--p) + var(--s-xl));   /* onde termina a coluna da esquerda */
+  --ax: calc((var(--margem) - var(--col)) / 2);       /* centro da coluna, a partir do centro do quadro */
   position: sticky;
   top: calc(var(--nav-h) + var(--subnav-h));
   height: calc(100vh - var(--nav-h) - var(--subnav-h));
@@ -1214,64 +1256,93 @@ em { font-style: normal; color: var(--primary); }
 /* No palco cada peça é uma camada do quadro, não um item da grade. */
 .palco.is-ativo .container,
 .palco.is-ativo .hero-split { display: contents; }
-.palco.is-ativo .hero-portrait { display: none; }
 
-.palco.is-ativo .palco-texto {
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding-inline: var(--s-lg);
-  text-align: center;
-  opacity: calc(1 - var(--sai, 0));
-  transform: translate3d(0, calc(var(--sai, 0) * -14svh), 0);
-}
-.palco.is-ativo .palco-texto.is-fora { visibility: hidden; }
-.palco.is-ativo .palco-texto h1 { max-width: 16ch; margin-inline: auto; }
-.palco.is-ativo .palco-texto .hero-sub { margin-inline: auto; }
-.palco.is-ativo .palco-texto .cta-row { justify-content: center; }
-
-/* A marca resolve atrás do painel: o espaçamento fecha e o desfoque some.
-   A margem negativa devolve o espaço que sobra depois da última letra. */
-.palco.is-ativo .palco-marca {
+/* O símbolo nasce atrás do retrato, como um astro no horizonte. */
+.palco.is-ativo .palco-disco {
   display: block;
   position: absolute;
-  inset: 4% 0 auto;
   z-index: 1;
-  text-align: center;
-  white-space: nowrap;
+  right: calc(var(--dir) - var(--p) * 0.04);
+  bottom: calc(var(--p) * -0.12);
+  width: calc(var(--p) * 1.08);
+  height: calc(var(--p) * 1.08);
+  max-width: none;
+  color: var(--simbolo);
+  transform: translate3d(0, calc((1 - var(--nasce)) * 18svh), 0);
+  will-change: transform;
+}
+.palco.is-ativo .hero-portrait {
+  position: absolute;
+  z-index: 4;
+  right: var(--dir);
+  bottom: 0;
+  width: var(--p);
+}
+.palco.is-ativo .hero-portrait::before { display: none; }
+/* Encostado na borda de baixo, o recorte da foto não precisa de máscara. */
+.palco.is-ativo .hero-portrait img { -webkit-mask-image: none; mask-image: none; }
+
+.palco.is-ativo .palco-texto,
+.palco.is-ativo .palco-cena {
+  position: absolute;
+  inset: 0 var(--col) 0 var(--margem);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+.palco.is-ativo .palco-texto {
+  z-index: 5;
+  opacity: calc(1 - var(--sai));
+  transform: translate3d(0, calc(var(--sai) * -14svh), 0);
+}
+.palco.is-ativo .palco-texto.is-fora { visibility: hidden; }
+.palco.is-ativo .palco-cena { z-index: 3; pointer-events: none; }
+
+/* A marca resolve letra a letra, por transformação: sem refluxo de texto e sem
+   desfoque, que eram o custo mais alto do quadro. Fica acima do painel. */
+.palco.is-ativo .palco-marca {
+  display: flex;
   font-family: var(--font-display);
-  font-size: min(23vw, 38svh);
+  font-size: min(12.5vw, 20svh);
   font-weight: 700;
-  line-height: 1;
-  color: var(--ink);
-  letter-spacing: calc(0.5em - var(--marca, 0) * 0.46em);
-  margin-right: calc(-0.5em + var(--marca, 0) * 0.46em);
-  opacity: var(--marca, 0);
-  filter: blur(calc((1 - var(--marca, 0)) * 12px));
+  line-height: 0.92;
+  letter-spacing: 0.02em;
+  color: var(--on-dark);
   user-select: none;
+}
+.palco-marca span {
+  opacity: var(--res, 0);
+  transform: translate3d(calc((1 - var(--res, 0)) * var(--dx)), 0, 0);
+  will-change: transform, opacity;
+}
+.palco-marca span:nth-child(1) { --dx: 0em; }
+.palco-marca span:nth-child(2) { --dx: 0.35em; }
+.palco-marca span:nth-child(3) { --dx: 0.7em; }
+.palco-marca span:nth-child(4) { --dx: 1.05em; }
+.palco.is-ativo .palco-legenda {
+  display: block;
+  margin: var(--s-sm) 0 var(--s-lg);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--body-muted);
+  opacity: var(--res, 0);
 }
 
 .palco.is-ativo .hero-stage {
-  position: absolute;
-  z-index: 3;
-  left: 50%;
-  top: 30%;
-  width: min(980px, 86vw);
+  width: 100%;
   margin: 0;
   perspective: none;
-  transform-origin: 50% 0;
-  transform:
-    translate3d(-50%, calc((1 - var(--sobe, 0)) * 85svh), 0)
-    scale(calc(var(--escala, 1) * (0.9 + var(--sobe, 0) * 0.1)));
+  transform-origin: 0 0;
+  transform: translate3d(0, calc((1 - var(--sobe)) * 95svh), 0) scale(var(--escala, 1));
   will-change: transform;
 }
+.palco.is-ativo .sicc-panel { margin-inline: 0; }
 .palco.is-ativo .sicc-card {
-  opacity: var(--c, 0);
-  transform: translate3d(0, calc((1 - var(--c, 0)) * 14px), 0);
+  opacity: var(--c);
+  transform: translate3d(0, calc((1 - var(--c)) * 14px), 0);
 }
 
 .palco.is-ativo .palco-papeis {
@@ -1282,7 +1353,7 @@ em { font-style: normal; color: var(--primary); }
   pointer-events: none;
 }
 /* Cada folha parte do seu canto (--x, --y, --r, --s) e chega ao centro do
-   painel conforme --k vai de 0 a 1; some só no fim do caminho. */
+   painel (--ax) conforme --k vai de 0 a 1; some só no fim do caminho. */
 .papel {
   position: absolute;
   left: 50%;
@@ -1290,10 +1361,10 @@ em { font-style: normal; color: var(--primary); }
   width: 148px;
   margin: -94px 0 0 -74px;
   transform:
-    translate3d(calc(var(--x) * (1 - var(--k, 0))), calc(var(--y) * (1 - var(--k, 0)) + var(--k, 0) * 8svh), 0)
-    rotate(calc(var(--r) * (1 - var(--k, 0))))
-    scale(calc(var(--s) * (1 - var(--k, 0) * 0.7)));
-  opacity: clamp(0, calc((1 - var(--k, 0)) * 4), 1);
+    translate3d(calc(var(--x) * (1 - var(--k)) + var(--ax, 0px) * var(--k)), calc(var(--y) * (1 - var(--k)) + var(--k) * 8svh), 0)
+    rotate(calc(var(--r) * (1 - var(--k))))
+    scale(calc(var(--s) * (1 - var(--k) * 0.7)));
+  opacity: clamp(0, calc((1 - var(--k)) * 4), 1);
   will-change: transform;
 }
 .papel-folha {
@@ -1316,50 +1387,69 @@ em { font-style: normal; color: var(--primary); }
 .papel-folha i:nth-of-type(6) { width: 44%; }
 .papel:nth-child(2n) .papel-folha { animation-duration: 9s; animation-delay: -3s; }
 .papel:nth-child(3n) .papel-folha { animation-duration: 8s; animation-delay: -5s; }
+/* Palco fora da tela: o laço das folhas para de consumir. */
+.palco.is-ativo:not(.is-visivel) .papel-folha { animation-play-state: paused; }
 @keyframes papel-flutua {
   from { transform: translate3d(0, -7px, 0); }
   to   { transform: translate3d(0, 7px, 0); }
 }
 
-.papel--1 { --x: -38vw; --y: -24svh; --r: -8deg; --s: 1; }
-.papel--2 { --x: -29vw; --y: 25svh;  --r: 6deg;  --s: 0.86; }
-.papel--3 { --x: 36vw;  --y: -25svh; --r: 7deg;  --s: 0.92; }
-.papel--4 { --x: 30vw;  --y: 23svh;  --r: -5deg; --s: 1.04; }
-.papel--5 { --x: -45vw; --y: 3svh;   --r: 4deg;  --s: 0.72; }
-.papel--6 { --x: 44vw;  --y: -1svh;  --r: -9deg; --s: 0.76; }
-.papel--7 { --x: -16vw; --y: -39svh; --r: 3deg;  --s: 0.62; }
-.papel--8 { --x: 24vw;  --y: 40svh;  --r: -4deg; --s: 0.66; }
-
-.palco.is-ativo .palco-patrao {
-  display: block;
-  position: absolute;
-  z-index: 4;
-  /* 84px livres à direita: é onde mora a pilha de botões flutuantes. */
-  right: max(84px, calc(50% - 660px));
-  bottom: 0;
-  width: auto;
-  max-width: none;
-  height: 40svh;
-  transform: translate3d(0, calc((1 - var(--patrao, 0)) * 102%), 0);
-}
+.papel--1 { --x: -45vw; --y: -34svh; --r: -8deg; --s: 0.8; }
+.papel--2 { --x: -12vw; --y: -39svh; --r: 5deg;  --s: 0.68; }
+.papel--3 { --x: 13vw;  --y: -27svh; --r: 7deg;  --s: 0.88; }
+.papel--4 { --x: -6vw;  --y: 38svh;  --r: -5deg; --s: 0.84; }
+.papel--5 { --x: -47vw; --y: 34svh;  --r: 4deg;  --s: 0.7; }
+.papel--6 { --x: 45vw;  --y: -33svh; --r: -9deg; --s: 0.74; }
+.papel--7 { --x: 29vw;  --y: -43svh; --r: 3deg;  --s: 0.6; }
+.papel--8 { --x: 47vw;  --y: 12svh;  --r: -4deg; --s: 0.6; }
 
 .palco.is-ativo .palco-dica {
   display: flex;
-  justify-content: center;
   gap: var(--s-xs);
-  position: absolute;
-  inset: auto 0 var(--s-lg);
-  z-index: 5;
+  margin-top: var(--s-xl);
   font-size: 14px;
   letter-spacing: -0.224px;
-  color: var(--ink-muted-48);
-  opacity: calc(1 - var(--dica, 0));
+  color: var(--body-muted);
 }
 .palco-dica span { animation: dica-quica 1.4s var(--ease-apple) infinite alternate; }
+.palco.is-ativo:not(.is-visivel) .palco-dica span { animation-play-state: paused; }
 @keyframes dica-quica {
   from { transform: translate3d(0, -2px, 0); }
   to   { transform: translate3d(0, 4px, 0); }
 }
+
+/* --- Banner das páginas: o símbolo nasce no canto, com folhas do assunto --- */
+.tile.banner {
+  display: flex;
+  align-items: center;
+  min-height: 440px;
+  padding-block: 104px 96px;
+  background: var(--surface-black);
+  text-align: left;
+}
+/* A metade direita é do símbolo: o texto para antes dele, mesmo quando a
+   página pede uma largura maior para o parágrafo. */
+.banner > .container { position: relative; z-index: 1; max-width: 1180px; padding-right: min(48%, 560px); }
+.banner > .container > * { margin-inline: 0; }
+.banner .hero-sub { color: var(--body-muted); }
+.banner .cta-row { justify-content: flex-start; }
+.banner-fundo {
+  --bd: min(460px, 38vw);
+  --br: max(3vw, calc((100vw - 1180px) / 2 - 40px));
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.banner-disco { position: absolute; right: var(--br); bottom: calc(var(--bd) * -0.36); width: var(--bd); color: var(--simbolo); }
+.banner-disco svg { width: 100%; height: auto; animation: banner-nasce 1.4s var(--ease-out-expo) both; }
+.banner-papeis { position: absolute; right: var(--br); bottom: 0; width: var(--bd); height: 100%; }
+.banner-folha { position: absolute; width: 148px; animation: banner-chega 1.1s var(--ease-out-expo) both; }
+.banner-folha--1 { left: -16%; top: 30%; rotate: -8deg; scale: 0.88; animation-delay: 0.2s; }
+.banner-folha--2 { right: -8%; top: 12%; rotate: 6deg; scale: 0.76; animation-delay: 0.32s; }
+.banner-folha--3 { left: 22%; top: 8%; rotate: -3deg; scale: 0.62; animation-delay: 0.44s; }
+@keyframes banner-nasce { from { transform: translate3d(0, 34%, 0); opacity: 0; } }
+@keyframes banner-chega { from { translate: 0 40px; opacity: 0; } }
 
 /* --- O ciclo, desenhado enquanto a página rola ---------------------------- */
 .ciclo { padding-top: 0; }
@@ -1544,19 +1634,52 @@ em { font-style: normal; color: var(--primary); }
 @media (max-width: 1068px) {
   /* Tela estreita: as folhas ficam só nos cantos, menores, para a manchete
      respirar. As do meio das laterais e a do pé saem. */
-  .papel--1 { --x: -38vw; --y: -41svh; --s: 0.6; }
-  .papel--2 { --x: -38vw; --y: 41svh;  --s: 0.56; }
-  .papel--3 { --x: 38vw;  --y: -40svh; --s: 0.58; }
-  .papel--4 { --x: 38vw;  --y: 40svh;  --s: 0.62; }
-  .papel--5, .papel--6, .papel--7, .papel--8 { display: none; }
+  .papel--1 { --x: -45vw; --y: -40svh; --s: 0.6; }
+  .papel--3 { --x: 4vw;   --y: -41svh; --s: 0.56; }
+  .papel--4 { --x: -4vw;  --y: 40svh;  --s: 0.6; }
+  .papel--2, .papel--5, .papel--6, .papel--7, .papel--8 { display: none; }
+  /* Coluna estreita: o painel mostra uma coluna só de demandas. */
+  .palco.is-ativo .sicc-panel-body { grid-template-columns: minmax(0, 1fr); }
+  .palco.is-ativo .sicc-col:nth-child(2) { display: none; }
+  .palco.is-ativo .sicc-col { min-height: 0; }
 }
 
 @media (max-width: 833px) {
-  .palco.is-ativo .hero-stage { top: 21%; width: calc(100% - var(--s-md) * 2); }
-  .palco.is-ativo .palco-marca { inset-block-start: 3%; font-size: min(27vw, 20svh); }
-  /* No celular o painel mostra uma coluna só: as duas não cabem no quadro. */
-  .palco.is-ativo .sicc-col:nth-child(2) { display: none; }
-  .palco.is-ativo .palco-patrao { height: 26svh; right: 0; }
+  /* Celular: uma coluna. A cena fica em cima e o fundador embaixo, no centro;
+     quando o painel sobe ele recua (--enc) para abrir espaço. */
+  .palco { --margem: var(--s-md); }
+  .palco.is-ativo .palco-fixo {
+    --p: min(60vw, 34svh);
+    --dir: calc(50% - var(--p) / 2);
+    --col: var(--s-md);
+  }
+  .palco.is-ativo .palco-texto,
+  .palco.is-ativo .palco-cena { inset: var(--s-lg) var(--s-md) auto; align-items: center; justify-content: flex-start; }
+  .palco.is-ativo .palco-cena { align-items: stretch; }
+  .palco.is-ativo .palco-texto .hero-sub { margin-top: var(--s-sm); font-size: 17px; line-height: 1.4; letter-spacing: -0.2px; }
+  .palco.is-ativo .palco-texto .cta-row { margin-top: var(--s-md); }
+  .palco.is-ativo .palco-marca { justify-content: center; font-size: min(25vw, 15svh); }
+  .palco.is-ativo .palco-legenda { text-align: center; font-size: 10px; letter-spacing: 0.12em; margin-bottom: var(--s-md); }
+  .palco.is-ativo .hero-portrait {
+    transform-origin: 50% 100%;
+    transform: scale(calc(1 - var(--enc) * 0.4));
+    will-change: transform;
+  }
+  .palco.is-ativo .palco-disco {
+    transform-origin: 50% 88%;
+    transform: translate3d(0, calc((1 - var(--nasce)) * 8svh), 0) scale(calc(1 - var(--enc) * 0.4));
+  }
+  .palco.is-ativo .palco-dica { display: none; }
+  /* A manchete ocupa o alto e o retrato o pé: as folhas ficam nas duas
+     faixas ao lado dele. */
+  .papel--1 { --x: -38vw; --y: 29svh; --s: 0.58; }
+  .papel--3 { --x: 38vw;  --y: 26svh; --s: 0.54; }
+  .papel--4 { --x: 37vw;  --y: 47svh; --s: 0.5; }
+
+  .tile.banner { min-height: 0; padding-block: 56px 150px; }
+  .banner > .container { padding-right: var(--s-md); }
+  .banner-fundo { --bd: 58vw; --br: -12vw; }
+  .banner-papeis { display: none; }
 
   .ciclo-topo { align-items: flex-start; }
   .ciclo-fases { grid-template-columns: minmax(0, 1fr); }

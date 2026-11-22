@@ -1,21 +1,23 @@
 <script setup lang="ts">
 import { motion } from 'motion-v';
+import SimboloInfoco from './SimboloInfoco.vue';
 import { EASE_EXPO, WordReveal } from './motion';
 import { ScrollTrigger } from './motion/gsap';
-import { faixa, suave, usePalco } from './motion/palco';
+import { esquecer, faixa, gravar, suave, usePalco } from './motion/palco';
 import { CONHECER } from '../data/links';
 
 /**
- * A abertura é um palco de rolagem: a papelada solta converge e some atrás do
- * painel do SICC, que sobe com a marca resolvendo ao fundo.
+ * A abertura é um palco de rolagem em duas colunas. À direita, o fundador
+ * fica o tempo todo, com o símbolo da INFOCO nascendo atrás dele. À esquerda
+ * a cena troca: a manchete cede, a papelada solta converge e some por baixo do
+ * painel do SICC, que sobe com a marca resolvendo logo acima — nunca atrás.
  *
+ *   0.00 – 0.50  o símbolo nasce atrás do retrato
  *   0.00 – 0.14  a manchete cede o quadro
- *   0.05 – 0.57  as folhas convergem, uma atrás da outra, e passam por
- *                baixo do painel
- *   0.10 – 0.34  SICC resolve (o espaçamento fecha, o desfoque some)
- *   0.12 – 0.46  o painel sobe de trás do horizonte
+ *   0.05 – 0.57  as folhas convergem, uma atrás da outra
+ *   0.12 – 0.36  SICC resolve, letra a letra
+ *   0.14 – 0.46  o painel sobe
  *   0.44 – 0.78  as demandas entram no painel, cartão a cartão
- *   0.66 – 0.86  o fundador sobe no primeiro plano
  *
  * O painel é uma representação desenhada do kanban de Demandas do SICC
  * (colunas "Em Elaboração" e "Em Contratação", cartões com P.ADM, selos e
@@ -42,51 +44,78 @@ const colunas = [
     { titulo: 'Em Contratação', cartoes: emContratacao },
 ];
 
-const n = (v: number) => v.toFixed(4);
+type Alvo = HTMLElement | SVGElement | null;
 let papeis: HTMLElement[] = [];
 let cartoes: HTMLElement[] = [];
 let texto: HTMLElement | null = null;
+let marca: Alvo = null;
+let legenda: Alvo = null;
+let estagio: HTMLElement | null = null;
+let disco: Alvo = null;
+let retrato: Alvo = null;
 
 usePalco('palco', {
     montar(secao) {
+        const um = <T extends Element = HTMLElement>(sel: string) => secao.querySelector<T>(sel);
         papeis = Array.from(secao.querySelectorAll<HTMLElement>('.papel'));
         cartoes = Array.from(secao.querySelectorAll<HTMLElement>('.sicc-card'));
-        texto = secao.querySelector<HTMLElement>('.palco-texto');
-        const fixo = secao.querySelector<HTMLElement>('.palco-fixo');
-        const painel = secao.querySelector<HTMLElement>('.sicc-panel');
-        // O painel tem altura própria; em janela baixa ele encolhe para caber
-        // no quadro em vez de sair cortado por baixo.
+        texto = um('.palco-texto');
+        marca = um('.palco-marca');
+        legenda = um('.palco-legenda');
+        estagio = um('.hero-stage');
+        disco = um<SVGElement>('.palco-disco');
+        retrato = um('.hero-portrait');
+        const fixo = um('.palco-fixo');
+        const painel = um('.sicc-panel');
+        // O painel cabe no que sobra abaixo da marca: em janela baixa ele
+        // encolhe, e a caixa encolhe junto para a coluna continuar centrada.
         const medir = () => {
-            if (!fixo || !painel) return;
-            secao.style.setProperty('--escala', n(Math.min(1, (fixo.clientHeight * 0.64) / painel.offsetHeight)));
+            if (!fixo || !painel || !estagio || !marca || !legenda) return;
+            const cabeca = (marca as HTMLElement).offsetHeight + (legenda as HTMLElement).offsetHeight;
+            // No celular o retrato recua para 60% e fica embaixo: o painel
+            // termina na altura da cabeça dele, sem cobrir o rosto.
+            const movel = window.matchMedia('(max-width: 833px)').matches;
+            const reserva = movel && retrato ? (retrato as HTMLElement).offsetHeight * 0.6 - 28 : 0;
+            const livre = fixo.clientHeight - cabeca - (movel ? 72 : 104) - reserva;
+            const escala = Math.min(1, Math.max(0.4, livre / painel.offsetHeight));
+            estagio.style.setProperty('--escala', escala.toFixed(4));
+            estagio.style.height = `${Math.round(painel.offsetHeight * escala)}px`;
         };
         medir();
         ScrollTrigger.addEventListener('refreshInit', medir);
         return () => {
             ScrollTrigger.removeEventListener('refreshInit', medir);
-            [secao, ...papeis, ...cartoes].forEach(e => e.removeAttribute('style'));
+            const tocados = [texto, marca, legenda, estagio, disco, retrato, ...papeis, ...cartoes];
+            tocados.forEach(el => el?.removeAttribute('style'));
+            esquecer(...tocados);
             texto?.classList.remove('is-fora');
         };
     },
-    aplicar(p, secao) {
-        const s = secao.style;
+    aplicar(p) {
         const sai = faixa(p, 0.02, 0.14);
-        s.setProperty('--dica', n(faixa(p, 0, 0.05)));
-        s.setProperty('--sai', n(sai));
+        gravar(texto, '--sai', sai);
         // Fora do quadro a manchete também sai do foco e do clique.
         texto?.classList.toggle('is-fora', sai >= 1);
-        papeis.forEach((el, i) => el.style.setProperty('--k', n(suave(faixa(p, 0.05 + i * 0.02, 0.36 + i * 0.03)))));
-        s.setProperty('--marca', n(suave(faixa(p, 0.1, 0.34))));
-        s.setProperty('--sobe', n(suave(faixa(p, 0.12, 0.46))));
-        cartoes.forEach((el, i) => el.style.setProperty('--c', n(suave(faixa(p, 0.44 + i * 0.05, 0.58 + i * 0.05)))));
-        s.setProperty('--patrao', n(suave(faixa(p, 0.66, 0.86))));
+        gravar(disco, '--nasce', suave(faixa(p, 0, 0.5)));
+        // Só o celular usa: o retrato recua para o painel caber acima dele.
+        const enc = suave(faixa(p, 0.1, 0.5));
+        gravar(retrato, '--enc', enc);
+        gravar(disco, '--enc', enc);
+        papeis.forEach((el, i) => gravar(el, '--k', suave(faixa(p, 0.05 + i * 0.02, 0.36 + i * 0.03))));
+        const res = suave(faixa(p, 0.12, 0.36));
+        gravar(marca, '--res', res);
+        gravar(legenda, '--res', res);
+        gravar(estagio, '--sobe', suave(faixa(p, 0.14, 0.46)));
+        cartoes.forEach((el, i) => gravar(el, '--c', suave(faixa(p, 0.44 + i * 0.05, 0.58 + i * 0.05))));
     },
 });
 </script>
 
 <template>
-    <section ref="palco" class="tile tile--parchment hero hero--split palco">
+    <section ref="palco" class="tile tile--black on-dark hero hero--split palco">
         <div class="palco-fixo">
+            <SimboloInfoco class="palco-disco" />
+
             <div class="palco-papeis" aria-hidden="true">
                 <div v-for="(rotulo, i) in PAPEIS" :key="rotulo" class="papel" :class="`papel--${i + 1}`">
                     <div class="papel-folha">
@@ -95,8 +124,6 @@ usePalco('palco', {
                     </div>
                 </div>
             </div>
-
-            <div class="palco-marca" aria-hidden="true">SICC</div>
 
             <div class="container container-mid">
                 <div class="hero-split">
@@ -135,13 +162,20 @@ usePalco('palco', {
                                 Ver o sistema por dentro
                             </a>
                         </motion.div>
+
+                        <p class="palco-dica" aria-hidden="true">Role para organizar a papelada <span>↓</span></p>
                     </div>
 
                     <figure class="hero-portrait" style="margin: 0">
-                        <img src="/patrao.png" alt="Fundador da INFOCO Gestão Pública" width="460" height="460" />
+                        <img src="/patrao.webp" alt="Fundador da INFOCO Gestão Pública" width="640" height="640" fetchpriority="high" />
                     </figure>
                 </div>
 
+                <!-- A marca fica acima do painel, na mesma coluna: nada passa
+                     por cima dela, em nenhum tamanho de tela. -->
+                <div class="palco-cena">
+                <div class="palco-marca" aria-hidden="true"><span v-for="(letra, i) in 'SICC'" :key="i">{{ letra }}</span></div>
+                <p class="palco-legenda" aria-hidden="true">Sistema Integrado de Compras e Contratações</p>
                 <div class="hero-stage">
                     <div class="sicc-panel">
                         <div class="sicc-panel-bar">
@@ -174,13 +208,9 @@ usePalco('palco', {
                         </div>
                     </div>
                 </div>
+                </div>
             </div>
 
-            <!-- O mesmo retrato, na posição do palco: ele sobe da borda de baixo,
-                 que é onde o recorte da foto termina. -->
-            <img class="palco-patrao" src="/patrao.png" alt="Fundador da INFOCO Gestão Pública" width="640" height="640" />
-
-            <p class="palco-dica" aria-hidden="true">Role para organizar a papelada <span>↓</span></p>
         </div>
     </section>
 </template>

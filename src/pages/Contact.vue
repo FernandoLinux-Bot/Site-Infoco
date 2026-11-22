@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BannerFundo from '../components/BannerFundo.vue';
 import { motion } from 'motion-v';
 import { EASE_EXPO, Reveal, Stagger, StaggerItem, WordReveal } from '../components/motion';
 import { useFormSubmit, useRecaptcha } from '../composables/useContactForm';
@@ -16,7 +17,8 @@ const { status, submit } = useFormSubmit(captcha.reset);
 </script>
 
 <template>
-    <section class="tile tile--light hero" style="padding-bottom: var(--s-xl)">
+    <section class="tile tile--black on-dark hero banner">
+        <BannerFundo :folhas="['Suporte', 'Comercial']" />
         <div class="container container-narrow">
             <motion.span
                 class="eyebrow"

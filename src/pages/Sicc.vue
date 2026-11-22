@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BannerFundo from '../components/BannerFundo.vue';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { AnimatePresence, motion } from 'motion-v';
 import { CICLO_DEMANDA, PERGUNTAS } from '../data/sicc';
@@ -89,7 +90,8 @@ const GLOSSARIO = [
 
 <template>
     <!-- Hero -->
-    <section class="tile tile--light hero">
+    <section class="tile tile--black on-dark hero banner">
+        <BannerFundo :folhas="['DFD', 'ETP', 'Contrato']" />
         <div class="container container-narrow">
             <motion.span
                 class="eyebrow"
