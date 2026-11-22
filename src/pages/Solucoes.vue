@@ -20,7 +20,7 @@ const lista = computed(() => (grupo.value === 'todos' ? MODULOS : MODULOS.filter
 </script>
 
 <template>
-    <section class="tile tile--black on-dark hero banner">
+    <section class="tile tile--marca on-dark hero banner">
         <BannerFundo :folhas="['PCA', 'Cotações', 'Contratos']" />
         <div class="container container-narrow">
             <motion.span

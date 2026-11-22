@@ -66,6 +66,12 @@ export function usePalco(chave: string, { media = COM_MOVIMENTO, montar, aplicar
         mm.add(media, () => {
             secao.classList.add('is-ativo');
             const limpar = montar?.(secao);
+            // Fora da tela, as animações em laço do palco param. Quem diz se
+            // está na tela é o navegador: o gatilho de rolagem só se dá por
+            // ativo depois do primeiro pixel rolado, e o palco de abertura já
+            // nasce à vista.
+            const olho = new IntersectionObserver(([e]) => secao.classList.toggle('is-visivel', e.isIntersecting));
+            olho.observe(secao);
             const estado = { p: 0 };
             aplicar(0, secao);
             gsap.to(estado, {
@@ -78,11 +84,10 @@ export function usePalco(chave: string, { media = COM_MOVIMENTO, montar, aplicar
                     end: 'bottom bottom',
                     scrub: 0.5,
                     invalidateOnRefresh: true,
-                    // Fora da tela, as animações em laço do palco param.
-                    onToggle: self => secao.classList.toggle('is-visivel', self.isActive),
                 },
             });
             return () => {
+                olho.disconnect();
                 limpar?.();
                 secao.classList.remove('is-ativo', 'is-visivel');
             };

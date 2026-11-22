@@ -22,6 +22,8 @@ O sistema visual segue o [`DESIGN-apple.md`](DESIGN-apple.md): fotografia e prod
 
 Dois desvios deliberados do spec, para o site e o FAQ (`faq.infocogestaopublica.com.br`) lerem como um produto só: as superfícies escuras são uma família **navy** (`#1e2a3b` / `#223040` / `#1a2534`) em vez do near-black neutro, e a tipografia é **Plus Jakarta Sans** auto-hospedada em vez de SF Pro/Inter.
 
+Um terceiro, pedido pelo cliente: o banner principal e o banner das outras páginas usam o **azul da marca** (`--marca: #1449d3`, o do símbolo) como superfície, com a ação em branco. As demais seções escuras seguem navy.
+
 `index.css` é a implementação — 20 seções numeradas, todas ancoradas nos tokens do spec.
 
 ## Como rodar

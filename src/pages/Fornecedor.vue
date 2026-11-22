@@ -19,7 +19,7 @@ const irParaCadastro = () => router.push('/cadastro');
 </script>
 
 <template>
-    <section class="tile tile--black on-dark hero banner">
+    <section class="tile tile--marca on-dark hero banner">
         <BannerFundo :folhas="['Edital', 'Proposta', 'Ata']" />
         <div class="container container-narrow">
             <motion.span

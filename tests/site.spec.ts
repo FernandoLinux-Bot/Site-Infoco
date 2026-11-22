@@ -719,6 +719,32 @@ test.describe('Palcos de rolagem da Home', () => {
         await expect(page.locator('.palco-texto')).toBeHidden();
     });
 
+    test('a abertura é azul da marca, com a órbita viva desde o primeiro quadro', async ({ page, isMobile }) => {
+        await page.goto('/');
+        // O fundo é o azul do símbolo da INFOCO, não o navy das outras seções.
+        const cores = await page.evaluate(() => ({
+            marca: getComputedStyle(document.documentElement).getPropertyValue('--marca').trim(),
+            fundo: getComputedStyle(document.querySelector('.palco')!).backgroundColor,
+        }));
+        expect(cores).toEqual({ marca: '#1449d3', fundo: 'rgb(20, 73, 211)' });
+        // Sem rolar um pixel o palco já se sabe à vista: é isso que solta as
+        // animações em laço (a órbita, a onda, os vistos). Já ficaram paradas
+        // no topo da página, esperando a primeira rolagem.
+        await expect(page.locator('.palco')).toHaveClass(/is-visivel/);
+        const rodando = await page.locator('.palco-satelite').evaluate(el => getComputedStyle(el).animationPlayState);
+        expect(rodando).toBe('running');
+        // Os documentos esperam a chegada terminar e ficam inteiros no quadro.
+        await page.waitForTimeout(2600);
+        const docs = page.locator('.palco .papel:visible');
+        expect(await docs.count()).toBeGreaterThanOrEqual(4);
+        if (isMobile) return;
+        // No desktop nenhum documento da órbita encosta no texto da manchete.
+        const caixas = await page.locator('.palco-texto > *').evaluateAll(els => els.map(el => el.getBoundingClientRect().right));
+        const textoAte = Math.max(...caixas);
+        const primeiro = (await docs.first().boundingBox())!;
+        expect(primeiro.x, 'o documento mais à esquerda invade a coluna do texto').toBeGreaterThanOrEqual(textoAte);
+    });
+
     test('o ciclo se desenha conforme a página rola', async ({ page }) => {
         await page.goto('/');
         const { ini, fim } = await limites(page, '.ciclo-palco');

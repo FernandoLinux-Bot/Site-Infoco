@@ -5,7 +5,7 @@ import { EASE_EXPO } from '../components/motion';
 </script>
 
 <template>
-    <section class="tile tile--black on-dark hero banner" style="min-height: 62vh; display: grid; place-items: center">
+    <section class="tile tile--marca on-dark hero banner" style="min-height: 62vh; display: grid; place-items: center">
         <BannerFundo :folhas="['404']" />
         <div class="container container-narrow">
             <motion.span

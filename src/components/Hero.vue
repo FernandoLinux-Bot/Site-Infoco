@@ -7,14 +7,20 @@ import { esquecer, faixa, gravar, suave, usePalco } from './motion/palco';
 import { CONHECER } from '../data/links';
 
 /**
- * A abertura é um palco de rolagem em duas colunas. À direita, o fundador
- * fica o tempo todo, com o símbolo da INFOCO nascendo atrás dele. À esquerda
- * a cena troca: a manchete cede, a papelada solta converge e some por baixo do
- * painel do SICC, que sobe com a marca resolvendo logo acima — nunca atrás.
+ * A abertura é um palco de rolagem em duas colunas, sobre o azul da marca.
  *
- *   0.00 – 0.50  o símbolo nasce atrás do retrato
+ * À direita, o fundador fica o tempo todo, com o símbolo da INFOCO atrás dele.
+ * Em volta do símbolo corre uma órbita: os documentos do processo ficam nela,
+ * na ordem em que acontecem (do DFD ao contrato), e um ponto de luz dá a volta
+ * conferindo um a um. É a manchete desenhada: tudo gira em torno de um
+ * cadastro só. O conjunto acompanha o ponteiro, cada camada no seu ritmo.
+ *
+ * À esquerda a cena troca com a rolagem: a manchete cede, os documentos saem
+ * da órbita e somem por baixo do painel do SICC, que sobe com a marca
+ * resolvendo logo acima — nunca atrás.
+ *
  *   0.00 – 0.14  a manchete cede o quadro
- *   0.05 – 0.57  as folhas convergem, uma atrás da outra
+ *   0.05 – 0.48  os documentos deixam a órbita, um atrás do outro
  *   0.12 – 0.36  SICC resolve, letra a letra
  *   0.14 – 0.46  o painel sobe
  *   0.44 – 0.78  as demandas entram no painel, cartão a cartão
@@ -26,7 +32,8 @@ import { CONHECER } from '../data/links';
  * Com movimento reduzido o palco não liga: fica a manchete ao lado do retrato
  * e o painel logo abaixo, tudo na tela.
  */
-const PAPEIS = ['DFD', 'ETP', 'Cotação', 'Edital', 'Mapa de Riscos', 'Contrato', 'Termo de Referência', 'Planilha'];
+// Na ordem do processo: é a ordem em que o ponto de luz passa por eles.
+const PAPEIS = ['DFD', 'ETP', 'Cotação', 'Edital', 'Contrato'];
 
 const emElaboracao = [
     { num: '081403/2026', obj: 'Notebooks para as secretarias escolares', selos: ['SRP', 'DFD 12'], status: 'Em Cotação de Preços', unidade: 'SECE', itens: '14 itens' },
@@ -51,8 +58,9 @@ let texto: HTMLElement | null = null;
 let marca: Alvo = null;
 let legenda: Alvo = null;
 let estagio: HTMLElement | null = null;
-let disco: Alvo = null;
+let astro: Alvo = null;
 let retrato: Alvo = null;
+let folhas: Alvo = null;
 
 usePalco('palco', {
     montar(secao) {
@@ -63,8 +71,9 @@ usePalco('palco', {
         marca = um('.palco-marca');
         legenda = um('.palco-legenda');
         estagio = um('.hero-stage');
-        disco = um<SVGElement>('.palco-disco');
+        astro = um('.palco-astro');
         retrato = um('.hero-portrait');
+        folhas = um('.palco-papeis');
         const fixo = um('.palco-fixo');
         const painel = um('.sicc-panel');
         // O painel cabe no que sobra abaixo da marca: em janela baixa ele
@@ -83,9 +92,29 @@ usePalco('palco', {
         };
         medir();
         ScrollTrigger.addEventListener('refreshInit', medir);
+        // Com mouse, o quadro responde ao ponteiro: símbolo, documentos e
+        // retrato se deslocam em medidas diferentes (o CSS decide quanto).
+        // No máximo uma escrita por quadro, e nenhuma leitura de leiaute.
+        let quadro = 0;
+        const seguir = (e: PointerEvent) => {
+            if (quadro) return;
+            const mx = (e.clientX / window.innerWidth) * 2 - 1;
+            const my = (e.clientY / window.innerHeight) * 2 - 1;
+            quadro = requestAnimationFrame(() => {
+                quadro = 0;
+                for (const el of [astro, folhas, retrato]) {
+                    gravar(el, '--mx', mx);
+                    gravar(el, '--my', my);
+                }
+            });
+        };
+        const comMouse = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        if (comMouse) fixo?.addEventListener('pointermove', seguir, { passive: true });
         return () => {
             ScrollTrigger.removeEventListener('refreshInit', medir);
-            const tocados = [texto, marca, legenda, estagio, disco, retrato, ...papeis, ...cartoes];
+            fixo?.removeEventListener('pointermove', seguir);
+            cancelAnimationFrame(quadro);
+            const tocados = [texto, marca, legenda, estagio, astro, retrato, folhas, ...papeis, ...cartoes];
             tocados.forEach(el => el?.removeAttribute('style'));
             esquecer(...tocados);
             texto?.classList.remove('is-fora');
@@ -96,11 +125,10 @@ usePalco('palco', {
         gravar(texto, '--sai', sai);
         // Fora do quadro a manchete também sai do foco e do clique.
         texto?.classList.toggle('is-fora', sai >= 1);
-        gravar(disco, '--nasce', suave(faixa(p, 0, 0.5)));
         // Só o celular usa: o retrato recua para o painel caber acima dele.
         const enc = suave(faixa(p, 0.1, 0.5));
         gravar(retrato, '--enc', enc);
-        gravar(disco, '--enc', enc);
+        gravar(astro, '--enc', enc);
         papeis.forEach((el, i) => gravar(el, '--k', suave(faixa(p, 0.05 + i * 0.02, 0.36 + i * 0.03))));
         const res = suave(faixa(p, 0.12, 0.36));
         gravar(marca, '--res', res);
@@ -112,15 +140,27 @@ usePalco('palco', {
 </script>
 
 <template>
-    <section ref="palco" class="tile tile--black on-dark hero hero--split palco">
+    <section ref="palco" class="tile tile--marca on-dark hero hero--split palco">
         <div class="palco-fixo">
-            <SimboloInfoco class="palco-disco" />
+            <!-- O símbolo e o que vive em volta dele: anéis, a onda que parte
+                 da borda e o ponto de luz que percorre a órbita. -->
+            <div class="palco-astro" aria-hidden="true">
+                <span class="palco-anel palco-anel--3" />
+                <span class="palco-anel palco-anel--2" />
+                <span class="palco-anel palco-anel--1" />
+                <span class="palco-onda" />
+                <span class="palco-satelite"><i /></span>
+                <SimboloInfoco class="palco-disco" />
+            </div>
 
             <div class="palco-papeis" aria-hidden="true">
                 <div v-for="(rotulo, i) in PAPEIS" :key="rotulo" class="papel" :class="`papel--${i + 1}`">
                     <div class="papel-folha">
                         <span class="chip chip--action">{{ rotulo }}</span>
                         <i v-for="linha in 6" :key="linha" />
+                        <b class="papel-visto">
+                            <svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.3 2.4 4.5-5.2" /></svg>
+                        </b>
                     </div>
                 </div>
             </div>
@@ -138,7 +178,7 @@ usePalco('palco', {
                         </motion.span>
 
                         <h1 class="t-hero">
-                            <WordReveal text="Do plano anual ao contrato assinado." />{{ ' ' }}<em><WordReveal text="Em um cadastro só." :delay="0.18" /></em>
+                            <WordReveal text="Do plano anual ao contrato assinado." />{{ ' ' }}<em><WordReveal text="Em um cadastro só." :delay="0.18" /><svg class="palco-risco" viewBox="0 0 300 12" preserveAspectRatio="none" aria-hidden="true"><path d="M3 8.5C52 3.5 118 2.5 168 4.5c46 1.8 92 1.2 129-1.5" pathLength="1" /></svg></em>
                         </h1>
 
                         <motion.p

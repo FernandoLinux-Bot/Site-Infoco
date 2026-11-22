@@ -13,9 +13,13 @@
   --primary: #0066cc;
   --primary-focus: #0071e3;
   --primary-on-dark: #2997ff;
-  /* O azul do símbolo da INFOCO. É arte da marca: só pinta o próprio símbolo,
-     nunca botão, link ou destaque de texto. */
-  --simbolo: #1449d3;
+  /* O azul da marca INFOCO, o do símbolo. É a superfície dos banners
+     (`.tile--marca`), não um segundo acento: sobre ele a ação é branca.
+     `--marca-luz` é a ponta clara do símbolo e pinta o disco; `--marca-ceu` é
+     o tom de texto de apoio sobre a marca. */
+  --marca: #1449d3;
+  --marca-luz: #3a7bff;
+  --marca-ceu: #c9dbff;
 
   /* Superfícies
      O near-black neutro do spec Apple foi trocado por uma família navy, para
@@ -184,6 +188,7 @@ em { font-style: normal; color: var(--primary); }
 .tile--dark-2    { background: var(--surface-tile-2);  color: var(--on-dark); }
 .tile--dark-3    { background: var(--surface-tile-3);  color: var(--on-dark); }
 .tile--black     { background: var(--surface-black);   color: var(--on-dark); }
+.tile--marca     { background: var(--marca);           color: var(--on-dark); }
 
 .tile--dark h1, .tile--dark h2, .tile--dark h3,
 .tile--dark-2 h1, .tile--dark-2 h2, .tile--dark-2 h3,
@@ -1226,57 +1231,158 @@ em { font-style: normal; color: var(--primary); }
    num elemento não obriga o navegador a recalcular os filhos. */
 @property --sai   { syntax: '<number>'; inherits: false; initial-value: 0; }
 @property --sobe  { syntax: '<number>'; inherits: false; initial-value: 0; }
-@property --nasce { syntax: '<number>'; inherits: false; initial-value: 0; }
 @property --enc   { syntax: '<number>'; inherits: false; initial-value: 0; }
 @property --k     { syntax: '<number>'; inherits: false; initial-value: 0; }
 @property --c     { syntax: '<number>'; inherits: false; initial-value: 0; }
 @property --f     { syntax: '<number>'; inherits: false; initial-value: 0; }
 
+/* --- A superfície da marca: sobre o azul da INFOCO, a ação é branca -------- */
+.tile.tile--marca { background: var(--marca); }
+.tile--marca h1, .tile--marca h2, .tile--marca h3 { color: var(--on-dark); }
+.tile--marca .eyebrow,
+.tile--marca .hero-sub,
+.tile--marca em { color: var(--marca-ceu); }
+.tile--marca .btn-primary,
+.tile--marca .btn-store { background: var(--canvas); color: var(--marca); }
+/* O secundário tem fundo da própria superfície: o que passa por trás dele (os
+   anéis do símbolo) não atravessa o texto do botão. */
+.tile--marca .btn-secondary { background: var(--marca); color: var(--on-dark); border-color: rgba(255, 255, 255, 0.62); }
+.tile--marca .link-action { color: var(--on-dark); }
+
 /* --- Abertura: duas colunas; o fundador fica, a cena da esquerda troca ----- */
-.palco {
-  --margem: clamp(var(--s-lg), 5vw, 96px);
-  background: var(--surface-black);
+.palco { --margem: clamp(var(--s-lg), 5vw, 96px); }
+/* Sem palco (movimento reduzido), o símbolo é um disco liso atrás do retrato;
+   o isolamento impede que ele escorregue para trás do fundo da seção. */
+.palco .hero-portrait { isolation: isolate; }
+.palco .hero-portrait::before { background: var(--marca-luz); }
+.palco-astro, .palco-papeis, .palco-marca, .palco-legenda, .palco-dica { display: none; }
+
+/* A linha final da manchete fica branca e ganha um risco de caneta, que se
+   desenha depois que as palavras chegam. */
+.palco h1 em { position: relative; display: inline-block; color: var(--on-dark); }
+.palco-risco {
+  position: absolute;
+  left: -1%;
+  bottom: -0.16em;
+  width: 102%;
+  height: 0.2em;
+  overflow: visible;
 }
-.palco .hero-sub { color: var(--body-muted); }
-.palco .hero-portrait::before { background: var(--simbolo); }
-.palco-disco, .palco-papeis, .palco-marca, .palco-legenda, .palco-dica { display: none; }
+.palco-risco path {
+  fill: none;
+  stroke: var(--marca-ceu);
+  stroke-width: 3.6;
+  stroke-linecap: round;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 0;
+}
 
 .palco.is-ativo { height: 260vh; height: 260svh; padding-block: 0; }
 .palco.is-ativo .palco-fixo {
   --p: min(36vw, 70svh);                              /* lado do retrato */
-  --dir: max(72px, 5vw);                              /* 72px: folga da pilha de botões flutuantes */
-  --col: calc(var(--dir) + var(--p) + var(--s-xl));   /* onde termina a coluna da esquerda */
+  --dir: max(88px, 7.5vw);                            /* folga à direita: a órbita cabe e os botões flutuantes também */
+  --col: calc(var(--dir) + var(--p) * 1.07 + 56px);   /* onde termina a coluna da esquerda: antes do documento mais à esquerda da órbita */
   --ax: calc((var(--margem) - var(--col)) / 2);       /* centro da coluna, a partir do centro do quadro */
+  /* O centro do símbolo, medido do centro do quadro, e o raio da órbita. */
+  --cx: calc(50vw - var(--dir) - var(--p) / 2);
+  --cy: calc(50svh - (var(--nav-h) + var(--subnav-h)) / 2 - var(--p) * 0.42);
+  --R: calc(var(--p) * 0.72);
   position: sticky;
   top: calc(var(--nav-h) + var(--subnav-h));
   height: calc(100vh - var(--nav-h) - var(--subnav-h));
   height: calc(100svh - var(--nav-h) - var(--subnav-h));
   overflow: hidden;
 }
+/* Parágrafo mais estreito: a órbita dos documentos começa logo à direita. */
+.palco.is-ativo .hero-sub { max-width: 29ch; }
 /* No palco cada peça é uma camada do quadro, não um item da grade. */
 .palco.is-ativo .container,
 .palco.is-ativo .hero-split { display: contents; }
 
-/* O símbolo nasce atrás do retrato, como um astro no horizonte. */
-.palco.is-ativo .palco-disco {
+/* O símbolo atrás do retrato, como um astro no horizonte, e o que vive em
+   volta dele. `--mx`/`--my` vêm do ponteiro: cada camada anda uma medida. */
+.palco.is-ativo .palco-astro {
   display: block;
   position: absolute;
   z-index: 1;
   right: calc(var(--dir) - var(--p) * 0.04);
   bottom: calc(var(--p) * -0.12);
   width: calc(var(--p) * 1.08);
-  height: calc(var(--p) * 1.08);
-  max-width: none;
-  color: var(--simbolo);
-  transform: translate3d(0, calc((1 - var(--nasce)) * 18svh), 0);
-  will-change: transform;
+  aspect-ratio: 1;
+  translate: calc(var(--mx, 0) * -9px) calc(var(--my, 0) * -6px);
+  transition: translate 0.9s var(--ease-out-expo);
 }
+.palco-disco {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  color: var(--marca-luz);
+  animation: astro-nasce 1.5s var(--ease-out-expo) backwards;
+}
+/* Anéis: o de dentro é a órbita dos documentos; os de fora só dão escala. */
+.palco-anel, .palco-satelite {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--d);
+  aspect-ratio: 1;
+  margin: calc(var(--d) / -2) 0 0 calc(var(--d) / -2);
+  border-radius: 50%;
+}
+.palco-anel {
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  animation: astro-abre 1.8s var(--ease-out-expo) backwards;
+}
+.palco-anel--1, .palco-satelite { --d: 133.33%; }   /* 2 × 0,72p sobre 1,08p */
+.palco-anel--1 { border: 1px dashed rgba(255, 255, 255, 0.42); animation-delay: 0.15s; }
+.palco-anel--2 { --d: 192%; animation-delay: 0.28s; }
+.palco-anel--3 { --d: 258%; border-color: rgba(255, 255, 255, 0.08); animation-delay: 0.4s; }
+/* Uma onda parte da borda do símbolo e se perde: o cadastro se propagando. */
+.palco-onda {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  animation: astro-onda 9s cubic-bezier(0.2, 0.6, 0.3, 1) 1.2s infinite backwards;
+  will-change: transform, opacity;
+}
+/* O ponto de luz dá a volta na órbita no sentido do processo: sai da esquerda,
+   sobe pelo DFD e desce pelo contrato. */
+.palco-satelite { animation: astro-orbita 30s linear infinite; }
+.palco-satelite i {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: var(--on-dark);
+}
+.palco-satelite i::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.24);
+}
+@keyframes astro-nasce { from { translate: 0 22%; opacity: 0; } }
+@keyframes astro-abre { from { scale: 0.72; opacity: 0; } }
+@keyframes astro-onda {
+  from { scale: 1; opacity: 0.55; }
+  to   { scale: 2.5; opacity: 0; }
+}
+@keyframes astro-orbita { to { rotate: 360deg; } }
+
 .palco.is-ativo .hero-portrait {
   position: absolute;
   z-index: 4;
   right: var(--dir);
   bottom: 0;
   width: var(--p);
+  translate: calc(var(--mx, 0) * 5px) 0;
+  transition: translate 0.9s var(--ease-out-expo);
 }
 .palco.is-ativo .hero-portrait::before { display: none; }
 /* Encostado na borda de baixo, o recorte da foto não precisa de máscara. */
@@ -1327,7 +1433,7 @@ em { font-style: normal; color: var(--primary); }
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--body-muted);
+  color: var(--marca-ceu);
   opacity: var(--res, 0);
 }
 
@@ -1351,10 +1457,17 @@ em { font-style: normal; color: var(--primary); }
   inset: 0;
   z-index: 2;
   pointer-events: none;
+  translate: calc(var(--mx, 0) * -18px) calc(var(--my, 0) * -12px);
+  transition: translate 0.7s var(--ease-out-expo);
 }
-/* Cada folha parte do seu canto (--x, --y, --r, --s) e chega ao centro do
-   painel (--ax) conforme --k vai de 0 a 1; some só no fim do caminho. */
+/* Cada documento parte do seu ponto da órbita (--co e --si são o cosseno e o
+   seno do ângulo, escritos à mão para não depender de trigonometria no CSS) e
+   chega ao centro do painel (--ax) conforme --k vai de 0 a 1; some só no fim
+   do caminho. */
 .papel {
+  --x: calc(var(--cx) + var(--co) * var(--R));
+  --y: calc(var(--cy) - var(--si) * var(--R));
+  --s: 0.66;
   position: absolute;
   left: 50%;
   top: 50%;
@@ -1368,6 +1481,7 @@ em { font-style: normal; color: var(--primary); }
   will-change: transform;
 }
 .papel-folha {
+  position: relative;
   height: 188px;
   display: flex;
   flex-direction: column;
@@ -1376,7 +1490,12 @@ em { font-style: normal; color: var(--primary); }
   background: var(--canvas);
   border: 1px solid var(--hairline);
   border-radius: var(--r-sm);
-  animation: papel-flutua 7s ease-in-out infinite alternate;
+}
+.papel .papel-folha {
+  animation:
+    papel-chega 1s var(--ease-out-expo) backwards,
+    papel-flutua 7s ease-in-out infinite alternate;
+  animation-delay: calc(0.5s + var(--i) * 0.14s), calc(var(--i) * -1.7s);
 }
 .papel-folha .chip { align-self: flex-start; margin-bottom: 6px; }
 .papel-folha i { display: block; height: 6px; border-radius: 3px; background: var(--hairline); }
@@ -1385,23 +1504,42 @@ em { font-style: normal; color: var(--primary); }
 .papel-folha i:nth-of-type(4) { width: 58%; }
 .papel-folha i:nth-of-type(5) { width: 88%; }
 .papel-folha i:nth-of-type(6) { width: 44%; }
-.papel:nth-child(2n) .papel-folha { animation-duration: 9s; animation-delay: -3s; }
-.papel:nth-child(3n) .papel-folha { animation-duration: 8s; animation-delay: -5s; }
-/* Palco fora da tela: o laço das folhas para de consumir. */
-.palco.is-ativo:not(.is-visivel) .papel-folha { animation-play-state: paused; }
+/* O visto: aparece quando o ponto de luz passa pelo documento (--t é a fração
+   da volta em que isso acontece) e fica até a volta seguinte se aproximar. */
+.papel-visto {
+  position: absolute;
+  right: -11px;
+  bottom: -11px;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 3px solid var(--canvas);
+  border-radius: 50%;
+  background: var(--marca);
+  scale: 0;
+  animation: papel-visto 30s linear infinite;
+  animation-delay: calc((var(--t) - 1) * 30s);
+}
+.papel-visto svg { width: 18px; height: 18px; fill: none; stroke: var(--on-dark); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+@keyframes papel-chega { from { scale: 0.5; opacity: 0; } }
 @keyframes papel-flutua {
   from { transform: translate3d(0, -7px, 0); }
   to   { transform: translate3d(0, 7px, 0); }
 }
+@keyframes papel-visto {
+  0%        { scale: 0; }
+  1.6%      { scale: 1.25; }
+  3.2%, 44% { scale: 1; }
+  47%, 100% { scale: 0; }
+}
 
-.papel--1 { --x: -45vw; --y: -34svh; --r: -8deg; --s: 0.8; }
-.papel--2 { --x: -12vw; --y: -39svh; --r: 5deg;  --s: 0.68; }
-.papel--3 { --x: 13vw;  --y: -27svh; --r: 7deg;  --s: 0.88; }
-.papel--4 { --x: -6vw;  --y: 38svh;  --r: -5deg; --s: 0.84; }
-.papel--5 { --x: -47vw; --y: 34svh;  --r: 4deg;  --s: 0.7; }
-.papel--6 { --x: 45vw;  --y: -33svh; --r: -9deg; --s: 0.74; }
-.papel--7 { --x: 29vw;  --y: -43svh; --r: 3deg;  --s: 0.6; }
-.papel--8 { --x: 47vw;  --y: 12svh;  --r: -4deg; --s: 0.6; }
+/* Do DFD ao contrato, da esquerda para a direita, num arco sobre o fundador. */
+.papel--1 { --i: 0; --co: -0.788; --si: 0.616; --r: -15deg; --t: 0.106; }   /* 142° */
+.papel--2 { --i: 1; --co: -0.438; --si: 0.899; --r: -8deg;  --t: 0.178; }   /* 116° */
+.papel--3 { --i: 2; --co: 0;      --si: 1;     --r: 0deg;   --t: 0.25; }    /*  90° */
+.papel--4 { --i: 3; --co: 0.438;  --si: 0.899; --r: 8deg;   --t: 0.322; }   /*  64° */
+.papel--5 { --i: 4; --co: 0.788;  --si: 0.616; --r: 15deg;  --t: 0.394; }   /*  38° */
 
 .palco.is-ativo .palco-dica {
   display: flex;
@@ -1409,14 +1547,23 @@ em { font-style: normal; color: var(--primary); }
   margin-top: var(--s-xl);
   font-size: 14px;
   letter-spacing: -0.224px;
-  color: var(--body-muted);
+  color: var(--marca-ceu);
 }
 .palco-dica span { animation: dica-quica 1.4s var(--ease-apple) infinite alternate; }
-.palco.is-ativo:not(.is-visivel) .palco-dica span { animation-play-state: paused; }
 @keyframes dica-quica {
   from { transform: translate3d(0, -2px, 0); }
   to   { transform: translate3d(0, 4px, 0); }
 }
+/* Palco fora da tela: nenhum laço continua consumindo. */
+.palco.is-ativo:not(.is-visivel) :is(.palco-onda, .palco-satelite, .papel-folha, .papel-visto, .palco-dica span) {
+  animation-play-state: paused;
+}
+/* O risco da manchete só se desenha para quem aceita movimento; sem isso ele
+   já nasce pronto. */
+@media (prefers-reduced-motion: no-preference) {
+  .palco-risco path { animation: risco-desenha 0.9s var(--ease-out-expo) 1.1s backwards; }
+}
+@keyframes risco-desenha { from { stroke-dashoffset: 1; } }
 
 /* --- Banner das páginas: o símbolo nasce no canto, com folhas do assunto --- */
 .tile.banner {
@@ -1424,14 +1571,12 @@ em { font-style: normal; color: var(--primary); }
   align-items: center;
   min-height: 440px;
   padding-block: 104px 96px;
-  background: var(--surface-black);
   text-align: left;
 }
 /* A metade direita é do símbolo: o texto para antes dele, mesmo quando a
    página pede uma largura maior para o parágrafo. */
 .banner > .container { position: relative; z-index: 1; max-width: 1180px; padding-right: min(48%, 560px); }
 .banner > .container > * { margin-inline: 0; }
-.banner .hero-sub { color: var(--body-muted); }
 .banner .cta-row { justify-content: flex-start; }
 .banner-fundo {
   --bd: min(460px, 38vw);
@@ -1441,13 +1586,29 @@ em { font-style: normal; color: var(--primary); }
   overflow: hidden;
   pointer-events: none;
 }
-.banner-disco { position: absolute; right: var(--br); bottom: calc(var(--bd) * -0.36); width: var(--bd); color: var(--simbolo); }
-.banner-disco svg { width: 100%; height: auto; animation: banner-nasce 1.4s var(--ease-out-expo) both; }
+.banner-disco { position: absolute; right: var(--br); bottom: calc(var(--bd) * -0.36); width: var(--bd); aspect-ratio: 1; color: var(--marca-luz); }
+.banner-disco svg { display: block; width: 100%; height: auto; animation: banner-nasce 1.4s var(--ease-out-expo) both; }
+/* Os mesmos anéis da abertura da Home, em volta do símbolo. */
+.banner-disco::before, .banner-disco::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--d);
+  aspect-ratio: 1;
+  margin: calc(var(--d) / -2) 0 0 calc(var(--d) / -2);
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 255, 255, 0.42);
+  animation: astro-abre 1.8s var(--ease-out-expo) 0.15s backwards;
+}
+.banner-disco::before { --d: 133.33%; }
+.banner-disco::after { --d: 192%; border: 1px solid rgba(255, 255, 255, 0.13); animation-delay: 0.3s; }
 .banner-papeis { position: absolute; right: var(--br); bottom: 0; width: var(--bd); height: 100%; }
 .banner-folha { position: absolute; width: 148px; animation: banner-chega 1.1s var(--ease-out-expo) both; }
 .banner-folha--1 { left: -16%; top: 30%; rotate: -8deg; scale: 0.88; animation-delay: 0.2s; }
 .banner-folha--2 { right: -8%; top: 12%; rotate: 6deg; scale: 0.76; animation-delay: 0.32s; }
 .banner-folha--3 { left: 22%; top: 8%; rotate: -3deg; scale: 0.62; animation-delay: 0.44s; }
+.banner-folha .papel-folha { animation: papel-flutua 8s ease-in-out infinite alternate; }
 @keyframes banner-nasce { from { transform: translate3d(0, 34%, 0); opacity: 0; } }
 @keyframes banner-chega { from { translate: 0 40px; opacity: 0; } }
 
@@ -1631,13 +1792,14 @@ em { font-style: normal; color: var(--primary); }
 }
 .esteira.is-ativo .esteira-cartao { min-height: min(440px, 62svh); }
 
+@media (min-width: 1600px) {
+  /* Tela larga: a órbita cresce e os documentos acompanham. */
+  .papel { --s: 0.8; }
+}
+
 @media (max-width: 1068px) {
-  /* Tela estreita: as folhas ficam só nos cantos, menores, para a manchete
-     respirar. As do meio das laterais e a do pé saem. */
-  .papel--1 { --x: -45vw; --y: -40svh; --s: 0.6; }
-  .papel--3 { --x: 4vw;   --y: -41svh; --s: 0.56; }
-  .papel--4 { --x: -4vw;  --y: 40svh;  --s: 0.6; }
-  .papel--2, .papel--5, .papel--6, .papel--7, .papel--8 { display: none; }
+  /* Tela estreita: os documentos encolhem junto com a órbita. */
+  .papel { --s: 0.5; }
   /* Coluna estreita: o painel mostra uma coluna só de demandas. */
   .palco.is-ativo .sicc-panel-body { grid-template-columns: minmax(0, 1fr); }
   .palco.is-ativo .sicc-col:nth-child(2) { display: none; }
@@ -1652,29 +1814,37 @@ em { font-style: normal; color: var(--primary); }
     --p: min(60vw, 34svh);
     --dir: calc(50% - var(--p) / 2);
     --col: var(--s-md);
+    --cx: 0px;                                          /* o símbolo fica no eixo do quadro */
   }
   .palco.is-ativo .palco-texto,
   .palco.is-ativo .palco-cena { inset: var(--s-lg) var(--s-md) auto; align-items: center; justify-content: flex-start; }
   .palco.is-ativo .palco-cena { align-items: stretch; }
-  .palco.is-ativo .palco-texto .hero-sub { margin-top: var(--s-sm); font-size: 17px; line-height: 1.4; letter-spacing: -0.2px; }
+  .palco.is-ativo .palco-texto .hero-sub { max-width: none; margin-top: var(--s-sm); font-size: 17px; line-height: 1.4; letter-spacing: -0.2px; }
   .palco.is-ativo .palco-texto .cta-row { margin-top: var(--s-md); }
   .palco.is-ativo .palco-marca { justify-content: center; font-size: min(25vw, 15svh); }
   .palco.is-ativo .palco-legenda { text-align: center; font-size: 10px; letter-spacing: 0.12em; margin-bottom: var(--s-md); }
+  /* Quando o painel encolhe para caber, encolhe em torno do eixo do quadro. */
+  .palco.is-ativo .hero-stage { transform-origin: 50% 0; }
   .palco.is-ativo .hero-portrait {
     transform-origin: 50% 100%;
     transform: scale(calc(1 - var(--enc) * 0.4));
     will-change: transform;
   }
-  .palco.is-ativo .palco-disco {
+  /* O símbolo recua com o retrato, em torno do mesmo ponto do chão. */
+  .palco.is-ativo .palco-astro {
     transform-origin: 50% 88%;
-    transform: translate3d(0, calc((1 - var(--nasce)) * 8svh), 0) scale(calc(1 - var(--enc) * 0.4));
+    transform: scale(calc(1 - var(--enc) * 0.4));
+    will-change: transform;
   }
   .palco.is-ativo .palco-dica { display: none; }
-  /* A manchete ocupa o alto e o retrato o pé: as folhas ficam nas duas
-     faixas ao lado dele. */
-  .papel--1 { --x: -38vw; --y: 29svh; --s: 0.58; }
-  .papel--3 { --x: 38vw;  --y: 26svh; --s: 0.54; }
-  .papel--4 { --x: 37vw;  --y: 47svh; --s: 0.5; }
+  /* A manchete ocupa o alto e o retrato o pé: os documentos ficam nos dois
+     flancos dele, e o do alto do arco sai para não cobrir os botões. */
+  .papel { --s: 0.46; }
+  .papel--1 { --co: -0.995; --si: -0.105; --r: -6deg; --t: 0.983; }   /* 186° */
+  .papel--2 { --co: -0.848; --si: 0.53;   --r: -12deg; --t: 0.089; }  /* 148° */
+  .papel--3 { display: none; }
+  .papel--4 { --co: 0.848;  --si: 0.53;   --r: 12deg; --t: 0.411; }   /*  32° */
+  .papel--5 { --co: 0.995;  --si: -0.105; --r: 6deg;  --t: 0.517; }   /*  -6° */
 
   .tile.banner { min-height: 0; padding-block: 56px 150px; }
   .banner > .container { padding-right: var(--s-md); }

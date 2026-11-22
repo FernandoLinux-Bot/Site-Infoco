@@ -31,7 +31,7 @@ O produto que o site apresenta é o **SICC — Sistema Integrado de Compras e Co
 
 O sistema visual segue o `DESIGN-apple.md` na raiz. **Ele é a fonte da verdade**; `index.css` é a implementação. As invariantes que não podem ser quebradas:
 
-1. **Um único acento interativo:** `--primary: #0066cc` (Action Blue). `--primary-focus: #0071e3` só para o anel de foco; `--primary-on-dark: #2997ff` só sobre tile escuro. Não existe segunda cor de marca. O `--simbolo: #1449d3` é o azul do símbolo da INFOCO e só pinta o próprio símbolo (o disco dos banners) — nunca botão, link ou destaque de texto.
+1. **Um único acento interativo:** `--primary: #0066cc` (Action Blue). `--primary-focus: #0071e3` só para o anel de foco; `--primary-on-dark: #2997ff` só sobre tile escuro. Não existe segundo acento. O `--marca: #1449d3` é o azul do símbolo da INFOCO e funciona como **superfície** dos banners (`.tile--marca`), não como cor de ação: sobre ele o botão primário é branco com texto azul, o secundário é contorno branco, e o texto de apoio usa `--marca-ceu: #c9dbff`. O disco do símbolo é pintado com `--marca-luz: #3a7bff`.
 2. **Uma única sombra:** `drop-shadow(rgba(0,0,0,.22) 3px 5px 30px)`, aplicada só a imagem de produto (`.product-shadow`, `.sicc-panel`, `.media-frame`). **Nunca** `box-shadow` em card, botão ou nav — a elevação vem da troca de superfície.
 3. **Zero gradiente decorativo.** Profundidade vem da alternância de tiles e do `backdrop-filter` das barras fixas.
 4. **Corpo em 17px / peso 400 / line-height 1.47 / tracking −0.374px.** Não 16px.
@@ -47,6 +47,8 @@ O sistema visual segue o `DESIGN-apple.md` na raiz. **Ele é a fonte da verdade*
 
 > **Desvio deliberado do spec.** O `DESIGN-apple.md` define as superfícies escuras como near-black neutro (#272729/#2a2a2c/#252527) e a nav como preto puro. Aqui elas são uma família **navy**, por decisão do cliente, para o site e o FAQ (`faq.infocogestaopublica.com.br`) lerem como um produto só. Tudo o mais do spec continua valendo — inclusive o micro-degrau entre tiles vizinhos, que é o que substitui borda e sombra. Um teste trava os quatro valores e exige que o canal azul supere o vermelho em cada um.
 
+> **Terceiro desvio deliberado: os banners são azul da marca.** O hero da Home e o banner das outras páginas usam `.tile--marca` (`#1449d3`) em vez de um tile navy. Pedido do cliente em 22/11/2026: o navy quase preto no banner foi reprovado. As demais seções escuras continuam na família navy. Um teste trava a cor do hero.
+
 **Ecossistema:** o FAQ usa a mesma paleta e a mesma fonte (`_deploy/site/{index,login,comunidade}.html`, cada um com seu `:root` — ao mexer numa cor, mexa nos três). A logo é a mesma arte (`public/logo-infoco.png`, vinda de `_deploy/site/assets/logo.png` do FAQ).
 
 **Chrome de navegação:** duas barras fixas — `.global-nav` escura de 44px (só links, incluindo Contato) e `.sub-nav` vitrificada de 52px com a logo estruturada, os links do produto e o CTA persistente. As duas usam a mesma grade `1fr auto 1fr`, e é isso que faz a fileira de cima cair exatamente sobre a de baixo. **Abaixo de 833px a barra escura some** e `--nav-h` vira `0px`: os links passam para a gaveta e a sub-nav vira o header inteiro.
@@ -61,7 +63,7 @@ O sistema visual segue o `DESIGN-apple.md` na raiz. **Ele é a fonte da verdade*
 ├── vite.config.ts            # manualChunks (vue, motion, gsap)
 ├── vercel.json               # build + SPA fallback
 ├── playwright.config.ts      # desktop (Chromium 1440) + mobile (WebKit/iPhone 13)
-├── tests/site.spec.ts        # 74 testes × 2 projetos
+├── tests/site.spec.ts        # 75 testes × 2 projetos
 ├── .claude/agents/
 │   └── testador-site.md      # subagente que roda e interpreta a suíte
 ├── public/                   # logo-infoco.png, favicon.{svg,ico} + favicon-192.png (só o símbolo), og-infoco.png,
@@ -80,8 +82,8 @@ O sistema visual segue o `DESIGN-apple.md` na raiz. **Ele é a fonte da verdade*
     │   │   └── palco.ts      # usePalco: seção presa dirigida pelo progresso da rolagem
     │   ├── Header.vue        # global-nav + sub-nav + sheet mobile
     │   ├── Footer.vue        # rodapé parchment com colunas densas
-    │   ├── Hero.vue          # palco de abertura em duas colunas: fundador + símbolo à direita, cena à esquerda
-    │   ├── BannerFundo.vue   # fundo dos banners de página: o símbolo nasce no canto, com folhas do assunto
+    │   ├── Hero.vue          # palco de abertura sobre o azul da marca: fundador + símbolo com a órbita dos documentos à direita, cena à esquerda
+    │   ├── BannerFundo.vue   # fundo dos banners de página: o símbolo nasce no canto, com anéis e folhas do assunto
     │   ├── SimboloInfoco.vue # o símbolo em vetor (mesma geometria do favicon)
     │   ├── Ciclo.vue         # palco: o ciclo da demanda se desenha com a rolagem
     │   ├── Esteira.vue       # palco: os módulos correm de lado (carrossel no celular)
@@ -144,7 +146,7 @@ A Home tem três seções presas, adaptadas do template Selene (scrolltide.co) p
 
 | Palco | O que acontece | Onde liga |
 |---|---|---|
-| `Hero.vue` (`.palco`) | duas colunas: à direita o fundador fica o tempo todo, com o símbolo nascendo atrás; à esquerda a manchete cede, as folhas (DFD, ETP, Edital…) convergem, `SICC` resolve letra a letra e o painel sobe **abaixo** dela, com os cartões entrando | todo tamanho |
+| `Hero.vue` (`.palco`) | duas colunas sobre o azul da marca: à direita o fundador fica o tempo todo, com o símbolo atrás e a órbita dos cinco documentos (DFD → Contrato) em volta; à esquerda a manchete cede, os documentos saem da órbita e convergem, `SICC` resolve letra a letra e o painel sobe **abaixo** dela, com os cartões entrando | todo tamanho |
 | `Ciclo.vue` (`.ciclo-palco`) | a onda das seis fases de `CICLO_DEMANDA` se traça trecho a trecho, com marcador e a fase em curso no rodapé; no celular o desenho desliza junto | todo tamanho |
 | `Esteira.vue` (`.esteira`) | os módulos correm de lado, um pixel de fila por pixel de rolagem; o cartão em foco fica inteiro | só ≥ 834px |
 
@@ -155,11 +157,13 @@ Como funciona, e o que não quebrar:
 - **Sem `is-ativo`, vale o leiaute estático.** Com `prefers-reduced-motion` o hero volta a ser manchete + retrato + painel, o ciclo nasce desenhado com as seis fases em lista e a esteira é um carrossel de arrastar (que também é o modo do celular). Um teste cobre os três.
 - **Altura do palco = duração da cena.** `.palco` 260svh, `.ciclo-palco` 360svh; a esteira mede a própria viagem e define a altura em pixels (refeita no `refreshInit`). Mexer na altura muda a velocidade de tudo.
 - **A marca `SICC` nunca fica atrás de nada.** Ela e o painel estão na mesma coluna (`.palco-cena`), um abaixo do outro; o painel encolhe (`--escala`) para caber no que sobra. Um teste mede as duas caixas. A foto do fundador também não sai do quadro em nenhum ponto da rolagem.
-- **Laços param fora da tela.** O `usePalco` marca `is-visivel` enquanto a seção está presa, e as folhas só flutuam com essa classe.
+- **Laços param fora da tela.** O `usePalco` marca `is-visivel` com um `IntersectionObserver` (não com o `onToggle` do ScrollTrigger, que só se dá por ativo depois do primeiro pixel rolado e deixava o hero parado no topo da página). Todo laço do palco pausa sem essa classe.
+- **A órbita do hero é só CSS.** `.palco-astro` guarda o disco, os anéis, a onda e o ponto de luz (`.palco-satelite`, uma volta a cada 30 s). Cada `.papel--N` declara à mão o cosseno e o seno do seu ângulo (`--co`, `--si`) e a fração da volta em que o ponto passa por ele (`--t`); o visto (`.papel-visto`) usa esse `--t` como atraso da própria animação de 30 s. Mudou o ângulo de um documento, mude os três números. `--col` (fim da coluna do texto) é calculado para parar antes do documento mais à esquerda — há teste.
+- **Resposta ao ponteiro.** Com mouse, o `Hero.vue` grava `--mx`/`--my` (de −1 a 1) no símbolo, nos documentos e no retrato, uma vez por quadro; o CSS desloca cada camada uma medida diferente com `translate`. Em tela de toque o ouvinte nem é registrado.
 
 ### Banners de página
 
-Toda página fora da Home abre com `.tile.banner` (navy) e um `<BannerFundo :folhas="[…]" />`: o símbolo nasce no canto direito, com duas ou três folhas do assunto da página, e os dois andam em ritmos diferentes com a rolagem (`useParallax`). O texto fica à esquerda e termina antes do disco (há teste). No celular as folhas somem e o símbolo vira uma calota no pé do banner.
+Toda página fora da Home abre com `.tile.tile--marca.banner` (azul da marca) e um `<BannerFundo :folhas="[…]" />`: o símbolo nasce no canto direito com dois anéis em volta, com duas ou três folhas do assunto da página, e os dois andam em ritmos diferentes com a rolagem (`useParallax`). O texto fica à esquerda e termina antes do disco (há teste). No celular as folhas somem e o símbolo vira uma calota no pé do banner.
 
 **Composables (`useParallax`, `usePalco`, `useRecaptcha`) só no `<script setup>`, nunca dentro de `v-for`.** E o nome da variável não pode coincidir com a chave de um `ref` do template: `const recaptcha = useRecaptcha()` com `<div ref="recaptcha">` derruba a página.
 
@@ -210,6 +214,8 @@ Almadina, Itamaraju, Nova Viçosa, Itororó, Anagé, Itabela e Prado (Bahia). Br
 - **reCAPTCHA não funciona em localhost** (o site key só aceita o domínio de produção). Os testes contornam simulando `window.grecaptcha`.
 
 ## Histórico de manutenção
+
+- **2026-11-22 (3):** **Banners no azul da marca, com a órbita dos documentos.** O cliente reprovou o navy do banner principal e pediu o azul claro da INFOCO, com mais vida. O hero e os banners das nove páginas passaram para `.tile--marca` (`#1449d3`), com o símbolo em `--marca-luz`. No hero, os oito papéis soltos viraram cinco documentos em arco sobre o fundador, na ordem do processo, com um ponto de luz dando a volta e marcando o visto em cada um; uma onda parte do símbolo, a última linha da manchete ganhou um risco desenhado e o quadro responde ao ponteiro. O símbolo deixou de subir com a rolagem: está inteiro desde o primeiro quadro. De carona, um defeito antigo: os laços do hero ficavam pausados no topo da página até a primeira rolagem (`is-visivel` agora vem de `IntersectionObserver`).
 
 - **2026-11-22 (2):** **Banner principal refeito, banners nas outras páginas e desempenho.** O hero virou duas colunas sobre navy: o fundador e o símbolo da INFOCO à direita o tempo todo, e a cena trocando à esquerda, com `SICC` acima do painel (antes o painel passava por cima da marca). As nove páginas internas ganharam o banner com o símbolo nascendo. Peso: imagens em WebP, reCAPTCHA só onde há formulário, player de vídeo só ao apertar e escrita por quadro no elemento-alvo. Removido `animated-banner.gif` (3,3 MB, sem uso). Suíte: 74 testes × 2 projetos.
 

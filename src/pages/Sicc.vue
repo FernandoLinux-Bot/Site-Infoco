@@ -90,7 +90,7 @@ const GLOSSARIO = [
 
 <template>
     <!-- Hero -->
-    <section class="tile tile--black on-dark hero banner">
+    <section class="tile tile--marca on-dark hero banner">
         <BannerFundo :folhas="['DFD', 'ETP', 'Contrato']" />
         <div class="container container-narrow">
             <motion.span
